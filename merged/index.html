@@ -9696,7 +9696,34 @@ public:
 class Solution {
 public:
     string simplifyPath(string path) {
-        
+        stack&lt;string&gt;s;
+        int i=0;
+        string temp=&quot;&quot;;\
+        for(int i=0; i&lt;path.length(); i++) {
+
+            if(path[i] == &#x27;/&#x27;) continue;
+
+            string temp=&quot;&quot;;
+            while(path[i]!=&#x27;/&#x27; &amp;&amp; i&lt;path.length()) {
+                temp=temp+path[i];
+                i++;
+            }
+            if(temp==&quot;.&quot;){
+                continue;
+            }
+            else if(temp==&quot;..&quot;){
+                if(!s.empty())s.pop();
+            }
+            else{
+                s.push(temp);
+            }
+        }
+        string ans=&quot;&quot;;
+        while(!s.empty()){
+            ans=s.top()+&#x27;/&#x27;+ans;
+            s.pop();
+        }
+        return &#x27;/&#x27;+ans.substr(0,ans.length()-1);
     }
 };
 // @lc code=end
@@ -12030,10 +12057,10 @@ As there is one possible scenario that led s1 to be scrambled to s2, we return t
 class Solution {
 public:
     bool isScramble(string s1, string s2) {
-        
+
     }
 };
-// @lc code=end
+// @lc code=end 
 
 </pre><html><head></head><body>
 <div id="title">
@@ -13573,22 +13600,22 @@ public:
 class Solution {
 public:
     bool isInterleave(string s1, string s2, string s3) {
-        int i=0,j=0;
-        string s=&quot;&quot;;
-        while(i&lt;=s1.length() &amp;&amp; j&lt;=s2.length()) {
-            string temp=s;
-            if(s+s1[i]==s3.substr(0,i+j+1)){
-                s=s+s1[i];
-                i++;
+        int n1,n2,n3;
+        n1 = s1.size();
+        n2 = s2.size();
+        n3 = s3.size();
+        if(n1 + n2 != n3) return false;
+        vector&lt;vector&lt;bool&gt;&gt;dp(n1+1,vector&lt;bool&gt;(n2+1,false));
+        dp[0][0]= true;
+        for(int i=1; i&lt;=n1;i++) dp[i][0] = dp[i-1][0] &amp;&amp; s1[i-1]==s3[i-1];
+        for(int i=1; i&lt;=n2;i++) dp[0][i] = dp[0][i-1] &amp;&amp; s2[i-1]==s3[i-1];
+
+        for(int i=1;i&lt;=n1;i++){
+            for(int j=1;j&lt;=n2;j++){
+                dp[i][j]=(dp[i-1][j] &amp;&amp; s1[i-1]==s3[i+j-1])||(dp[i][j-1] &amp;&amp; s2[j-1]==s3[i+j-1]);
             }
-            if(s+s2[j]==s3.substr(0,i+j+1)){
-                s=s+s2[j];
-                j++;
-            }
-            cout&lt;&lt;i&lt;&lt;j&lt;&lt;s&lt;&lt;endl;
-            if(temp==s) break;
         }
-        return s==s3;
+        return dp[n1][n2];
     }
 };
 // @lc code=end
@@ -14647,21 +14674,22 @@ public:
 class Solution {
 public:
     map&lt;int,int&gt;m;
-    TreeNode * build(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder,int&amp; post,int start,int end){
+    int post;
+    TreeNode * build(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder,int start,int end){
         if(post&lt;0 || start &gt; end) return NULL;
         int element = postorder[post--];
         TreeNode *root = new TreeNode(element);
         int index=m[element];
-        root-&gt;right=build(inorder,postorder,post,index+1,end);
-        root-&gt;left=build(inorder,postorder,post,start,index-1);
+        root-&gt;right=build(inorder,postorder,index+1,end);
+        root-&gt;left=build(inorder,postorder,start,index-1);
         return root;
     }
     TreeNode* buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder) {
         for(int i=0; i&lt;inorder.size();i++){
             m[inorder[i]]=i;
         }
-        int post=postorder.size()-1;
-        return build(inorder,postorder,post,0,inorder.size()-1);
+        post=postorder.size()-1;
+        return build(inorder,postorder,0,inorder.size()-1);
     }
 };
 // @lc code=end
@@ -19446,6 +19474,160 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 150. Evaluate Reverse Polish Notation
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Evaluate the value of an arithmetic expression in
+   <a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation" target="_blank">
+    Reverse Polish Notation
+   </a>
+   .
+  </p>
+  <p>
+   Valid operators are
+   <code>
+    +
+   </code>
+   ,
+   <code>
+    -
+   </code>
+   ,
+   <code>
+    *
+   </code>
+   , and
+   <code>
+    /
+   </code>
+   . Each operand may be an integer or another expression.
+  </p>
+  <p>
+   <strong>
+    Note
+   </strong>
+   that division between two integers should truncate toward zero.
+  </p>
+  <p>
+   It is guaranteed that the given RPN expression is always valid. That means the expression would always evaluate to a result, and there will not be any division by zero operation.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> tokens = ["2","1","+","3","*"]
+<strong>Output:</strong> 9
+<strong>Explanation:</strong> ((2 + 1) * 3) = 9
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> tokens = ["4","13","5","/","+"]
+<strong>Output:</strong> 6
+<strong>Explanation:</strong> (4 + (13 / 5)) = 6
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+<strong>Output:</strong> 22
+<strong>Explanation:</strong> ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+= ((10 * (6 / (12 * -11))) + 17) + 5
+= ((10 * (6 / -132)) + 17) + 5
+= ((10 * 0) + 17) + 5
+= (0 + 17) + 5
+= 17 + 5
+= 22
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= tokens.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     tokens[i]
+    </code>
+    is either an operator:
+    <code>
+     "+"
+    </code>
+    ,
+    <code>
+     "-"
+    </code>
+    ,
+    <code>
+     "*"
+    </code>
+    , or
+    <code>
+     "/"
+    </code>
+    , or an integer in the range
+    <code>
+     [-200, 200]
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 150 -->
+<pre>/*
+ * @lc app=leetcode id=150 lang=cpp
+ *
+ * [150] Evaluate Reverse Polish Notation
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int evalRPN(vector&lt;string&gt;&amp; tokens) {
+        stack&lt;int&gt;s;
+        for(int i = 0; i &lt; tokens.size();i++){
+            if(tokens[i] == &quot;+&quot; || tokens[i] ==&quot;-&quot; || tokens[i] == &quot;*&quot; || tokens[i] == &quot;/&quot;){
+                int x=s.top();
+                s.pop();
+                int y=s.top();
+                s.pop();
+                if(tokens[i] == &quot;-&quot;) s.push(y-x);
+                else if(tokens[i] == &quot;+&quot;) s.push(x+y);
+                else if(tokens[i]==&quot;*&quot;) s.push(x*y);
+                else s.push(y/x);
+            }
+            else{
+                s.push(stoi(tokens[i]));
+            }
+        }
+        return s.top();
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  151. Reverse Words in a String
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -21328,6 +21510,239 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 173. Binary Search Tree Iterator
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Implement the
+   <code>
+    BSTIterator
+   </code>
+   class that represents an iterator over the
+   <strong>
+    <a href="https://en.wikipedia.org/wiki/Tree_traversal#In-order_(LNR)" target="_blank">
+     in-order traversal
+    </a>
+   </strong>
+   of a binary search tree (BST):
+  </p>
+  <ul>
+   <li>
+    <code>
+     BSTIterator(TreeNode root)
+    </code>
+    Initializes an object of the
+    <code>
+     BSTIterator
+    </code>
+    class. The
+    <code>
+     root
+    </code>
+    of the BST is given as part of the constructor. The pointer should be initialized to a non-existent number smaller than any element in the BST.
+   </li>
+   <li>
+    <code>
+     boolean hasNext()
+    </code>
+    Returns
+    <code>
+     true
+    </code>
+    if there exists a number in the traversal to the right of the pointer, otherwise returns
+    <code>
+     false
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     int next()
+    </code>
+    Moves the pointer to the right, then returns the number at the pointer.
+   </li>
+  </ul>
+  <p>
+   Notice that by initializing the pointer to a non-existent smallest number, the first call to
+   <code>
+    next()
+   </code>
+   will return the smallest element in the BST.
+  </p>
+  <p>
+   You may assume that
+   <code>
+    next()
+   </code>
+   calls will always be valid. That is, there will be at least a next number in the in-order traversal when
+   <code>
+    next()
+   </code>
+   is called.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/bst-tree.png" style="width: 189px; height: 178px;"/>
+  <pre><strong>Input</strong>
+["BSTIterator", "next", "next", "hasNext", "next", "hasNext", "next", "hasNext", "next", "hasNext"]
+[[[7, 3, 15, null, null, 9, 20]], [], [], [], [], [], [], [], [], []]
+<strong>Output</strong>
+[null, 3, 7, true, 9, true, 15, true, 20, false]
+
+<strong>Explanation</strong>
+BSTIterator bSTIterator = new BSTIterator([7, 3, 15, null, null, 9, 20]);
+bSTIterator.next();    // return 3
+bSTIterator.next();    // return 7
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 9
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 15
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 20
+bSTIterator.hasNext(); // return False
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is in the range
+    <code>
+     [1, 10
+     <sup>
+      5
+     </sup>
+     ]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     0 &lt;= Node.val &lt;= 10
+     <sup>
+      6
+     </sup>
+    </code>
+   </li>
+   <li>
+    At most
+    <code>
+     10
+     <sup>
+      5
+     </sup>
+    </code>
+    calls will be made to
+    <code>
+     hasNext
+    </code>
+    , and
+    <code>
+     next
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    Could you implement
+    <code>
+     next()
+    </code>
+    and
+    <code>
+     hasNext()
+    </code>
+    to run in average
+    <code>
+     O(1)
+    </code>
+    time and use
+    <code>
+     O(h)
+    </code>
+    memory, where
+    <code>
+     h
+    </code>
+    is the height of the tree?
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 173 -->
+<pre>/*
+ * @lc app=leetcode id=173 lang=cpp
+ *
+ * [173] Binary Search Tree Iterator
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class BSTIterator {
+public:
+    vector&lt;int&gt;a;
+    int index=0;
+    BSTIterator(TreeNode* root) {
+        inorder(root);
+    }
+    void inorder(TreeNode* root){
+        if(root){
+            inorder(root-&gt;left);
+            a.push_back(root-&gt;val);
+            inorder(root-&gt;right);
+        }
+    }
+    int next() {
+        return a[index++];
+    }
+
+    bool hasNext() {
+        if(index&lt;a.size()){
+            return true;
+        }
+        return false;
+    }
+};
+
+/**
+ * Your BSTIterator object will be instantiated and called as such:
+ * BSTIterator* obj = new BSTIterator(root);
+ * int param_1 = obj-&gt;next();
+ * bool param_2 = obj-&gt;hasNext();
+ */
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  174. Dungeon Game
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -21478,6 +21893,115 @@ public:
             cout&lt;&lt;&#x27;\n&#x27;;
         }
         return dp[0][0];
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 179. Largest Number
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a list of non-negative integers
+   <code>
+    nums
+   </code>
+   , arrange them such that they form the largest number.
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+   The result may be very large, so you need to return a string instead of an integer.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [10,2]
+<strong>Output:</strong> "210"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [3,30,34,5,9]
+<strong>Output:</strong> "9534330"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1]
+<strong>Output:</strong> "1"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [10]
+<strong>Output:</strong> "10"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= nums[i] &lt;= 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 179 -->
+<pre>/*
+ * @lc app=leetcode id=179 lang=cpp
+ *
+ * [179] Largest Number
+ */
+
+// @lc code=start
+
+bool compare(string a,string b){
+    return a+b &gt; b+a;
+}
+class Solution {
+public:
+
+
+    string largestNumber(vector&lt;int&gt;&amp; nums) {
+        vector&lt;string&gt;s;
+        for(int x:nums){
+            s.push_back(to_string(x));
+        }
+        sort(s.begin(), s.end(),compare);
+        string ans=&quot;&quot;;
+        for(int i=0; i&lt;s.size(); i++){
+            ans+=s[i];
+        }
+        return ans[0]==&#x27;0&#x27;?&quot;0&quot;:ans;
     }
 };
 // @lc code=end
@@ -21826,7 +22350,11 @@ public:
 class Solution {
 public:
     uint32_t reverseBits(uint32_t n) {
-        return ~n;
+        uint32_t ans=0;
+        for(int i=0; i&lt;32; i++){
+            ans+=(((n&gt;&gt;i)&amp;1)&lt;&lt;(31-i));
+        }
+        return ans;
     }
 };
 // @lc code=end
@@ -21948,6 +22476,111 @@ public:
 // @lc code=end
 
 </pre><html><head></head><body>
+914. X of a Kind in a Deck of Cards<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   In a deck of cards, each card has an integer written on it.
+  </p>
+  <p>
+   Return
+   <code>
+    true
+   </code>
+   if and only if you can choose
+   <code>
+    X &gt;= 2
+   </code>
+   such that it is possible to split the entire deck into 1 or more groups of cards, where:
+  </p>
+  <ul>
+   <li>
+    Each group has exactly
+    <code>
+     X
+    </code>
+    cards.
+   </li>
+   <li>
+    All the cards in each group have the same integer.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> deck = [1,2,3,4,4,3,2,1]
+<strong>Output:</strong> true
+<strong>Explanation</strong>: Possible partition [1,1],[2,2],[3,3],[4,4].
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> deck = [1,1,1,2,2,2,3,3]
+<strong>Output:</strong> false
+<strong>Explanation</strong>: No possible partition.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> deck = [1]
+<strong>Output:</strong> false
+<strong>Explanation</strong>: No possible partition.
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> deck = [1,1]
+<strong>Output:</strong> true
+<strong>Explanation</strong>: Possible partition [1,1].
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> deck = [1,1,2,2,2,2]
+<strong>Output:</strong> true
+<strong>Explanation</strong>: Possible partition [1,1],[2,2],[2,2].
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= deck.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= deck[i] &lt; 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 192 -->
+<pre></pre><html><head></head><body>
 925. Long Pressed Name<div class="content__u3I1 question-content__JfgR">
  <div>
   <p>
@@ -31245,25 +31878,34 @@ public:
 // @lc code=start
 class Solution {
 public:
-    long long ans=INT_MAX;
-    void backtrack(string s,int k,int i,string temp){
-        if(k==0){
-            if(i&lt;s.length()){
-                cout&lt;&lt;temp+s.substr(i)&lt;&lt;&#x27;\n&#x27;;
-                ans=min(ans,stoll(temp+s.substr(i)));
-                return;
-            }
-            ans=min(ans,stoll(temp));
-            return;
-        }
-        if(k&lt;0||i==s.length()) return;
-        backtrack(s,k,i+1,temp+s[i]);
-        backtrack(s,k-1,i+1,temp);
-    }
     string removeKdigits(string s, int k) {
+        string ans;
+
         if(k&gt;=s.length()) return &quot;0&quot;;
-        backtrack(s,k,0,&quot;&quot;);
-        return to_string(ans);
+
+        ans.push_back(s[0]);
+        for(int i=1; i&lt;s.length();i++){
+            while(k &amp;&amp; !ans.empty() &amp;&amp; ans.back()&gt;s[i]){
+                ans.pop_back();
+                k--;
+            }
+            ans.push_back(s[i]);
+        }
+
+        while(k &amp;&amp; !ans.empty()){
+            ans.pop_back();
+            k--;
+        }
+        if(ans.size()&gt;1 &amp;&amp; ans[0]==&#x27;0&#x27;){
+            reverse(ans.begin(), ans.end());
+            while(!ans.empty() &amp;&amp; ans.back()==&#x27;0&#x27;) ans.pop_back();
+            reverse(ans.begin(), ans.end());
+        }
+
+
+        if(ans.length()==0) return &quot;0&quot;;
+
+        return ans;
     }
 };
 // @lc code=end
@@ -32163,6 +32805,231 @@ public:
 class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; pacificAtlantic(vector&lt;vector&lt;int&gt;&gt;&amp; heights) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 429. N-ary Tree Level Order Traversal
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an n-ary tree, return the
+   <em>
+    level order
+   </em>
+   traversal of its nodes' values.
+  </p>
+  <p>
+   <em>
+    Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value (See examples).
+   </em>
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <p>
+   <img src="./output_files/narytreeexample.png" style="width: 100%; max-width: 300px;"/>
+  </p>
+  <pre><strong>Input:</strong> root = [1,null,3,2,4,null,5,6]
+<strong>Output:</strong> [[1],[3,2,4],[5,6]]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <p>
+   <img alt="" src="./output_files/sample_4_964.png" style="width: 296px; height: 241px;"/>
+  </p>
+  <pre><strong>Input:</strong> root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]
+<strong>Output:</strong> [[1],[2,3,4,5],[6,7,8,9,10],[11,12,13],[14]]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The height of the n-ary tree is less than or equal to
+    <code>
+     1000
+    </code>
+   </li>
+   <li>
+    The total number of nodes is between
+    <code>
+     [0, 10
+     <sup>
+      4
+     </sup>
+     ]
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 429 -->
+<pre>/*
+ * @lc app=leetcode id=429 lang=cpp
+ *
+ * [429] N-ary Tree Level Order Traversal
+ */
+
+// @lc code=start
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector&lt;Node*&gt; children;
+
+    Node() {}
+
+    Node(int _val) {
+        val = _val;
+    }
+
+    Node(int _val, vector&lt;Node*&gt; _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; levelOrder(Node* root) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 435. Non-overlapping Intervals
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an array of intervals
+   <code>
+    intervals
+   </code>
+   where
+   <code>
+    intervals[i] = [start
+    <sub>
+     i
+    </sub>
+    , end
+    <sub>
+     i
+    </sub>
+    ]
+   </code>
+   , return
+   <em>
+    the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> intervals = [[1,2],[2,3],[3,4],[1,3]]
+<strong>Output:</strong> 1
+<strong>Explanation:</strong> [1,3] can be removed and the rest of the intervals are non-overlapping.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> intervals = [[1,2],[1,2],[1,2]]
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> You need to remove two [1,2] to make the rest of the intervals non-overlapping.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> intervals = [[1,2],[2,3]]
+<strong>Output:</strong> 0
+<strong>Explanation:</strong> You don't need to remove any of the intervals since they're already non-overlapping.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= intervals.length &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     intervals[i].length == 2
+    </code>
+   </li>
+   <li>
+    <code>
+     -5 * 10
+     <sup>
+      4
+     </sup>
+     &lt;= start
+     <sub>
+      i
+     </sub>
+     &lt; end
+     <sub>
+      i
+     </sub>
+     &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 435 -->
+<pre>/*
+ * @lc app=leetcode id=435 lang=cpp
+ *
+ * [435] Non-overlapping Intervals
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int eraseOverlapIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
         
     }
 };

@@ -99,25 +99,34 @@
 // @lc code=start
 class Solution {
 public:
-    long long ans=INT_MAX;
-    void backtrack(string s,int k,int i,string temp){
-        if(k==0){
-            if(i&lt;s.length()){
-                cout&lt;&lt;temp+s.substr(i)&lt;&lt;&#x27;\n&#x27;;
-                ans=min(ans,stoll(temp+s.substr(i)));
-                return;
-            }
-            ans=min(ans,stoll(temp));
-            return;
-        }
-        if(k&lt;0||i==s.length()) return;
-        backtrack(s,k,i+1,temp+s[i]);
-        backtrack(s,k-1,i+1,temp);
-    }
     string removeKdigits(string s, int k) {
+        string ans;
+
         if(k&gt;=s.length()) return &quot;0&quot;;
-        backtrack(s,k,0,&quot;&quot;);
-        return to_string(ans);
+
+        ans.push_back(s[0]);
+        for(int i=1; i&lt;s.length();i++){
+            while(k &amp;&amp; !ans.empty() &amp;&amp; ans.back()&gt;s[i]){
+                ans.pop_back();
+                k--;
+            }
+            ans.push_back(s[i]);
+        }
+
+        while(k &amp;&amp; !ans.empty()){
+            ans.pop_back();
+            k--;
+        }
+        if(ans.size()&gt;1 &amp;&amp; ans[0]==&#x27;0&#x27;){
+            reverse(ans.begin(), ans.end());
+            while(!ans.empty() &amp;&amp; ans.back()==&#x27;0&#x27;) ans.pop_back();
+            reverse(ans.begin(), ans.end());
+        }
+
+
+        if(ans.length()==0) return &quot;0&quot;;
+
+        return ans;
     }
 };
 // @lc code=end
