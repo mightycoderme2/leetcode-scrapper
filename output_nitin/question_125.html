@@ -1,0 +1,92 @@
+<html><head></head><body>
+<div id="title">
+ 125. Valid Palindrome
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   , determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "A man, a plan, a canal: Panama"
+<strong>Output:</strong> true
+<strong>Explanation:</strong> "amanaplanacanalpanama" is a palindrome.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "race a car"
+<strong>Output:</strong> false
+<strong>Explanation:</strong> "raceacar" is not a palindrome.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 2 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists only of printable ASCII characters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 125 -->
+<pre>/*
+ * @lc app=leetcode id=125 lang=cpp
+ *
+ * [125] Valid Palindrome
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        int start=0,end=s.length()-1;
+        if(s==&quot; &quot;) return true;
+        while(start&lt;=end){
+            while(!isalnum(s[start]) &amp;&amp; start&lt;=end){
+                start++;
+            }
+            while(!isalnum(s[end])  &amp;&amp; start&lt;=end ){
+                end--;
+            }
+            cout&lt;&lt;start&lt;&lt;end;
+            if((char)(tolower(s[start]))!=(char)(tolower(s[end])) &amp;&amp; start&lt;=end) return false;
+            else {
+                start++;
+                end--;
+            }
+        }
+        return true;
+    }
+};
+// @lc code=end
+
+</pre>

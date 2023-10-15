@@ -1,0 +1,110 @@
+<html><head></head><body>
+<div id="title">
+ 179. Largest Number
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a list of non-negative integers
+   <code>
+    nums
+   </code>
+   , arrange them such that they form the largest number.
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+   The result may be very large, so you need to return a string instead of an integer.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [10,2]
+<strong>Output:</strong> "210"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [3,30,34,5,9]
+<strong>Output:</strong> "9534330"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1]
+<strong>Output:</strong> "1"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [10]
+<strong>Output:</strong> "10"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= nums[i] &lt;= 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 179 -->
+<pre>/*
+ * @lc app=leetcode id=179 lang=cpp
+ *
+ * [179] Largest Number
+ */
+
+// @lc code=start
+
+bool compare(string a,string b){
+    return a+b &gt; b+a;
+}
+class Solution {
+public:
+
+
+    string largestNumber(vector&lt;int&gt;&amp; nums) {
+        vector&lt;string&gt;s;
+        for(int x:nums){
+            s.push_back(to_string(x));
+        }
+        sort(s.begin(), s.end(),compare);
+        string ans=&quot;&quot;;
+        for(int i=0; i&lt;s.size(); i++){
+            ans+=s[i];
+        }
+        return ans[0]==&#x27;0&#x27;?&quot;0&quot;:ans;
+    }
+};
+// @lc code=end
+
+</pre>

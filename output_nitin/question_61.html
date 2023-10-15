@@ -1,0 +1,133 @@
+<html><head></head><body>
+<div id="title">
+ 61. Rotate List
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    head
+   </code>
+   of a linked list, rotate the list to the right by
+   <code>
+    k
+   </code>
+   places.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/rotate1.jpg" style="width: 450px; height: 191px;"/>
+  <pre><strong>Input:</strong> head = [1,2,3,4,5], k = 2
+<strong>Output:</strong> [4,5,1,2,3]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/roate2.jpg" style="width: 305px; height: 350px;"/>
+  <pre><strong>Input:</strong> head = [0,1,2], k = 4
+<strong>Output:</strong> [2,0,1]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the list is in the range
+    <code>
+     [0, 500]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -100 &lt;= Node.val &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= k &lt;= 2 * 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 61 -->
+<pre>/*
+ * @lc app=leetcode id=61 lang=cpp
+ *
+ * [61] Rotate List
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head==NULL)
+        {
+            return NULL;
+        }
+        if(head-&gt;next==NULL)
+        {
+            return head;
+        }
+        ListNode* temp = new ListNode(head-&gt;val);
+        ListNode *traversenode = head-&gt;next;
+        int count =1;
+        while(traversenode!=NULL )
+        {
+            ListNode* newnode = new ListNode(traversenode-&gt;val);
+            newnode-&gt;next=temp;
+            temp=newnode;
+            count++;
+            traversenode = traversenode-&gt;next;
+        }
+        cout&lt;&lt;count;
+        int main_count = k % count;
+        while(main_count)
+        {
+            ListNode *newnode = new ListNode(temp-&gt;val);
+            newnode-&gt;next=head;
+            head=newnode;
+            temp=temp-&gt;next;
+            main_count--;
+        }
+        temp=head;
+        main_count=count;
+        while(main_count!=1)
+        {
+            temp=temp-&gt;next;
+            main_count--;
+        }
+        temp-&gt;next=NULL;
+        return head;
+    }
+};
+// @lc code=end
+
+</pre>

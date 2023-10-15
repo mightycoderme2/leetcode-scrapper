@@ -1,0 +1,131 @@
+<html><head></head><body>
+<div id="title">
+ 94. Binary Tree Inorder Traversal
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    root
+   </code>
+   of a binary tree, return
+   <em>
+    the inorder traversal of its nodes' values
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/inorder_1.jpg" style="width: 202px; height: 324px;"/>
+  <pre><strong>Input:</strong> root = [1,null,2,3]
+<strong>Output:</strong> [1,3,2]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root = []
+<strong>Output:</strong> []
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root = [1]
+<strong>Output:</strong> [1]
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/inorder_5.jpg" style="width: 202px; height: 202px;"/>
+  <pre><strong>Input:</strong> root = [1,2]
+<strong>Output:</strong> [2,1]
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/inorder_4.jpg" style="width: 202px; height: 202px;"/>
+  <pre><strong>Input:</strong> root = [1,null,2]
+<strong>Output:</strong> [1,2]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is in the range
+    <code>
+     [0, 100]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -100 &lt;= Node.val &lt;= 100
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow up:
+  </strong>
+  Recursive solution is trivial, could you do it iteratively?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 94 -->
+<pre>/*
+ * @lc app=leetcode id=94 lang=cpp
+ *
+ * [94] Binary Tree Inorder Traversal
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+ void inorder(TreeNode *root,vector&lt;int&gt;&amp;a)
+ {
+        if(root!=NULL)
+        {
+            inorder(root-&gt;left,a);
+            a.push_back(root-&gt;val);
+            inorder(root-&gt;right,a);
+        }
+ }
+    vector&lt;int&gt; inorderTraversal(TreeNode* root) {
+        vector&lt;int&gt;a;
+        inorder(root,a);
+        return a;
+    }
+};
+// @lc code=end
+
+</pre>

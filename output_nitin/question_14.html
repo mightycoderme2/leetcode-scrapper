@@ -1,0 +1,90 @@
+<html><head></head><body>
+<div id="title">
+ 14. Longest Common Prefix
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Write a function to find the longest common prefix string amongst an array of strings.
+  </p>
+  <p>
+   If there is no common prefix, return an empty string
+   <code>
+    ""
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> strs = ["flower","flow","flight"]
+<strong>Output:</strong> "fl"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> strs = ["dog","racecar","car"]
+<strong>Output:</strong> ""
+<strong>Explanation:</strong> There is no common prefix among the input strings.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= strs.length &lt;= 200
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= strs[i].length &lt;= 200
+    </code>
+   </li>
+   <li>
+    <code>
+     strs[i]
+    </code>
+    consists of only lower-case English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 14 -->
+<pre>/*
+ * @lc app=leetcode id=14 lang=cpp
+ *
+ * [14] Longest Common Prefix
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string longestCommonPrefix(vector&lt;string&gt;&amp; strs) {
+        sort(strs.begin(), strs.end());
+        string s1=strs[0];
+        string ans=&quot;&quot;;
+        string s2=strs[strs.size()-1];
+        for(int i=0; i&lt;s1.size(); i++){
+            if(s1[i]==s2[i]){
+                ans=ans+s1[i];
+            }
+            else break;
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

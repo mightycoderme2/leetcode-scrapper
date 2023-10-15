@@ -1,0 +1,156 @@
+<html><head></head><body>
+<div id="title">
+ 130. Surrounded Regions
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an
+   <code>
+    m x n
+   </code>
+   matrix
+   <code>
+    board
+   </code>
+   containing
+   <code>
+    'X'
+   </code>
+   and
+   <code>
+    'O'
+   </code>
+   ,
+   <em>
+    capture all regions that are 4-directionally surrounded by
+   </em>
+   <code>
+    'X'
+   </code>
+   .
+  </p>
+  <p>
+   A region is
+   <strong>
+    captured
+   </strong>
+   by flipping all
+   <code>
+    'O'
+   </code>
+   s into
+   <code>
+    'X'
+   </code>
+   s in that surrounded region.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/xogrid.jpg" style="width: 550px; height: 237px;"/>
+  <pre><strong>Input:</strong> board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+<strong>Output:</strong> [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+<strong>Explanation:</strong> Surrounded regions should not be on the border, which means that any 'O' on the border of the board are not flipped to 'X'. Any 'O' that is not on the border and it is not connected to an 'O' on the border will be flipped to 'X'. Two cells are connected if they are adjacent cells connected horizontally or vertically.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> board = [["X"]]
+<strong>Output:</strong> [["X"]]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == board.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == board[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 200
+    </code>
+   </li>
+   <li>
+    <code>
+     board[i][j]
+    </code>
+    is
+    <code>
+     'X'
+    </code>
+    or
+    <code>
+     'O'
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 130 -->
+<pre>wwww/*
+ * @lc app=leetcode id=130 lang=cpp
+ *
+ * [130] Surrounded Regions
+ */
+
+// @lc code=start
+class Solution {
+public:
+    void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board,int x,int y,char value){
+        if(x&lt;0 || y&lt;0 || x&gt;=board.size()|| y&gt;=board[x].size()){
+            return;
+        }
+        if(board[x][y]!=&#x27;O&#x27;){
+            return;
+        }
+        board[x][y] = value;
+        dfs(board,x-1,y,value);
+        dfs(board,x+1,y,value);
+        dfs(board,x,y-1,value);
+        dfs(board,x,y+1,value);
+    }
+    void solve(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        for(int i = 0; i &lt; board.size();i++){
+            for(int j = 0; j &lt; board[i].size();j++){
+                if((i==0 || j==0|| i==board.size()-1 || j==board[i].size()-1) &amp;&amp; board[i][j]==&#x27;O&#x27;){
+                    dfs(board,i,j,&#x27;1&#x27;);
+                }
+            }
+        }
+
+        for(int i = 1; i &lt; board.size()-1;i++){
+            for(int j = 1; j &lt; board[i].size()-1;j++){
+                    dfs(board,i,j,&#x27;X&#x27;);
+            }
+        }
+
+        for(int i = 0; i &lt; board.size();i++){
+            for(int j = 0; j &lt; board[i].size();j++){
+                if(board[i][j]==&#x27;1&#x27;) board[i][j]=&#x27;O&#x27;;
+            }
+        }
+    }
+};
+// @lc code=end
+
+</pre>

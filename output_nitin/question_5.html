@@ -1,0 +1,126 @@
+<html><head></head><body>
+<div id="title">
+ 5. Longest Palindromic Substring
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   , return
+   <em>
+    the longest palindromic substring
+   </em>
+   in
+   <code>
+    s
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "babad"
+<strong>Output:</strong> "bab"
+<strong>Note:</strong> "aba" is also a valid answer.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "cbbd"
+<strong>Output:</strong> "bb"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "a"
+<strong>Output:</strong> "a"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "ac"
+<strong>Output:</strong> "a"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consist of only digits and English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 5 -->
+<pre>/*
+ * @lc app=leetcode id=5 lang=cpp
+ *
+ * [5] Longest Palindromic Substring
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.length();
+        vector&lt;vector&lt;int&gt;&gt; dp(n, vector&lt;int&gt;(n, 0));
+        string ans=&quot;&quot;;
+        for(int i = 0; i &lt; n; i++){
+            ans=s[i];
+            dp[i][i] = 1;
+        }
+        for(int i = 0; i &lt; n; i++){
+            if(s[i]==s[i+1]){
+                dp[i][i+1]=1;
+                ans=s.substr(i,2);
+            }
+        }
+        for(int len = 1; len &lt; n; len++){
+            for(int i = 0; i + len &lt; n; i++){
+                int j = i + len;
+                if(s[i] == s[j] &amp;&amp;  dp[i + 1][j - 1]){
+                    dp[i][j]=1;
+                    if(j-i+1&gt;ans.length()) ans=s.substr(i,j-i+1);
+                }
+
+            }
+        }
+        
+        for(int i=0;i&lt;n;i++){
+            for(int j = 0;j&lt;n;j++){
+                cout&lt;&lt;dp[i][j]&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

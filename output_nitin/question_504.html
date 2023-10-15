@@ -1,0 +1,88 @@
+<html><head></head><body>
+<div id="title">
+ 504. Base 7
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer
+   <code>
+    num
+   </code>
+   , return
+   <em>
+    a string of its
+    <strong>
+     base 7
+    </strong>
+    representation
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 100
+<strong>Output:</strong> "202"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = -7
+<strong>Output:</strong> "-10"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     -10
+     <sup>
+      7
+     </sup>
+     &lt;= num &lt;= 10
+     <sup>
+      7
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 504 -->
+<pre>/*
+ * @lc app=leetcode id=504 lang=cpp
+ *
+ * [504] Base 7
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string convertToBase7(int num) {
+        string s=&quot;&quot;;
+        if(num==0) return &quot;0&quot;;
+        int sign=1;
+        if(num&lt;0) sign=-1;
+        while(num!=0){
+            s=to_string(abs(num%7))+s;
+            num=num/7;
+        }
+        return sign==-1?&#x27;-&#x27;+s:s;
+    }
+};
+// @lc code=end
+
+</pre>

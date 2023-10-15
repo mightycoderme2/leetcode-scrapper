@@ -1,0 +1,133 @@
+<html><head></head><body>
+<div id="title">
+ 500. Keyboard Row
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an array of strings
+   <code>
+    words
+   </code>
+   , return
+   <em>
+    the words that can be typed using letters of the alphabet on only one row of American keyboard like the image below
+   </em>
+   .
+  </p>
+  <p>
+   In the
+   <strong>
+    American keyboard
+   </strong>
+   :
+  </p>
+  <ul>
+   <li>
+    the first row consists of the characters
+    <code>
+     "qwertyuiop"
+    </code>
+    ,
+   </li>
+   <li>
+    the second row consists of the characters
+    <code>
+     "asdfghjkl"
+    </code>
+    , and
+   </li>
+   <li>
+    the third row consists of the characters
+    <code>
+     "zxcvbnm"
+    </code>
+    .
+   </li>
+  </ul>
+  <img alt="" src="./output_files/keyboard.png" style="width: 800px; max-width: 600px; height: 267px;"/>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["Hello","Alaska","Dad","Peace"]
+<strong>Output:</strong> ["Alaska","Dad"]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["omk"]
+<strong>Output:</strong> []
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["adsdf","sfd"]
+<strong>Output:</strong> ["adsdf","sfd"]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= words.length &lt;= 20
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= words[i].length &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i]
+    </code>
+    consists of English letters (both lowercase and uppercase).
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 500 -->
+<pre>/*
+ * @lc app=leetcode id=500 lang=cpp
+ *
+ * [500] Keyboard Row
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;string&gt; findWords(vector&lt;string&gt;&amp; words) {
+        vector&lt;int&gt; dict{1,2,2,1,0,1,1,1,0,1,1,1,2,2,0,0,0,0,1,0,0,2,0,2,0,2};
+        vector&lt;string&gt;ans;
+        for(string x:words)
+        {
+        int main=dict[(int)(tolower(x[0])-&#x27;a&#x27;)];
+        ans.push_back(x);
+        for(int i=1; i&lt;x.length(); i++) {
+            if(dict[(int)(tolower(x[i])-&#x27;a&#x27;)]!=main)
+            {
+                ans.pop_back();
+                break;
+            }
+        }
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

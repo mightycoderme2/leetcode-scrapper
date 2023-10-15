@@ -1,0 +1,118 @@
+<html><head></head><body>
+<div id="title">
+ 1319. Number of Operations to Make Network Connected
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   . Return all the words vertically in the same order in which they appear in
+   <code>
+    s
+   </code>
+   .
+   <br/>
+   Words are returned as a list of strings, complete with spaces when is necessary. (Trailing spaces are not allowed).
+   <br/>
+   Each word would be put on only one column and that in one column there will be only one word.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "HOW ARE YOU"
+<strong>Output:</strong> ["HAY","ORO","WEU"]
+<strong>Explanation: </strong>Each word is printed vertically. 
+ "HAY"
+ "ORO"
+ "WEU"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "TO BE OR NOT TO BE"
+<strong>Output:</strong> ["TBONTB","OEROOE","   T"]
+<strong>Explanation: </strong>Trailing spaces is not allowed. 
+"TBONTB"
+"OEROOE"
+"   T"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "CONTEST IS COMING"
+<strong>Output:</strong> ["CIC","OSO","N M","T I","E N","S G","T"]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 200
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    contains only upper case English letters.
+   </li>
+   <li>
+    It's guaranteed that there is only one space between 2 words.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 1319 -->
+<pre>/*
+ * @lc app=leetcode id=1319 lang=cpp
+ *
+ * [1319] Number of Operations to Make Network Connected
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt;parent;
+    int find(int x){
+        return x==parent[x]?x:find(parent[x]);
+    }
+    int makeConnected(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) {
+        if(connections.size()&lt;n-1) return -1;
+        parent.resize(n);
+        iota(parent.begin(), parent.end(),0);
+        int count=0;
+        int connected = 0;
+        for(auto a:connections){
+            int x=find(a[0]);
+            int y=find(a[1]);
+            if(x!=y){
+                parent[y]=x;
+            }
+            else{
+                count++;
+            }
+        }
+        for(int i=0;i&lt;n;i++) if(parent[i]==i) connected++;
+        return connected-1;
+    }
+};
+// @lc code=end
+
+</pre>

@@ -1,0 +1,160 @@
+<html><head></head><body>
+<div id="title">
+ 79. Word Search
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an
+   <code>
+    m x n
+   </code>
+   grid of characters
+   <code>
+    board
+   </code>
+   and a string
+   <code>
+    word
+   </code>
+   , return
+   <code>
+    true
+   </code>
+   <em>
+    if
+   </em>
+   <code>
+    word
+   </code>
+   <em>
+    exists in the grid
+   </em>
+   .
+  </p>
+  <p>
+   The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/word2.jpg" style="width: 322px; height: 242px;"/>
+  <pre><strong>Input:</strong> board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/word-1.jpg" style="width: 322px; height: 242px;"/>
+  <pre><strong>Input:</strong> board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/word3.jpg" style="width: 322px; height: 242px;"/>
+  <pre><strong>Input:</strong> board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == board.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n = board[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 6
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= word.length &lt;= 15
+    </code>
+   </li>
+   <li>
+    <code>
+     board
+    </code>
+    and
+    <code>
+     word
+    </code>
+    consists of only lowercase and uppercase English letters.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+   Could you use search pruning to make your solution faster with a larger
+   <code>
+    board
+   </code>
+   ?
+  </p>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 79 -->
+<pre>/*
+ * @lc app=leetcode id=79 lang=cpp
+ *
+ * [79] Word Search
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
+        for(int i=0;i&lt;board.size();i++)
+        {
+            for(int j=0;j&lt;board[0].size();j++)
+            {
+                if(dfs(board,i,j,word))
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board,int i,int j,string word)
+    {
+        if(!word.size()) return true;
+        if(i&lt;0 || i&gt;=board.size()||j&lt;0 || j&gt;=board[0].size()||board[i][j]!=word[0]) return false;
+        char c = board[i][j];
+        board[i][j]=&#x27;*&#x27;;
+        string s=word.substr(1);
+        bool ret = dfs(board,i-1,j,s) || dfs(board,i+1,j,s) ||dfs(board,i,j-1,s) ||dfs(board,i,j+1,s);
+        board[i][j]=c;
+        return ret;
+    }
+};
+// @lc code=end
+
+</pre>

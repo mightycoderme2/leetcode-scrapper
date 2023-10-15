@@ -1,0 +1,170 @@
+<html><head></head><body>
+<div id="title">
+ 733. Flood Fill
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   An image is represented by an
+   <code>
+    m x n
+   </code>
+   integer grid
+   <code>
+    image
+   </code>
+   where
+   <code>
+    image[i][j]
+   </code>
+   represents the pixel value of the image.
+  </p>
+  <p>
+   You are also given three integers
+   <code>
+    sr
+   </code>
+   ,
+   <code>
+    sc
+   </code>
+   , and
+   <code>
+    newColor
+   </code>
+   . You should perform a
+   <strong>
+    flood fill
+   </strong>
+   on the image starting from the pixel
+   <code>
+    image[sr][sc]
+   </code>
+   .
+  </p>
+  <p>
+   To perform a
+   <strong>
+    flood fill
+   </strong>
+   , consider the starting pixel, plus any pixels connected
+   <strong>
+    4-directionally
+   </strong>
+   to the starting pixel of the same color as the starting pixel, plus any pixels connected
+   <strong>
+    4-directionally
+   </strong>
+   to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with
+   <code>
+    newColor
+   </code>
+   .
+  </p>
+  <p>
+   Return
+   <em>
+    the modified image after performing the flood fill
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/flood1-grid.jpg" style="width: 613px; height: 253px;"/>
+  <pre><strong>Input:</strong> image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, newColor = 2
+<strong>Output:</strong> [[2,2,2],[2,2,0],[2,0,1]]
+<strong>Explanation:</strong> From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), all pixels connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, newColor = 2
+<strong>Output:</strong> [[2,2,2],[2,2,2]]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == image.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == image[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 50
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= image[i][j], newColor &lt; 2
+     <sup>
+      16
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= sr &lt; m
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= sc &lt; n
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 733 -->
+<pre>/*
+ * @lc app=leetcode id=733 lang=cpp
+ *
+ * [733] Flood Fill
+ */
+
+// @lc code=start
+class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; image,int x,int y,int color,int chose){
+        if(x&lt;0 || y&lt;0 || x&gt;=image.size()|| y&gt;=image[x].size()){
+            return;
+        }
+        if(image[x][y]== !chose){
+            return;
+        }
+        if(image[x][y]==chose){
+        image[x][y] = color;
+        dfs(image,x-1,y,color,chose);
+        dfs(image,x+1,y,color,chose);
+        dfs(image,x,y-1,color,chose);
+        dfs(image,x,y+1,color,chose);
+        }
+    }
+    vector&lt;vector&lt;int&gt;&gt; floodFill(vector&lt;vector&lt;int&gt;&gt;&amp; image, int sr, int sc, int color) {
+        if(image[sr][sc]!=color)
+        dfs(image,sr,sc,color,image[sr][sc]);
+        return image;
+    }
+};
+// @lc code=end
+
+</pre>

@@ -1,0 +1,124 @@
+<html><head></head><body>
+<div id="title">
+ 132. Palindrome Partitioning II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   , partition
+   <code>
+    s
+   </code>
+   such that every substring of the partition is a palindrome.
+  </p>
+  <p>
+   Return
+   <em>
+    the minimum cuts needed
+   </em>
+   for a palindrome partitioning of
+   <code>
+    s
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "aab"
+<strong>Output:</strong> 1
+<strong>Explanation:</strong> The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "a"
+<strong>Output:</strong> 0
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "ab"
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 2000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of lower-case English letters only.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 132 -->
+<pre>/*
+ * @lc app=leetcode id=132 lang=cpp
+ *
+ * [132] Palindrome Partitioning II
+ */
+
+// @lc code=start
+class Solution {
+public:
+vector&lt;vector&lt;string&gt;&gt;a;
+int check(string s1,string s2){
+    reverse(s2.begin(),s2.end());
+    if(s1.compare(s2)==0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void ans(vector&lt;string&gt;b,string s,int&amp; cut){
+    if(s.size()==0){
+        a.push_back(b);
+        if(cut&gt;b.size()-1)cut=b.size()-1;
+        return;
+    }
+    for(int i=0;i&lt;s.size();i++){
+        if(check(s.substr(0,i+1),s.substr(0,i+1))){
+        b.push_back(s.substr(0,i+1));
+        ans(b,s.substr(i+1,s.size()-i-1),cut);
+        b.pop_back();
+        }
+    }
+}
+
+int minCut(string s) {
+    int i=0,n=s.length();
+    vector&lt;string&gt;b;
+    int cut=s.length()-1;
+    ans(b,s,cut);
+    return cut;
+    }
+};
+// @lc code=end
+
+</pre>

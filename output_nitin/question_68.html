@@ -1,0 +1,235 @@
+<html><head></head><body>
+<div id="title">
+ 68. Text Justification
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an array of strings
+   <code>
+    words
+   </code>
+   and a width
+   <code>
+    maxWidth
+   </code>
+   , format the text such that each line has exactly
+   <code>
+    maxWidth
+   </code>
+   characters and is fully (left and right) justified.
+  </p>
+  <p>
+   You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces
+   <code>
+    ' '
+   </code>
+   when necessary so that each line has exactly
+   <code>
+    maxWidth
+   </code>
+   characters.
+  </p>
+  <p>
+   Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
+  </p>
+  <p>
+   For the last line of text, it should be left-justified and no extra space is inserted between words.
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    A word is defined as a character sequence consisting of non-space characters only.
+   </li>
+   <li>
+    Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
+   </li>
+   <li>
+    The input array
+    <code>
+     words
+    </code>
+    contains at least one word.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
+<strong>Output:</strong>
+[
+   "This    is    an",
+   "example  of text",
+   "justification.  "
+]</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+<strong>Output:</strong>
+[
+  "What   must   be",
+  "acknowledgment  ",
+  "shall be        "
+]
+<strong>Explanation:</strong> Note that the last line is "shall be    " instead of "shall     be", because the last line must be left-justified instead of fully-justified.
+Note that the second line is also left-justified becase it contains only one word.</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"], maxWidth = 20
+<strong>Output:</strong>
+[
+  "Science  is  what we",
+  "understand      well",
+  "enough to explain to",
+  "a  computer.  Art is",
+  "everything  else  we",
+  "do                  "
+]</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= words.length &lt;= 300
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= words[i].length &lt;= 20
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i]
+    </code>
+    consists of only English letters and symbols.
+   </li>
+   <li>
+    <code>
+     1 &lt;= maxWidth &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i].length &lt;= maxWidth
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 68 -->
+<pre>/*
+ * @lc app=leetcode id=68 lang=cpp
+ *
+ * [68] Text Justification
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string justify(vector&lt;int&gt;space,string s,int maxwidth) {
+        while(s.length()&gt;= maxwidth) {
+            for(int x:space){
+                s[x]=s[x]+&#x27; &#x27;;
+                if(s.length()&gt;=maxwidth){
+                    cout&lt;&lt;s&lt;&lt;endl;
+                    return s;
+                }
+            }
+        }
+        cout&lt;&lt;s&lt;&lt;endl;
+        return s;
+    }
+    vector&lt;string&gt; fullJustify(vector&lt;string&gt;&amp; words, int maxWidth) {
+        string s=&quot;&quot;;
+        int spacing=0;
+        vector&lt;string&gt;ans;
+        int len=0;
+        vector&lt;string&gt;temp;
+        for(int i = 0; i &lt;words.size();i++){
+            temp.push_back(words[i]);
+            len+=words[i].length();
+            spacing++;
+            if(len+spacing-1&gt;maxWidth){
+                temp.pop_back();
+                len=len-words[i].length();
+                cout&lt;&lt;len;
+                spacing=0;
+                while(len+spacing!=maxWidth){
+                    for(int j = 0; j &lt;temp.size()-1; j++){
+                        temp[j]=temp[j]+&#x27; &#x27;;
+                        spacing++;
+                        if(spacing+len==maxWidth){
+                            cout&lt;&lt;spacing;
+                            break;
+                        }
+                    }
+                    if(temp.size()==1){
+                        temp[0]=temp[0]+&#x27; &#x27;;
+                        spacing++;
+                        if(spacing+len==maxWidth){
+                            cout&lt;&lt;spacing;
+                            break;
+                        }
+                    }
+                }
+                string up=&quot;&quot;;
+                for(auto x:temp){
+                    up=up+x;
+                }
+                ans.push_back(up);
+                len=words[i].length();
+                spacing=1;
+                temp.clear();
+                temp.push_back(words[i]);
+            }
+        }
+        spacing=0;
+        for(int j = 0; j &lt;temp.size()-1; j++){
+                        temp[j]=temp[j]+&#x27; &#x27;;
+                        spacing++;
+                        if(spacing+len==maxWidth){
+                            cout&lt;&lt;spacing;
+                            break;
+                        }
+                    }
+        while(len+spacing!=maxWidth){
+                        temp[temp.size()-1]=temp[temp.size()-1]+&#x27; &#x27;;
+                        spacing++;
+                        if(spacing+len==maxWidth){
+                            cout&lt;&lt;spacing;
+                            break;
+                        }
+                    }
+                string up=&quot;&quot;;
+                for(auto x:temp){
+                    up=up+x;
+                }
+                ans.push_back(up);
+
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

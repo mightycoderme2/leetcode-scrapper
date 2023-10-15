@@ -1,0 +1,121 @@
+<html><head></head><body>
+<div id="title">
+ 52. N-Queens II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The
+   <strong>
+    n-queens
+   </strong>
+   puzzle is the problem of placing
+   <code>
+    n
+   </code>
+   queens on an
+   <code>
+    n x n
+   </code>
+   chessboard such that no two queens attack each other.
+  </p>
+  <p>
+   Given an integer
+   <code>
+    n
+   </code>
+   , return
+   <em>
+    the number of distinct solutions to the
+    <strong>
+     n-queens puzzle
+    </strong>
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/queens.jpg" style="width: 600px; height: 268px;"/>
+  <pre><strong>Input:</strong> n = 4
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> There are two distinct solutions to the 4-queens puzzle as shown.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 9
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 52 -->
+<pre>/*
+ * @lc app=leetcode id=52 lang=cpp
+ *
+ * [52] N-Queens II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;vector&lt;string&gt;&gt;ans;
+    void backtrack(vector&lt;string&gt;a,int col,int n){
+        if(col==n){
+            ans.push_back(a);
+            return;
+        }
+        for(int i=0;i&lt;n;i++){
+            if(valid(a,i,col)){
+                a[i][col]=&#x27;Q&#x27;;
+                backtrack(a,col+1,n);
+                a[i][col]=&#x27;.&#x27;;
+            }
+        }
+    }
+    bool valid(vector&lt;string&gt;&amp;a,int row,int col){
+        int n=a.size();
+
+        for(int i=1;i&lt;=col;i++){
+            if(a[row][col-i]==&#x27;Q&#x27;) return false;
+        }
+
+        for(int i=1;row-i&gt;=0 &amp;&amp; col-i&gt;=0 ;i++){
+            if(a[row-i][col-i]==&#x27;Q&#x27;) return false;
+        }
+        for(int i=1;row+i&lt;n &amp;&amp; col-i&gt;=0 ;i++){
+            if(a[row+i][col-i]==&#x27;Q&#x27;) return false;
+        }
+        return true;
+    }
+    int totalNQueens(int n) {
+        vector&lt;string&gt;a(n,string(n,&#x27;.&#x27;));
+        backtrack(a,0,n);
+        return ans.size();
+    }
+
+};
+// @lc code=end
+
+</pre>

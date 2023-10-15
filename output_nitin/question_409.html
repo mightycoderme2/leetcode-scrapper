@@ -1,0 +1,120 @@
+<html><head></head><body>
+<div id="title">
+ 409. Longest Palindrome
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   which consists of lowercase or uppercase letters, return
+   <em>
+    the length of the
+    <strong>
+     longest palindrome
+    </strong>
+   </em>
+   that can be built with those letters.
+  </p>
+  <p>
+   Letters are
+   <strong>
+    case sensitive
+   </strong>
+   , for example,
+   <code>
+    "Aa"
+   </code>
+   is not considered a palindrome here.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "abccccdd"
+<strong>Output:</strong> 7
+<strong>Explanation:</strong>
+One longest palindrome that can be built is "dccaccd", whose length is 7.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "a"
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "bb"
+<strong>Output:</strong> 2
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 2000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of lowercase
+    <strong>
+     and/or
+    </strong>
+    uppercase English letters only.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 409 -->
+<pre>/*
+ * @lc app=leetcode id=409 lang=cpp
+ *
+ * [409] Longest Palindrome
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        map&lt;char,int&gt;m;
+        for(char x:s)m[x]++;
+        int count=0;
+        int flag=0;
+        for(auto x:m){
+            if(x.second/2&gt;=1) {
+                if(x.second%2==1 &amp;&amp; flag==0){
+                    flag=1;
+                    count+=x.second;
+                }
+                else count+=(x.second/2)*2;
+                }
+            else if(x.second==1 &amp;&amp; flag==0){
+                flag=1;
+                count++;
+            }
+        }
+        return count;
+    }
+};
+// @lc code=end
+
+</pre>

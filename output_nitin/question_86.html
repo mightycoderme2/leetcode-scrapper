@@ -1,0 +1,131 @@
+<html><head></head><body>
+<div id="title">
+ 86. Partition List
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    head
+   </code>
+   of a linked list and a value
+   <code>
+    x
+   </code>
+   , partition it such that all nodes
+   <strong>
+    less than
+   </strong>
+   <code>
+    x
+   </code>
+   come before nodes
+   <strong>
+    greater than or equal
+   </strong>
+   to
+   <code>
+    x
+   </code>
+   .
+  </p>
+  <p>
+   You should
+   <strong>
+    preserve
+   </strong>
+   the original relative order of the nodes in each of the two partitions.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/partition.jpg" style="width: 662px; height: 222px;"/>
+  <pre><strong>Input:</strong> head = [1,4,3,2,5,2], x = 3
+<strong>Output:</strong> [1,2,2,4,3,5]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = [2,1], x = 2
+<strong>Output:</strong> [1,2]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the list is in the range
+    <code>
+     [0, 200]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -100 &lt;= Node.val &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     -200 &lt;= x &lt;= 200
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 86 -->
+<pre>/*
+ * @lc app=leetcode id=86 lang=cpp
+ *
+ * [86] Partition List
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode *fast=head;
+        ListNode *temp=new ListNode(0);
+        ListNode *t=temp;
+        ListNode *temp1=new ListNode(0);
+        ListNode *t1=temp1;
+        while(fast!=NULL){
+            if(fast-&gt;val&lt;x){
+                t-&gt;next=new ListNode(fast-&gt;val);
+                t=t-&gt;next;
+            }
+            else{
+                t1-&gt;next=new ListNode(fast-&gt;val);
+                t1=t1-&gt;next;
+            }
+            fast=fast-&gt;next;
+        }
+        t-&gt;next=temp1-&gt;next;
+        return temp-&gt;next;
+    }
+};
+// @lc code=end
+
+</pre>

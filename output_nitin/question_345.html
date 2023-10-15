@@ -1,0 +1,118 @@
+<html><head></head><body>
+<div id="title">
+ 345. Reverse Vowels of a String
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   , reverse only all the vowels in the string and return it.
+  </p>
+  <p>
+   The vowels are
+   <code>
+    'a'
+   </code>
+   ,
+   <code>
+    'e'
+   </code>
+   ,
+   <code>
+    'i'
+   </code>
+   ,
+   <code>
+    'o'
+   </code>
+   , and
+   <code>
+    'u'
+   </code>
+   , and they can appear in both cases.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "hello"
+<strong>Output:</strong> "holle"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "leetcode"
+<strong>Output:</strong> "leotcede"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 3 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consist of
+    <strong>
+     printable ASCII
+    </strong>
+    characters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 345 -->
+<pre>/*
+ * @lc app=leetcode id=345 lang=cpp
+ *
+ * [345] Reverse Vowels of a String
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string reverseVowels(string s) {
+        int start=0,end=s.length()-1;
+        while(start&lt;=end){
+            while(!(tolower(s[start])==&#x27;a&#x27;||tolower(s[start])==&#x27;e&#x27;||tolower(s[start])==&#x27;i&#x27;||tolower(s[start])==&#x27;o&#x27;|| tolower(s[start])==&#x27;u&#x27;) &amp;&amp; start&lt;=end){
+                start++;
+            }
+            while(!(tolower(s[end])==&#x27;a&#x27;||tolower(s[end])==&#x27;e&#x27;||tolower(s[end])==&#x27;i&#x27;||tolower(s[end])==&#x27;o&#x27;|| tolower(s[end])==&#x27;u&#x27;) &amp;&amp; start&lt;=end){
+                end--;
+            }
+            cout&lt;&lt;start&lt;&lt;end;
+            if(start&lt;=end){
+            swap(s[start],s[end]);
+            start++;end--;
+            }
+            else{
+                return s;
+            }
+        }
+        return s;
+    }
+};
+// @lc code=end
+
+</pre>

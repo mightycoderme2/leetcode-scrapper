@@ -1,0 +1,162 @@
+<html><head></head><body>
+<div id="title">
+ 1020. Number of Enclaves
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are given an
+   <code>
+    m x n
+   </code>
+   binary matrix
+   <code>
+    grid
+   </code>
+   , where
+   <code>
+    0
+   </code>
+   represents a sea cell and
+   <code>
+    1
+   </code>
+   represents a land cell.
+  </p>
+  <p>
+   A
+   <strong>
+    move
+   </strong>
+   consists of walking from one land cell to another adjacent (
+   <strong>
+    4-directionally
+   </strong>
+   ) land cell or walking off the boundary of the
+   <code>
+    grid
+   </code>
+   .
+  </p>
+  <p>
+   Return
+   <em>
+    the number of land cells in
+   </em>
+   <code>
+    grid
+   </code>
+   <em>
+    for which we cannot walk off the boundary of the grid in any number of
+    <strong>
+     moves
+    </strong>
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/enclaves1.jpg" style="width: 333px; height: 333px;"/>
+  <pre><strong>Input:</strong> grid = [[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]
+<strong>Output:</strong> 3
+<strong>Explanation:</strong> There are three 1s that are enclosed by 0s, and one 1 that is not enclosed because its on the boundary.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/enclaves2.jpg" style="width: 333px; height: 333px;"/>
+  <pre><strong>Input:</strong> grid = [[0,1,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]]
+<strong>Output:</strong> 0
+<strong>Explanation:</strong> All 1s are either on the boundary or can reach the boundary.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == grid.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == grid[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 500
+    </code>
+   </li>
+   <li>
+    <code>
+     grid[i][j]
+    </code>
+    is either
+    <code>
+     0
+    </code>
+    or
+    <code>
+     1
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 1020 -->
+<pre>/*
+ * @lc app=leetcode id=1020 lang=cpp
+ *
+ * [1020] Number of Enclaves
+ */
+
+// @lc code=start
+class Solution {
+public:
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; board,int x,int y){
+        if(x&lt;0 || y&lt;0 || x&gt;=board.size()|| y&gt;=board[x].size()){
+            return;
+        }
+        if(board[x][y]==0){
+            return;
+        }
+        board[x][y] = 0;
+        dfs(board,x-1,y);
+        dfs(board,x+1,y);
+        dfs(board,x,y-1);
+        dfs(board,x,y+1);
+    }
+    int numEnclaves(vector&lt;vector&lt;int&gt;&gt;&amp; board) {
+        for(int i = 0; i &lt; board.size();i++){
+            for(int j = 0; j &lt; board[i].size();j++){
+                if((i==0 || j==0|| i==board.size()-1 || j==board[i].size()-1) &amp;&amp; board[i][j]==1){
+                    dfs(board,i,j);
+                }
+            }
+        }
+        int ans=0;
+        for(int i = 0; i &lt; board.size();i++){
+            for(int j = 0; j &lt; board[i].size();j++){
+                if(board[i][j]==1) ans++;
+            }
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

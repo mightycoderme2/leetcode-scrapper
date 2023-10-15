@@ -1,0 +1,144 @@
+<html><head></head><body>
+<div id="title">
+ 6. ZigZag Conversion
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The string
+   <code>
+    "PAYPALISHIRING"
+   </code>
+   is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+  </p>
+  <pre>P   A   H   N
+A P L S I I G
+Y   I   R
+</pre>
+  <p>
+   And then read line by line:
+   <code>
+    "PAHNAPLSIIGYIR"
+   </code>
+  </p>
+  <p>
+   Write the code that will take a string and make this conversion given a number of rows:
+  </p>
+  <pre>string convert(string s, int numRows);
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "PAYPALISHIRING", numRows = 3
+<strong>Output:</strong> "PAHNAPLSIIGYIR"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "PAYPALISHIRING", numRows = 4
+<strong>Output:</strong> "PINALSIGYAHRPI"
+<strong>Explanation:</strong>
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "A", numRows = 1
+<strong>Output:</strong> "A"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of English letters (lower-case and upper-case),
+    <code>
+     ','
+    </code>
+    and
+    <code>
+     '.'
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     1 &lt;= numRows &lt;= 1000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 6 -->
+<pre>/*
+ * @lc app=leetcode id=6 lang=cpp
+ *
+ * [6] Zigzag Conversion
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows == 1 || s.length() == 1)
+        {
+            return s;
+        }
+        vector&lt;string&gt;a(numRows,&quot;&quot;);
+        int place=0;
+        int count=0;
+        for(int i = 0; i &lt; s.length();i++)
+        {
+            a[place] =a[place]+s[i];
+            if(count==0)
+            {
+            place++;
+            if(place==numRows-1)
+            {
+                count=1;
+            }
+            }
+            else
+            {
+                place--;
+                if(place==0)
+                {
+                    count=0;
+                }
+            }
+        }
+        string ans=&quot;&quot;;
+        for(int i = 0; i &lt; numRows; i++)
+        {
+            ans=ans+a[i];
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

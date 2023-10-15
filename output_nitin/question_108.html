@@ -1,0 +1,133 @@
+<html><head></head><body>
+<div id="title">
+ 108. Convert Sorted Array to Binary Search Tree
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   where the elements are sorted in
+   <strong>
+    ascending order
+   </strong>
+   , convert
+   <em>
+    it to a
+    <strong>
+     height-balanced
+    </strong>
+    binary search tree
+   </em>
+   .
+  </p>
+  <p>
+   A
+   <strong>
+    height-balanced
+   </strong>
+   binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/btree1.jpg" style="width: 302px; height: 222px;"/>
+  <pre><strong>Input:</strong> nums = [-10,-3,0,5,9]
+<strong>Output:</strong> [0,-3,9,-10,null,5]
+<strong>Explanation:</strong> [0,-10,5,null,-3,null,9] is also accepted:
+<img alt="" src="./output_files/btree2.jpg" style="width: 302px; height: 222px;"/>
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/btree.jpg" style="width: 342px; height: 142px;"/>
+  <pre><strong>Input:</strong> nums = [1,3]
+<strong>Output:</strong> [3,1]
+<strong>Explanation:</strong> [1,3] and [3,1] are both a height-balanced BSTs.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     -10
+     <sup>
+      4
+     </sup>
+     &lt;= nums[i] &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     nums
+    </code>
+    is sorted in a
+    <strong>
+     strictly increasing
+    </strong>
+    order.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 108 -->
+<pre>/*
+ * @lc app=leetcode id=108 lang=cpp
+ *
+ * [108] Convert Sorted Array to Binary Search Tree
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* create(vector&lt;int&gt;nums,int start,int end){
+        if(start&gt;end) return NULL;
+        int mid=(start+end)/2;
+        TreeNode *node = new TreeNode(nums[mid]);
+        node-&gt;left = create(nums,start,mid-1);
+        node-&gt;right = create(nums,mid+1,end);
+        return node;
+    }
+    TreeNode* sortedArrayToBST(vector&lt;int&gt;&amp; nums) {
+        return create(nums,0,nums.size()-1);
+    }
+};
+// @lc code=end
+
+</pre>

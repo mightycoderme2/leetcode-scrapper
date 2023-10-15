@@ -1,0 +1,113 @@
+<html><head></head><body>
+<div id="title">
+ 101. Symmetric Tree
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    root
+   </code>
+   of a binary tree,
+   <em>
+    check whether it is a mirror of itself
+   </em>
+   (i.e., symmetric around its center).
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/symtree1.jpg" style="width: 354px; height: 291px;"/>
+  <pre><strong>Input:</strong> root = [1,2,2,3,4,4,3]
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/symtree2.jpg" style="width: 308px; height: 258px;"/>
+  <pre><strong>Input:</strong> root = [1,2,2,null,3,null,3]
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is in the range
+    <code>
+     [1, 1000]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -100 &lt;= Node.val &lt;= 100
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow up:
+  </strong>
+  Could you solve it both recursively and iteratively?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 101 -->
+<pre>/*
+ * @lc app=leetcode id=101 lang=cpp
+ *
+ * [101] Symmetric Tree
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool check(TreeNode *t1, TreeNode *t2)
+    {
+        if(t1==NULL &amp;&amp; t2==NULL)
+        {
+            return true;
+        }
+        if(t1==NULL || t2==NULL)
+        {
+            return false;
+        }
+        if(t1-&gt;val != t2-&gt;val)
+        {
+            return false;
+        }
+        return check(t1-&gt;left,t2-&gt;right) &amp;&amp; check(t2-&gt;left,t1-&gt;right);
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root==NULL) return false;
+
+        return check(root-&gt;left,root-&gt;right);
+    }
+};
+// @lc code=end
+
+</pre>

@@ -1,0 +1,135 @@
+<html><head></head><body>
+<div id="title">
+ 115. Distinct Subsequences
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two strings
+   <code>
+    s
+   </code>
+   and
+   <code>
+    t
+   </code>
+   , return
+   <em>
+    the number of distinct subsequences of
+    <code>
+     s
+    </code>
+    which equals
+    <code>
+     t
+    </code>
+   </em>
+   .
+  </p>
+  <p>
+   A string's
+   <strong>
+    subsequence
+   </strong>
+   is a new string formed from the original string by deleting some (can be none) of the characters without disturbing the remaining characters' relative positions. (i.e.,
+   <code>
+    "ACE"
+   </code>
+   is a subsequence of
+   <code>
+    "ABCDE"
+   </code>
+   while
+   <code>
+    "AEC"
+   </code>
+   is not).
+  </p>
+  <p>
+   It is guaranteed the answer fits on a 32-bit signed integer.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "rabbbit", t = "rabbit"
+<strong>Output:</strong> 3
+<strong>Explanation:</strong>
+As shown below, there are 3 ways you can generate "rabbit" from S.
+<code><strong><u>rabb</u></strong>b<strong><u>it</u></strong></code>
+<code><strong><u>ra</u></strong>b<strong><u>bbit</u></strong></code>
+<code><strong><u>rab</u></strong>b<strong><u>bit</u></strong></code>
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "babgbag", t = "bag"
+<strong>Output:</strong> 5
+<strong>Explanation:</strong>
+As shown below, there are 5 ways you can generate "bag" from S.
+<code><strong><u>ba</u></strong>b<u><strong>g</strong></u>bag</code>
+<code><strong><u>ba</u></strong>bgba<strong><u>g</u></strong></code>
+<code><u><strong>b</strong></u>abgb<strong><u>ag</u></strong></code>
+<code>ba<u><strong>b</strong></u>gb<u><strong>ag</strong></u></code>
+<code>babg<strong><u>bag</u></strong></code></pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length, t.length &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    and
+    <code>
+     t
+    </code>
+    consist of English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 115 -->
+<pre>/*
+ * @lc app=leetcode id=115 lang=cpp
+ *
+ * [115] Distinct Subsequences
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int m=t.length();
+        int n=s.length();
+        int mod = 1e9+7;
+        vector&lt;vector&lt;long long&gt;&gt;dp(m+1,vector&lt;long long&gt;(n+1,0));
+        for(int i=0;i&lt;=n;i++) dp[0][i] =1;
+
+        for(int j=1;j&lt;=n;j++){
+            for(int i=1;i&lt;=m;i++){
+                dp[i][j] = dp[i][j-1]%mod + (t[i-1]==s[j-1]?dp[i-1][j-1]%mod:0);
+                dp[i][j]=dp[i][j]%mod;
+            }
+        }
+        return dp[m][n]%mod;
+    }
+};
+// @lc code=end
+
+</pre>

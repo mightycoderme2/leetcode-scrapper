@@ -1,0 +1,106 @@
+<html><head></head><body>
+<div id="title">
+ 897. Increasing Order Search Tree
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    root
+   </code>
+   of a binary search tree, rearrange the tree in
+   <strong>
+    in-order
+   </strong>
+   so that the leftmost node in the tree is now the root of the tree, and every node has no left child and only one right child.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/ex1(3).jpg" style="width: 600px; height: 350px;"/>
+  <pre><strong>Input:</strong> root = [5,3,6,2,4,null,8,1,null,null,null,7,9]
+<strong>Output:</strong> [1,null,2,null,3,null,4,null,5,null,6,null,7,null,8,null,9]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/ex2(2).jpg" style="width: 300px; height: 114px;"/>
+  <pre><strong>Input:</strong> root = [5,1,7]
+<strong>Output:</strong> [1,null,5,null,7]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the given tree will be in the range
+    <code>
+     [1, 100]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     0 &lt;= Node.val &lt;= 1000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 897 -->
+<pre>/*
+ * @lc app=leetcode id=897 lang=cpp
+ *
+ * [897] Increasing Order Search Tree
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void inorder(TreeNode *root,vector&lt;TreeNode *&gt;&amp;a){
+        if(root){
+            inorder(root-&gt;left,a);
+            a.push_back(root);
+            inorder(root-&gt;right,a);
+        }
+    }
+    TreeNode* increasingBST(TreeNode* root) {
+        if(!root)return nullptr;
+        vector&lt;TreeNode *&gt;a;
+        inorder(root,a);
+        TreeNode* head=new TreeNode(0);
+        TreeNode* temp=head;
+        for(int i=0;i&lt;a.size();i++)
+        {
+            temp-&gt;right=new TreeNode(a[i]-&gt;val);
+            temp=temp-&gt;right;
+        }
+        return head-&gt;right;
+    }
+};
+// @lc code=end
+
+</pre>
