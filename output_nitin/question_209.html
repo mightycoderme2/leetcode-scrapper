@@ -135,24 +135,18 @@ class Solution {
 public:
     int minSubArrayLen(int target, vector&lt;int&gt;&amp; nums) {
         int start = 0;
-        int sum=target;
-        int maxx=0;
-        int count=0;
-        for(int i=0; i&lt;nums.size(); i++) {
-            target=target-nums[i];
-            count++;
-                cout&lt;&lt;i;
-            if(target==0){
-                maxx=max(count,maxx);
-                i=start++;
-                count=0;
-            }
-            else if(target&lt;0){
-                i=start++;
-                count=0;
+        int sum=0;
+        int maxx=INT_MAX;
+        int end=0;
+        int n=nums.size();
+        while(end&lt;n){
+            sum+=nums[end++];
+            while(sum&gt;=target){
+                maxx=min(maxx,end-start);
+                sum=sum-nums[start++];
             }
         }
-        return maxx;
+        return maxx==INT_MAX?0:maxx;
 
     }
 };

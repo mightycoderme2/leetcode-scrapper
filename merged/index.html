@@ -23399,6 +23399,215 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 204. Count Primes
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Count the number of prime numbers less than a non-negative number,
+   <code>
+    n
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 10
+<strong>Output:</strong> 4
+<strong>Explanation:</strong> There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 0
+<strong>Output:</strong> 0
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> 0
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= n &lt;= 5 * 10
+     <sup>
+      6
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 204 -->
+<pre>/*
+ * @lc app=leetcode id=204 lang=cpp
+ *
+ * [204] Count Primes
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int countPrimes(int n) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 205. Isomorphic Strings
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two strings
+   <code>
+    s
+   </code>
+   and
+   <code>
+    t
+   </code>
+   ,
+   <em>
+    determine if they are isomorphic
+   </em>
+   .
+  </p>
+  <p>
+   Two strings
+   <code>
+    s
+   </code>
+   and
+   <code>
+    t
+   </code>
+   are isomorphic if the characters in
+   <code>
+    s
+   </code>
+   can be replaced to get
+   <code>
+    t
+   </code>
+   .
+  </p>
+  <p>
+   All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "egg", t = "add"
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "foo", t = "bar"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "paper", t = "title"
+<strong>Output:</strong> true
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     t.length == s.length
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    and
+    <code>
+     t
+    </code>
+    consist of any valid ascii character.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 205 -->
+<pre>/*
+ * @lc app=leetcode id=205 lang=cpp
+ *
+ * [205] Isomorphic Strings
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        if(s.length() != t.length()) return false;
+        map&lt;char,char&gt;m1;
+        map&lt;char,char&gt;m2;
+        for(int i = 0; i &lt; s.length();i++){
+            cout&lt;&lt;i;
+            if(m1.find(s[i])==m1.end() &amp;&amp; m2.find(t[i])==m2.end() ){
+                m1[s[i]]=t[i];
+                m2[t[i]]=s[i];
+            }
+            else{
+                if(m1[s[i]]!=t[i] || m2[t[i]]!=s[i]) return false;
+            }
+        }
+        return true;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  206. Reverse Linked List
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -23837,24 +24046,18 @@ class Solution {
 public:
     int minSubArrayLen(int target, vector&lt;int&gt;&amp; nums) {
         int start = 0;
-        int sum=target;
-        int maxx=0;
-        int count=0;
-        for(int i=0; i&lt;nums.size(); i++) {
-            target=target-nums[i];
-            count++;
-                cout&lt;&lt;i;
-            if(target==0){
-                maxx=max(count,maxx);
-                i=start++;
-                count=0;
-            }
-            else if(target&lt;0){
-                i=start++;
-                count=0;
+        int sum=0;
+        int maxx=INT_MAX;
+        int end=0;
+        int n=nums.size();
+        while(end&lt;n){
+            sum+=nums[end++];
+            while(sum&gt;=target){
+                maxx=min(maxx,end-start);
+                sum=sum-nums[start++];
             }
         }
-        return maxx;
+        return maxx==INT_MAX?0:maxx;
 
     }
 };
@@ -24717,7 +24920,167 @@ public:
 class Solution {
 public:
     bool containsNearbyDuplicate(vector&lt;int&gt;&amp; nums, int k) {
-        
+        map&lt;int,vector&lt;int&gt;&gt;m;
+        for(int i=0; i&lt;nums.size(); i++){
+            if(m.find(nums[i])==m.end()){
+                m[nums[i]].push_back(i);
+            }
+            else{
+                for(int j=0; j&lt;m[nums[i]].size(); j++){
+                    if(k&gt;=abs(m[nums[i]][j]-i)) return true;
+                }
+                m[nums[i]].push_back(i);
+            }
+        }
+        return false;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 220. Contains Duplicate III
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   and two integers
+   <code>
+    k
+   </code>
+   and
+   <code>
+    t
+   </code>
+   , return
+   <code>
+    true
+   </code>
+   if there are
+   <strong>
+    two distinct indices
+   </strong>
+   <code>
+    i
+   </code>
+   and
+   <code>
+    j
+   </code>
+   in the array such that
+   <code>
+    abs(nums[i] - nums[j]) &lt;= t
+   </code>
+   and
+   <code>
+    abs(i - j) &lt;= k
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,2,3,1], k = 3, t = 0
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,0,1,1], k = 1, t = 2
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,5,9,1,5,9], k = 2, t = 3
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= nums.length &lt;= 2 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     -2
+     <sup>
+      31
+     </sup>
+     &lt;= nums[i] &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= k &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= t &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 220 -->
+<pre>/*
+ * @lc app=leetcode id=220 lang=cpp
+ *
+ * [220] Contains Duplicate III
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector&lt;int&gt;&amp; nums, int k, int valueDiff) {
+        map&lt;int,vector&lt;int&gt;&gt;m;
+        for(int i=0; i&lt;nums.size(); i++){
+            if(m.find(nums[i])==m.end()){
+                m[nums[i]].push_back(i);
+            }
+            else{
+                for(int j=0; j&lt;m[nums[i]].size(); j++){
+                    if(k&gt;=abs(m[nums[i]][j]-i)) return true;
+                }
+                m[nums[i]].push_back(i);
+            }
+        }
+        return false;
     }
 };
 // @lc code=end
@@ -25429,6 +25792,139 @@ public:
             }
         }
         return ans;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 230. Kth Smallest Element in a BST
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    root
+   </code>
+   of a binary search tree, and an integer
+   <code>
+    k
+   </code>
+   , return
+   <em>
+    the
+   </em>
+   <code>
+    k
+    <sup>
+     th
+    </sup>
+   </code>
+   (
+   <strong>
+    1-indexed
+   </strong>
+   )
+   <em>
+    smallest element in the tree
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/kthtree1.jpg" style="width: 212px; height: 301px;"/>
+  <pre><strong>Input:</strong> root = [3,1,4,null,2], k = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/kthtree2.jpg" style="width: 382px; height: 302px;"/>
+  <pre><strong>Input:</strong> root = [5,3,6,2,4,null,null,1], k = 3
+<strong>Output:</strong> 3
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is
+    <code>
+     n
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     1 &lt;= k &lt;= n &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= Node.val &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow up:
+  </strong>
+  If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 230 -->
+<pre>/*
+ * @lc app=leetcode id=230 lang=cpp
+ *
+ * [230] Kth Smallest Element in a BST
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector&lt;int&gt;a;
+    void inorder(TreeNode *root){
+        if(root)
+        {
+            inorder(root-&gt;left);
+            a.push_back(root-&gt;val);
+            inorder(root-&gt;right);
+        }
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        inorder(root);
+        return a[k-1];
     }
 };
 // @lc code=end
@@ -32812,6 +33308,124 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 421. Maximum XOR of Two Numbers in an Array
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   , return
+   <em>
+    the maximum result of
+   </em>
+   <code>
+    nums[i] XOR nums[j]
+   </code>
+   , where
+   <code>
+    0 &lt;= i &lt;= j &lt; n
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [3,10,5,25,2,8]
+<strong>Output:</strong> 28
+<strong>Explanation:</strong> The maximum result is 5 XOR 25 = 28.</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [0]
+<strong>Output:</strong> 0
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [2,4]
+<strong>Output:</strong> 6
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [8,10,2]
+<strong>Output:</strong> 10
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [14,70,53,83,49,91,36,80,92,51,66,70]
+<strong>Output:</strong> 127
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 2 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= nums[i] &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 421 -->
+<pre>/*
+ * @lc app=leetcode id=421 lang=cpp
+ *
+ * [421] Maximum XOR of Two Numbers in an Array
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int findMaximumXOR(vector&lt;int&gt;&amp; nums) {
+        int maxx=0;
+        int n=nums.size();
+        for(int i=0;i&lt;n;i++){
+            for(int j=i;j&lt;n;j++){
+                maxx=max(maxx,nums[i]^nums[j]);
+            }
+        }
+        return maxx;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  429. N-ary Tree Level Order Traversal
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -32911,7 +33525,25 @@ public:
 class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; levelOrder(Node* root) {
-        
+        if(root == NULL)  return {};
+        vector&lt;vector&lt;int&gt;&gt;a;
+        queue&lt;Node *&gt; q;
+        q.push(root);
+        while(!q.empty()) {
+            int count=q.size();
+            vector&lt;int&gt;b;
+            while(count){
+                Node* node = q.front();
+                b.push_back(node-&gt;val);
+                q.pop();
+                for(auto x:node-&gt;children){
+                    q.push(x);
+                }
+                count--;
+            }
+        a.push_back(b);
+        }
+        return a;
     }
 };
 // @lc code=end

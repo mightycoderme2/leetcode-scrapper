@@ -99,7 +99,25 @@ public:
 class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; levelOrder(Node* root) {
-        
+        if(root == NULL)  return {};
+        vector&lt;vector&lt;int&gt;&gt;a;
+        queue&lt;Node *&gt; q;
+        q.push(root);
+        while(!q.empty()) {
+            int count=q.size();
+            vector&lt;int&gt;b;
+            while(count){
+                Node* node = q.front();
+                b.push_back(node-&gt;val);
+                q.pop();
+                for(auto x:node-&gt;children){
+                    q.push(x);
+                }
+                count--;
+            }
+        a.push_back(b);
+        }
+        return a;
     }
 };
 // @lc code=end

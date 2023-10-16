@@ -1,6 +1,6 @@
 <html><head></head><body>
 <div id="title">
- 219. Contains Duplicate II
+ 220. Contains Duplicate III
 </div>
 <div class="content__u3I1 question-content__JfgR">
  <div>
@@ -9,17 +9,21 @@
    <code>
     nums
    </code>
-   and an integer
+   and two integers
    <code>
     k
+   </code>
+   and
+   <code>
+    t
    </code>
    , return
    <code>
     true
    </code>
-   if there are two
+   if there are
    <strong>
-    distinct indices
+    two distinct indices
    </strong>
    <code>
     i
@@ -30,7 +34,7 @@
    </code>
    in the array such that
    <code>
-    nums[i] == nums[j]
+    abs(nums[i] - nums[j]) &lt;= t
    </code>
    and
    <code>
@@ -45,7 +49,7 @@
     Example 1:
    </strong>
   </p>
-  <pre><strong>Input:</strong> nums = [1,2,3,1], k = 3
+  <pre><strong>Input:</strong> nums = [1,2,3,1], k = 3, t = 0
 <strong>Output:</strong> true
 </pre>
   <p>
@@ -53,7 +57,7 @@
     Example 2:
    </strong>
   </p>
-  <pre><strong>Input:</strong> nums = [1,0,1,1], k = 1
+  <pre><strong>Input:</strong> nums = [1,0,1,1], k = 1, t = 2
 <strong>Output:</strong> true
 </pre>
   <p>
@@ -61,7 +65,7 @@
     Example 3:
    </strong>
   </p>
-  <pre><strong>Input:</strong> nums = [1,2,3,1,2,3], k = 2
+  <pre><strong>Input:</strong> nums = [1,5,9,1,5,9], k = 2, t = 3
 <strong>Output:</strong> false
 </pre>
   <p>
@@ -74,47 +78,57 @@
   <ul>
    <li>
     <code>
-     1 &lt;= nums.length &lt;= 10
+     0 &lt;= nums.length &lt;= 2 * 10
      <sup>
-      5
+      4
      </sup>
     </code>
    </li>
    <li>
     <code>
-     -10
+     -2
      <sup>
-      9
+      31
      </sup>
-     &lt;= nums[i] &lt;= 10
+     &lt;= nums[i] &lt;= 2
      <sup>
-      9
+      31
      </sup>
+     - 1
     </code>
    </li>
    <li>
     <code>
      0 &lt;= k &lt;= 10
      <sup>
-      5
+      4
      </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= t &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
     </code>
    </li>
   </ul>
  </div>
 </div>
 </body></html>
-<!-- Solution for Question 219 -->
+<!-- Solution for Question 220 -->
 <pre>/*
- * @lc app=leetcode id=219 lang=cpp
+ * @lc app=leetcode id=220 lang=cpp
  *
- * [219] Contains Duplicate II
+ * [220] Contains Duplicate III
  */
 
 // @lc code=start
 class Solution {
 public:
-    bool containsNearbyDuplicate(vector&lt;int&gt;&amp; nums, int k) {
+    bool containsNearbyAlmostDuplicate(vector&lt;int&gt;&amp; nums, int k, int valueDiff) {
         map&lt;int,vector&lt;int&gt;&gt;m;
         for(int i=0; i&lt;nums.size(); i++){
             if(m.find(nums[i])==m.end()){
