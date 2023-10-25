@@ -279,7 +279,18 @@ Explanation: The two lists do not intersect, so return null.
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        
+        if(headA==NULL || headB==NULL) return NULL;
+        if(headA==headB) return headA;
+        ListNode * ans1=headA;
+        while(ans1!=NULL){
+        ListNode * ans2=headB;
+            while(ans2!=NULL){
+                if(ans1==ans2) return ans1;
+                ans2=ans2-&gt;next;
+            }
+            ans1=ans1-&gt;next;
+        }
+        return NULL;
     }
 };
 // @lc code=end

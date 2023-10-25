@@ -237,12 +237,12 @@ public:
             }
         }
         sort(filtered.begin(), filtered.end(),[](vector&lt;int&gt;&amp; a, vector&lt;int&gt;&amp; b)-&gt;bool{return a[1]==b[1]?a[0]&gt;b[0]:a[1]&gt;b[1];});
-    vector&lt;int&gt;ans;
-    for(auto x:filtered)
-    {
-        ans.push_back(x[0]);
-    }
-    return ans;
+        vector&lt;int&gt;ans;
+        for(auto x:filtered)
+        {
+            ans.push_back(x[0]);
+        }
+        return ans;
     }
 
 };

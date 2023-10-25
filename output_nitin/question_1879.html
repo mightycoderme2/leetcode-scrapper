@@ -149,6 +149,14 @@ class Solution {
 public:
 
     int dfs(int mask,int index,vector&lt;int&gt;nums1,vector&lt;int&gt;nums2,vector&lt;vector&lt;int&gt;&gt;&amp;dp){
+        cout&lt;&lt;mask&lt;&lt;&quot; &quot;&lt;&lt;index&lt;&lt;&quot; &quot;&lt;&lt;endl;
+        for(auto x:dp){
+            for(int y:x){
+                cout&lt;&lt;y&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;endl;
+        }
+        cout&lt;&lt;&#x27;\n&#x27;;
         if(index&gt;=nums1.size()) return 0;
         if(dp[index][mask]!=-1) return dp[index][mask];
         int ans=INT_MAX;
@@ -160,7 +168,8 @@ public:
         return dp[index][mask]=ans;
     }
     int minimumXORSum(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
-        vector&lt;vector&lt;int&gt;&gt;dp(nums1.size()+1,vector&lt;int&gt;(1&lt;&lt;nums1.size(),-1));
+        int n=nums1.size();
+        vector&lt;vector&lt;int&gt;&gt;dp(n+1,vector&lt;int&gt;(1&lt;&lt;n,-1));
         return dfs(0,0,nums1,nums2,dp);
     }
 };

@@ -1,0 +1,98 @@
+<html><head></head><body>
+<div id="title">
+ 273. Integer to English Words
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Convert a non-negative integer
+   <code>
+    num
+   </code>
+   to its English words representation.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 123
+<strong>Output:</strong> "One Hundred Twenty Three"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 12345
+<strong>Output:</strong> "Twelve Thousand Three Hundred Forty Five"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 1234567
+<strong>Output:</strong> "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 1234567891
+<strong>Output:</strong> "One Billion Two Hundred Thirty Four Million Five Hundred Sixty Seven Thousand Eight Hundred Ninety One"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= num &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 273 -->
+<pre>/*
+ * @lc app=leetcode id=273 lang=cpp
+ *
+ * [273] Integer to English Words
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string ones[20] = {&quot;&quot;, &quot; One&quot;, &quot; Two&quot;, &quot; Three&quot;, &quot; Four&quot;, &quot; Five&quot;, &quot; Six&quot;, &quot; Seven&quot;, &quot; Eight&quot;, &quot; Nine&quot;, &quot; Ten&quot;, &quot; Eleven&quot;, &quot; Twelve&quot;, &quot; Thirteen&quot;, &quot; Fourteen&quot;, &quot; Fifteen&quot;, &quot; Sixteen&quot;, &quot; Seventeen&quot;, &quot; Eighteen&quot;, &quot; Nineteen&quot;};
+    string tens[10] = {&quot;&quot;, &quot; Ten&quot;, &quot; Twenty&quot;, &quot; Thirty&quot;, &quot; Forty&quot;, &quot; Fifty&quot;, &quot; Sixty&quot;, &quot; Seventy&quot;, &quot; Eighty&quot;, &quot; Ninety&quot;};
+    string thousands[4] = {&quot;&quot;, &quot; Thousand&quot;, &quot; Million&quot;, &quot; Billion&quot;};
+    string find(int num){
+        if(num&lt;20) return ones[num];
+        else if(num&lt;100) return tens[num/10] + find(num%10);
+        else if(num &lt; 1000) return find(num/100) + &quot; Hundred&quot; + find(num%100);
+        for(int i=3;i&gt;=0;i--){
+            if(num&gt;=pow(1000,i)) return find(num/pow(1000,i)) + thousands[i] + find(num% (int) pow(1000,i));
+        }
+        return &quot;&quot;;
+    }
+    string numberToWords(int num) {
+        if(num==0) return &quot;Zero&quot;;
+        return find(num).substr(1);
+    }
+};
+// @lc code=end
+
+</pre>

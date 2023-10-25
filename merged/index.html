@@ -1501,7 +1501,49 @@ public:
 class Solution {
 public:
     bool isMatch(string s, string p) {
-        
+        int m=s.length(),n=p.length();
+        vector&lt;vector&lt;bool&gt;&gt;dp(m+1,vector&lt;bool&gt;(n+1,false));
+        dp[0][0]=1;
+        for(int i=1;i&lt;=m;i++){
+            dp[i][0]=false;
+        }
+        for(int i=1;i&lt;=n;i++){
+            if(p[i-1]==&#x27;*&#x27;){
+                dp[0][i]=dp[0][i-2];
+            }
+            else{
+                dp[0][i]=false;
+            }
+        }
+
+        for(int i=1;i&lt;=m;i++){
+            for(int j=1;j&lt;=n;j++){
+                if(s[i-1]==p[j-1]||p[j-1]==&#x27;.&#x27;){
+                    dp[i][j]=dp[i-1][j-1];
+                }
+                else if(p[j-1]==&#x27;*&#x27;){
+                    if(dp[i][j-2]){
+                        dp[i][j]=dp[i][j-2];
+                    }
+                    else if(p[j-2]==&#x27;.&#x27;||s[i-1]==p[j-2]){
+                        dp[i][j]=dp[i-1][j];
+                    }
+                    else{
+                        dp[i][j]=false;
+                    }
+                }
+                else{
+                    dp[i][j]=false;
+                }
+            }
+        }
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+        return dp[m][n];
     }
 };
 // @lc code=end
@@ -4708,7 +4750,27 @@ public:
 class Solution {
 public:
     int longestValidParentheses(string s) {
-        
+        stack&lt;int&gt;q;
+        int maxx=0,count;
+        for(int i = 0; i &lt; s.length();i++){
+            if(s[i] == &#x27;(&#x27;) q.push(i);
+            else if(!q.empty()){
+                s[q.top()] = &#x27;1&#x27;;
+                s[i]=&#x27;1&#x27;;
+                q.pop();
+            }
+        }
+        cout&lt;&lt;s;
+        for(int i = 0; i &lt; s.length();i++){
+            if(s[i]!=&#x27;1&#x27;){
+                maxx=max(maxx,count);
+                count=0;
+            }
+            else{
+                count++;
+            }
+        }
+        return max(maxx,count);
     }
 };
 // @lc code=end
@@ -5238,6 +5300,165 @@ class Solution {
 public:
     int searchInsert(vector&lt;int&gt;&amp; a, int target) {
         return lower_bound(a.begin(), a.end(), target) - a.begin();
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 36. Valid Sudoku
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Determine if a
+   <code>
+    9 x 9
+   </code>
+   Sudoku board is valid. Only the filled cells need to be validated
+   <strong>
+    according to the following rules
+   </strong>
+   :
+  </p>
+  <ol>
+   <li>
+    Each row must contain the digits
+    <code>
+     1-9
+    </code>
+    without repetition.
+   </li>
+   <li>
+    Each column must contain the digits
+    <code>
+     1-9
+    </code>
+    without repetition.
+   </li>
+   <li>
+    Each of the nine
+    <code>
+     3 x 3
+    </code>
+    sub-boxes of the grid must contain the digits
+    <code>
+     1-9
+    </code>
+    without repetition.
+   </li>
+  </ol>
+  <p>
+   <strong>
+    Note:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+   </li>
+   <li>
+    Only the filled cells need to be validated according to the mentioned rules.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img src="./output_files/Sudoku-by-L2G-20050714.svg.png" style="height:250px; width:250px"/>
+  <pre><strong>Input:</strong> board = 
+[["5","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> board = 
+[["8","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+<strong>Output:</strong> false
+<strong>Explanation:</strong> Same as Example 1, except with the <strong>5</strong> in the top left corner being modified to <strong>8</strong>. Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     board.length == 9
+    </code>
+   </li>
+   <li>
+    <code>
+     board[i].length == 9
+    </code>
+   </li>
+   <li>
+    <code>
+     board[i][j]
+    </code>
+    is a digit
+    <code>
+     1-9
+    </code>
+    or
+    <code>
+     '.'
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 36 -->
+<pre>/*
+ * @lc app=leetcode id=36 lang=cpp
+ *
+ * [36] Valid Sudoku
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isValidSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        int row[9][9]={0},col[9][9]={0},grid[9][9]={0};
+
+        for(int i = 0; i &lt; 9;i++){
+            for(int j = 0; j &lt; 9; j++){
+                if(board[i][j]!=&#x27;.&#x27;){
+                    int num = board[i][j]-&#x27;1&#x27;;
+                    int grid_number= i/3*3 + j/3;
+                    if(row[i][num] || col[j][num] || grid[grid_number][num]) return 0;
+                    row[i][num] = col[j][num] = grid[grid_number][num] =1;
+                }
+            }
+        }
+        return 1;
     }
 };
 // @lc code=end
@@ -6042,6 +6263,193 @@ public:
             if(i!=0)
             return s.substr(i);
             return s;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 44. Wildcard Matching
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an input string (
+   <code>
+    s
+   </code>
+   ) and a pattern (
+   <code>
+    p
+   </code>
+   ), implement wildcard pattern matching with support for
+   <code>
+    '?'
+   </code>
+   and
+   <code>
+    '*'
+   </code>
+   where:
+  </p>
+  <ul>
+   <li>
+    <code>
+     '?'
+    </code>
+    Matches any single character.
+   </li>
+   <li>
+    <code>
+     '*'
+    </code>
+    Matches any sequence of characters (including the empty sequence).
+   </li>
+  </ul>
+  <p>
+   The matching should cover the
+   <strong>
+    entire
+   </strong>
+   input string (not partial).
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "aa", p = "a"
+<strong>Output:</strong> false
+<strong>Explanation:</strong> "a" does not match the entire string "aa".
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "aa", p = "*"
+<strong>Output:</strong> true
+<strong>Explanation:</strong> '*' matches any sequence.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "cb", p = "?a"
+<strong>Output:</strong> false
+<strong>Explanation:</strong> '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "adceb", p = "*a*b"
+<strong>Output:</strong> true
+<strong>Explanation:</strong> The first '*' matches the empty sequence, while the second '*' matches the substring "dce".
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "acdcb", p = "a*c?b"
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= s.length, p.length &lt;= 2000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    contains only lowercase English letters.
+   </li>
+   <li>
+    <code>
+     p
+    </code>
+    contains only lowercase English letters,
+    <code>
+     '?'
+    </code>
+    or
+    <code>
+     '*'
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 44 -->
+<pre>/*
+ * @lc app=leetcode id=44 lang=cpp
+ *
+ * [44] Wildcard Matching
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m=s.length(),n=p.length();
+        vector&lt;vector&lt;bool&gt;&gt;dp(m+1,vector&lt;bool&gt;(n+1,false));
+        dp[0][0]=1;
+        for(int i=1;i&lt;=m;i++){
+            dp[i][0]=false;
+        }
+        for(int i=1;i&lt;=n;i++){
+            if(p[i-1]==&#x27;*&#x27;){
+                dp[0][i]=dp[0][i-2];
+            }
+            else{
+                dp[0][i]=false;
+            }
+        }
+
+        for(int i=1;i&lt;=m;i++){
+            for(int j=1;j&lt;=n;j++){
+                if(s[i-1]==p[j-1]||p[j-1]==&#x27;?&#x27;){
+                    dp[i][j]=dp[i-1][j-1];
+                }
+                else if(p[j-1]==&#x27;*&#x27;){
+                    if(dp[i][j-2]){
+                        dp[i][j]=dp[i][j-2];
+                    }
+                    else if(p[j-2]==&#x27;?&#x27;||s[i-1]==p[j-2]){
+                        dp[i][j]=dp[i-1][j];
+                    }
+                    else{
+                        dp[i][j]=false;
+                    }
+                }
+                else{
+                    dp[i][j]=false;
+                }
+            }
+        }
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+        return dp[m][n];
     }
 };
 // @lc code=end
@@ -8512,19 +8920,24 @@ public:
     int minPathSum(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
         int m=grid.size();
         int n=grid[0].size();
-        vector&lt;vector&lt;int&gt;&gt;dp(m+1,vector&lt;int&gt;(n+1,INT_MAX));
-        dp[1][1]=grid[0][0];
-        for(int i=1;i&lt;dp.size();i++)
+        vector&lt;vector&lt;int&gt;&gt;dp(m,vector&lt;int&gt;(n,0));
+        dp[0][0]=grid[0][0];
+        for(int i=1;i&lt;m;i++) dp[i][0]=dp[i-1][0]+grid[i][0];
+        for(int i=1;i&lt;n;i++) dp[0][i]=dp[0][i-1]+grid[0][i];
+        for(int i=1;i&lt;m;i++)
         {
-            for(int j=1;j&lt;dp[0].size();j++)
+            for(int j=1;j&lt;n;j++)
             {
-                if(i!=1 || j!=1)
-                {
-                dp[i][j]=grid[i-1][j-1]+min(dp[i-1][j],dp[i][j-1]);
-                }
+                dp[i][j]=grid[i][j]+min(dp[i-1][j],dp[i][j-1]);
             }
         }
-        return dp[m][n];
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+        return dp[m-1][n-1];
     }
 };
 // @lc code=end
@@ -9853,6 +10266,12 @@ public:
                     dp[i][j]=min({dp[i-1][j-1],dp[i][j-1],dp[i-1][j]}) +1;
                 }
             }
+        }
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
         }
         return dp[m][n];
     }
@@ -11745,8 +12164,30 @@ public:
 // @lc code=start
 class Solution {
 public:
-    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; matrix) {
-        
+    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; a1) {
+        vector&lt;vector&lt;int&gt;&gt;a;
+        for(int i = 0; i &lt; a1.size();i++){
+            for(int j = 0; j &lt; a1[i].size();j++){
+                if(i==0) a[i][j] =a1[i][j]-&#x27;0&#x27;;
+                else a[i][j]+=a1[i-1][j]-&#x27;0&#x27;-&#x27;0&#x27;;
+            }
+        }
+        int area = 1;
+        for(int k = 0; k &lt; a.size();k++){
+            vector&lt;int&gt;b(a[k]);
+            int i=0,j=b.size();
+            while(j&gt;i){
+                int h=min(b[i],b[j]);
+                area=max(area,h*(j-i));
+                if(h&gt;=b[i]){
+                    i++;
+                }
+                else{
+                    j--;
+                }
+            }
+        }
+        return area;
     }
 };
 // @lc code=end
@@ -13220,26 +13661,28 @@ public:
  */
 class Solution {
 public:
-vector&lt;vector&lt;int&gt;&gt;a;
-void generate(vector&lt;int&gt;&amp; nums,int j){
-    if(j==nums.size()-1){
-        a.push_back(nums);
-        return;
-    }
-    for(int i=j; i&lt;=nums.size();i++){
-        swap(nums[i],nums[j]);
-        generate(nums,j+1);
-        swap(nums[i],nums[j]);
-    }
-}
-
-    vector&lt;TreeNode*&gt; generateTrees(int n) {
-        vector&lt;int&gt;nums(n);
-        for(int i=0; i&lt;n;i++){
-            nums[i]=i+1;
+    vector&lt;TreeNode *&gt; generate(int start,int end){
+        vector&lt;TreeNode *&gt;ans;
+        if(start&gt;end){
+            ans.push_back(NULL);
+            return ans;
         }
-        generate(nums,0);
-        return
+        for(int i=start;i&lt;=end;i++){
+            vector&lt;TreeNode *&gt;lefts=generate(start,i-1);
+            vector&lt;TreeNode *&gt;rights=generate(i+1,end);
+            for(int j=0;j&lt;lefts.size();j++){
+                for(int k=0;k&lt;rights.size();k++){
+                    TreeNode* root = new TreeNode(i);
+                    root-&gt;left = lefts[j];
+                    root-&gt;right = rights[k];
+                    ans.push_back(root);
+                }
+            }
+        }
+        return ans;
+    }
+    vector&lt;TreeNode*&gt; generateTrees(int n) {
+        return generate(1,n);
     }
 };
 // @lc code=end
@@ -13334,6 +13777,9 @@ public:
             for(int j=1; j&lt;=i; j++){
                 dp[i]+=dp[i-j]*dp[j-1];
             }
+        }
+        for(auto y:dp){
+                cout&lt;&lt;y&lt;&lt;&#x27; &#x27;;
         }
         return dp[n];
     }
@@ -13613,8 +14059,16 @@ public:
         for(int i=1;i&lt;=n1;i++){
             for(int j=1;j&lt;=n2;j++){
                 dp[i][j]=(dp[i-1][j] &amp;&amp; s1[i-1]==s3[i+j-1])||(dp[i][j-1] &amp;&amp; s2[j-1]==s3[i+j-1]);
-            }
+            } 
         }
+
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+
         return dp[n1][n2];
     }
 };
@@ -15873,6 +16327,13 @@ public:
                 dp[i][j] = dp[i][j-1]%mod + (t[i-1]==s[j-1]?dp[i-1][j-1]%mod:0);
                 dp[i][j]=dp[i][j]%mod;
             }
+        }
+
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
         }
         return dp[m][n]%mod;
     }
@@ -18259,6 +18720,7 @@ void ans(vector&lt;string&gt;b,string s,int&amp; cut){
         if(cut&gt;b.size()-1)cut=b.size()-1;
         return;
     }
+    cout&lt;&lt;s&lt;&lt;&#x27;\n&#x27;;
     for(int i=0;i&lt;s.size();i++){
         if(check(s.substr(0,i+1),s.substr(0,i+1))){
         b.push_back(s.substr(0,i+1));
@@ -20775,7 +21237,18 @@ Explanation: The two lists do not intersect, so return null.
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        
+        if(headA==NULL || headB==NULL) return NULL;
+        if(headA==headB) return headA;
+        ListNode * ans1=headA;
+        while(ans1!=NULL){
+        ListNode * ans2=headB;
+            while(ans2!=NULL){
+                if(ans1==ans2) return ans1;
+                ans2=ans2-&gt;next;
+            }
+            ans1=ans1-&gt;next;
+        }
+        return NULL;
     }
 };
 // @lc code=end
@@ -21150,7 +21623,49 @@ public:
 class Solution {
 public:
     int compareVersion(string version1, string version2) {
-        
+        queue&lt;int&gt;s1;
+        queue&lt;int&gt;s2;
+        string s=&quot;&quot;;
+        version1+=&#x27;.&#x27;;
+        version2+=&#x27;.&#x27;;
+        for(int i = 0; i &lt;version1.size(); i++){
+            if(version1[i]==&#x27;.&#x27;){
+                s1.push(stoi(s));
+                cout&lt;&lt;s&lt;&lt;endl;
+                s=&quot;&quot;;
+            }
+            else{
+                s=s+version1[i];
+            }
+        }
+        s=&quot;&quot;;
+        for(int i = 0; i &lt;version2.size(); i++){
+            if(version2[i]==&#x27;.&#x27;){
+                s2.push(stoi(s));
+                cout&lt;&lt;s&lt;&lt;endl;
+                s=&quot;&quot;;
+            }
+            else{
+                s=s+version2[i];
+            }
+        }
+        while(!s1.empty() &amp;&amp; !s2.empty()){
+            cout&lt;&lt;s1.front()&lt;&lt;s2.front()&lt;&lt;endl;
+            if(s1.front()&gt;s2.front()) return 1;
+            else if(s1.front()&lt;s2.front()) return -1;
+            s1.pop();
+            s2.pop();
+        }
+        cout&lt;&lt;&#x27;h&#x27;;
+        while(!s1.empty()){
+            if(s1.front()&gt;0) return 1;
+            s1.pop();
+        }
+        while(!s2.empty()){
+            if(s2.front()&gt;0) return -1;
+            s2.pop();
+        }
+        return 0;
     }
 };
 // @lc code=end
@@ -21872,27 +22387,33 @@ class Solution {
 public:
     int calculateMinimumHP(vector&lt;vector&lt;int&gt;&gt;&amp; a) {
         int m=a.size(),n=a[0].size();
-        vector&lt;vector&lt;int&gt;&gt;dp(m+1,vector&lt;int&gt;(n+1,0));
-        for(int i=m;i&gt;=0;i--) dp[i][n]=1e9;
-        for(int i=n;i&gt;=0;i--) dp[m][i]=1e9;
-
-        for(int i=m-1;i&gt;=0;i--){
-            for(int j=n-1;j&gt;=0;j--){
-                if(i==m-1 &amp;&amp; j==n-1){
-                    dp[i][j]=a[i][j]&gt;0?1:1-a[i][j];
-                    continue;
-                }
-                int temp=min(dp[i+1][j],dp[i][j+1])-a[i][j];
-                dp[i][j] = temp&gt;0?temp:1;
+        a[m-1][n-1] = a[m-1][n-1]&gt;0?1:1-a[m-1][n-1];
+        int i,j;
+        j=n-1;
+        for(int i=m-2;i&gt;=0;i--){
+           a[i][j]=a[i+1][j]-a[i][j];
+           if(a[i][j]&lt;=0) a[i][j]=1;
+        }
+        i=m-1;
+        for(int j=n-2;j&gt;=0;j--){
+            a[i][j]=a[i][j+1]-a[i][j];
+            if(a[i][j]&lt;=0) a[i][j]=1;
+        }
+        for(int i=m-2;i&gt;=0;i--){
+            for(int j=n-2;j&gt;=0;j--){
+                a[i][j]=min(a[i][j+1],a[i+1][j])-a[i][j];
+                if(a[i][j]&lt;=0) a[i][j]=1;
             }
         }
-        for(int i=0;i&lt;=m;i++){
-            for(int j=0;j&lt;=n;j++){
-                cout&lt;&lt;dp[i][j]&lt;&lt;&#x27; &#x27;;
+
+        for(int i=0;i&lt;m;i++){
+            for(int j=0;j&lt;n;j++){
+                cout&lt;&lt;a[i][j]&lt;&lt;&#x27; &#x27;;
             }
             cout&lt;&lt;&#x27;\n&#x27;;
         }
-        return dp[0][0];
+
+        return a[0][0];
     }
 };
 // @lc code=end
@@ -23468,7 +23989,17 @@ public:
 class Solution {
 public:
     int countPrimes(int n) {
-        
+        if(n&lt;=1) return 0;
+        vector&lt;bool&gt;a(n,1);
+        a[0]=a[1]=false;
+        for(long long i=2; i&lt;n; i++){
+            if(a[i]==0) continue;
+            for(long long j=i*i; j&lt;n; j=j+i){
+                a[j]=false;
+            }
+        }
+        int c=count(a.begin(),a.end(),1);
+        return c;
     }
 };
 // @lc code=end
@@ -24381,7 +24912,8 @@ Total amount you can rob = 1 + 3 = 4.
 
 // @lc code=start
 class Solution {
-public:int f(vector&lt;int&gt;nums,int i,vector&lt;int&gt;&amp;dp)
+public:
+int f(vector&lt;int&gt;nums,int i,vector&lt;int&gt;&amp;dp)
 {
     if(i==0)
     {
@@ -24420,6 +24952,90 @@ public:int f(vector&lt;int&gt;nums,int i,vector&lt;int&gt;&amp;dp)
         vector&lt;int&gt;dp1(nums.size(),-1);
         vector&lt;int&gt;dp2(nums.size(),-1);
         return max(f(a1,j-1,dp1),f(a2,j-1,dp2);
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 214. Shortest Palindrome
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are given a string
+   <code>
+    s
+   </code>
+   . You can convert
+   <code>
+    s
+   </code>
+   to a palindrome by adding characters in front of it.
+  </p>
+  <p>
+   Return
+   <em>
+    the shortest palindrome you can find by performing this transformation
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "aacecaaa"
+<strong>Output:</strong> "aaacecaaa"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "abcd"
+<strong>Output:</strong> "dcbabcd"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= s.length &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of lowercase English letters only.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 214 -->
+<pre>/*
+ * @lc app=leetcode id=214 lang=cpp
+ *
+ * [214] Shortest Palindrome
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string shortestPalindrome(string s) {
+        
     }
 };
 // @lc code=end
@@ -25070,14 +25686,12 @@ public:
     bool containsNearbyAlmostDuplicate(vector&lt;int&gt;&amp; nums, int k, int valueDiff) {
         map&lt;int,vector&lt;int&gt;&gt;m;
         for(int i=0; i&lt;nums.size(); i++){
-            if(m.find(nums[i])==m.end()){
-                m[nums[i]].push_back(i);
-            }
-            else{
-                for(int j=0; j&lt;m[nums[i]].size(); j++){
-                    if(k&gt;=abs(m[nums[i]][j]-i)) return true;
+            for(int j=i+1; j&lt;nums.size(); j++){
+                if(abs(i-j)&lt;=k){
+                    if(abs(nums[i]-nums[j])&lt;=valueDiff){
+                        return true;
+                    }
                 }
-                m[nums[i]].push_back(i);
             }
         }
         return false;
@@ -27132,6 +27746,102 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 258. Add Digits
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer
+   <code>
+    num
+   </code>
+   , repeatedly add all its digits until the result has only one digit, and return it.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 38
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> The process is
+38 --&gt; 3 + 8 --&gt; 11
+11 --&gt; 1 + 1 --&gt; 2 
+Since 2 has only one digit, return it.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 0
+<strong>Output:</strong> 0
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= num &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+   Could you do it without any loop/recursion in
+   <code>
+    O(1)
+   </code>
+   runtime?
+  </p>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 258 -->
+<pre>/*
+ * @lc app=leetcode id=258 lang=cpp
+ *
+ * [258] Add Digits
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int addDigits(int num) {
+        /*
+        while(num&gt;=10){
+            string s = to_string(num);
+            num=0;
+            for(int i=0; i&lt;s.length(); i++){
+                num=num+s[i]-&#x27;0&#x27;;
+            }
+        }
+        return num;
+        */
+       if(num==0) return 0;
+       else if(num%9==0) return 9;
+       else return num%9;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  260. Single Number III
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -27488,6 +28198,103 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 273. Integer to English Words
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Convert a non-negative integer
+   <code>
+    num
+   </code>
+   to its English words representation.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 123
+<strong>Output:</strong> "One Hundred Twenty Three"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 12345
+<strong>Output:</strong> "Twelve Thousand Three Hundred Forty Five"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 1234567
+<strong>Output:</strong> "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> num = 1234567891
+<strong>Output:</strong> "One Billion Two Hundred Thirty Four Million Five Hundred Sixty Seven Thousand Eight Hundred Ninety One"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= num &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 273 -->
+<pre>/*
+ * @lc app=leetcode id=273 lang=cpp
+ *
+ * [273] Integer to English Words
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string ones[20] = {&quot;&quot;, &quot; One&quot;, &quot; Two&quot;, &quot; Three&quot;, &quot; Four&quot;, &quot; Five&quot;, &quot; Six&quot;, &quot; Seven&quot;, &quot; Eight&quot;, &quot; Nine&quot;, &quot; Ten&quot;, &quot; Eleven&quot;, &quot; Twelve&quot;, &quot; Thirteen&quot;, &quot; Fourteen&quot;, &quot; Fifteen&quot;, &quot; Sixteen&quot;, &quot; Seventeen&quot;, &quot; Eighteen&quot;, &quot; Nineteen&quot;};
+    string tens[10] = {&quot;&quot;, &quot; Ten&quot;, &quot; Twenty&quot;, &quot; Thirty&quot;, &quot; Forty&quot;, &quot; Fifty&quot;, &quot; Sixty&quot;, &quot; Seventy&quot;, &quot; Eighty&quot;, &quot; Ninety&quot;};
+    string thousands[4] = {&quot;&quot;, &quot; Thousand&quot;, &quot; Million&quot;, &quot; Billion&quot;};
+    string find(int num){
+        if(num&lt;20) return ones[num];
+        else if(num&lt;100) return tens[num/10] + find(num%10);
+        else if(num &lt; 1000) return find(num/100) + &quot; Hundred&quot; + find(num%100);
+        for(int i=3;i&gt;=0;i--){
+            if(num&gt;=pow(1000,i)) return find(num/pow(1000,i)) + thousands[i] + find(num% (int) pow(1000,i));
+        }
+        return &quot;&quot;;
+    }
+    string numberToWords(int num) {
+        if(num==0) return &quot;Zero&quot;;
+        return find(num).substr(1);
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  274. H-Index
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -27799,6 +28606,110 @@ public:
             int mid = (start +end)/2;
             if(citations[n-mid-1]&gt;=mid+1) start=mid+1;
             else end=mid-1;
+        }
+        return start;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 278. First Bad Version
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+  </p>
+  <p>
+   Suppose you have
+   <code>
+    n
+   </code>
+   versions
+   <code>
+    [1, 2, ..., n]
+   </code>
+   and you want to find out the first bad one, which causes all the following ones to be bad.
+  </p>
+  <p>
+   You are given an API
+   <code>
+    bool isBadVersion(version)
+   </code>
+   which returns whether
+   <code>
+    version
+   </code>
+   is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 5, bad = 4
+<strong>Output:</strong> 4
+<strong>Explanation:</strong>
+call isBadVersion(3) -&gt; false
+call isBadVersion(5) -&gt; true
+call isBadVersion(4) -&gt; true
+Then 4 is the first bad version.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1, bad = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= bad &lt;= n &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 278 -->
+<pre>/*
+ * @lc app=leetcode id=278 lang=cpp
+ *
+ * [278] First Bad Version
+ */
+
+// @lc code=start
+// The API isBadVersion is defined for you.
+// bool isBadVersion(int version);
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        int start=0,end=n;
+        while(start&lt;end){
+            int mid = (start)/2+(end)/2;
+            if(isBadVersion(mid)){
+                end=mid;
+            }
+            else{
+                start=mid+1;
+            }
         }
         return start;
     }
@@ -28331,6 +29242,178 @@ public:
             }
         }
         return -1;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 290. Word Pattern
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a
+   <code>
+    pattern
+   </code>
+   and a string
+   <code>
+    s
+   </code>
+   , find if
+   <code>
+    s
+   </code>
+   follows the same pattern.
+  </p>
+  <p>
+   Here
+   <b>
+    follow
+   </b>
+   means a full match, such that there is a bijection between a letter in
+   <code>
+    pattern
+   </code>
+   and a
+   <b>
+    non-empty
+   </b>
+   word in
+   <code>
+    s
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> pattern = "abba", s = "dog cat cat dog"
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> pattern = "abba", s = "dog cat cat fish"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> pattern = "aaaa", s = "dog cat cat dog"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> pattern = "abba", s = "dog dog dog dog"
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= pattern.length &lt;= 300
+    </code>
+   </li>
+   <li>
+    <code>
+     pattern
+    </code>
+    contains only lower-case English letters.
+   </li>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 3000
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    contains only lower-case English letters and spaces
+    <code>
+     ' '
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    <strong>
+     does not contain
+    </strong>
+    any leading or trailing spaces.
+   </li>
+   <li>
+    All the words in
+    <code>
+     s
+    </code>
+    are separated by a
+    <strong>
+     single space
+    </strong>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 290 -->
+<pre>/*
+ * @lc app=leetcode id=290 lang=cpp
+ *
+ * [290] Word Pattern
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        int space=0;
+        s=s+&#x27; &#x27;;
+        int j=0;
+        map&lt;char,string&gt;m1;
+        map&lt;string,char&gt;m2;
+        string temp=&quot;&quot;;
+        for(int i=0; i&lt;s.length(); i++){
+            if(s[i]==&#x27; &#x27;){
+                space++;
+                cout&lt;&lt;temp&lt;&lt;j&lt;&lt;endl;
+                if(m1.find(pattern[j])==m1.end() &amp;&amp; m2.find(temp)==m2.end()){
+                    m1[pattern[j]]=temp;
+                    m2[temp]=pattern[j];
+                }
+                else{
+                    if(m1[pattern[j]]!=temp || m2[temp]!=pattern[j])return false;
+                }
+                j++;
+                temp=&quot;&quot;;
+            }
+            else{
+                temp=temp+s[i];
+            }
+        }
+        return space==pattern.length()?true:false;
     }
 };
 // @lc code=end
@@ -29378,15 +30461,20 @@ coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167</pre>
 // @lc code=start
 class Solution {
 public:
-    int maxCoins(vector&lt;int&gt;&amp; nums) {
-        sort(nums.begin(), nums.end());
-        int sum=nums[nums.size()-1];
-        cout&lt;&lt;sum;
-        for(int i=nums.size()-2; i&gt;=0; i--){
-            nums[i]=nums[i]*nums[i+1];
-            sum+=nums[i];
+    int maxCoins(vector&lt;int&gt;&amp; a) {
+        a.push_back(1);
+        a.insert(a.begin(),1);
+        int n= a.size();
+        vector&lt;vector&lt;int&gt;&gt;dp(n,vector&lt;int&gt;(n));
+        for(int len=2;len&lt;=n;len++){
+            for(int i=0;i+len&lt;=n;i++){
+                int j=i+len-1;
+                for(int k=i+1;k&lt;j;k++){
+                    dp[i][j]=max(dp[i][j],dp[i][k]+dp[k][j]+a[i]*a[j]*a[k]);
+                }
+            }
         }
-        return sum;
+        return dp[0][n-1];
     }
 };
 // @lc code=end
@@ -29698,6 +30786,128 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 324. Wiggle Sort II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   , reorder it such that
+   <code>
+    nums[0] &lt; nums[1] &gt; nums[2] &lt; nums[3]...
+   </code>
+   .
+  </p>
+  <p>
+   You may assume the input array always has a valid answer.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,5,1,1,6,4]
+<strong>Output:</strong> [1,6,1,5,1,4]
+<strong>Explanation:</strong> [1,4,1,5,1,6] is also accepted.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,3,2,2,3,1]
+<strong>Output:</strong> [2,3,1,3,1,2]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= nums[i] &lt;= 5000
+    </code>
+   </li>
+   <li>
+    It is guaranteed that there will be an answer for the given input
+    <code>
+     nums
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow Up:
+  </strong>
+  Can you do it in
+  <code>
+   O(n)
+  </code>
+  time and/or
+  <strong>
+   in-place
+  </strong>
+  with
+  <code>
+   O(1)
+  </code>
+  extra space?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 324 -->
+<pre>/*
+ * @lc app=leetcode id=324 lang=cpp
+ *
+ * [324] Wiggle Sort II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    void wiggleSort(vector&lt;int&gt;&amp; nums) {
+        if(nums.size() == 1) return;
+        priority_queue&lt;int&gt;pq;
+        for(int x:nums){
+            pq.push(x);
+        }
+        int i=1;
+        while(!pq.empty() &amp;&amp; i&lt;nums.size()) {
+            nums[i]=pq.top();
+            cout&lt;&lt;i;
+            i=i+2;
+            pq.pop();
+        }
+        i=0;
+        while(!pq.empty() &amp;&amp; i&lt;nums.size()) {
+            nums[i]=pq.top();
+            i=i+2;
+            pq.pop();
+        }
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  326. Power of Three
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -29820,6 +31030,301 @@ public:
             k++;
         }
         return false;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 331. Verify Preorder Serialization of a Binary Tree
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   One way to serialize a binary tree is to use
+   <strong>
+    preorder traversal
+   </strong>
+   . When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as
+   <code>
+    '#'
+   </code>
+   .
+  </p>
+  <img alt="" src="./output_files/pre-tree.jpg" style="width: 362px; height: 293px;"/>
+  <p>
+   For example, the above binary tree can be serialized to the string
+   <code>
+    "9,3,4,#,#,1,#,#,2,#,6,#,#"
+   </code>
+   , where
+   <code>
+    '#'
+   </code>
+   represents a null node.
+  </p>
+  <p>
+   Given a string of comma-separated values
+   <code>
+    preorder
+   </code>
+   , return
+   <code>
+    true
+   </code>
+   if it is a correct preorder traversal serialization of a binary tree.
+  </p>
+  <p>
+   It is
+   <strong>
+    guaranteed
+   </strong>
+   that each comma-separated value in the string must be either an integer or a character
+   <code>
+    '#'
+   </code>
+   representing null pointer.
+  </p>
+  <p>
+   You may assume that the input format is always valid.
+  </p>
+  <ul>
+   <li>
+    For example, it could never contain two consecutive commas, such as
+    <code>
+     "1,,3"
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+   <strong>
+    Note:
+   </strong>
+   You are not allowed to reconstruct the tree.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> preorder = "9,3,4,#,#,1,#,#,2,#,6,#,#"
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> preorder = "1,#"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> preorder = "9,#,#,1"
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= preorder.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     preorder
+    </code>
+    consist of integers in the range
+    <code>
+     [0, 100]
+    </code>
+    and
+    <code>
+     '#'
+    </code>
+    separated by commas
+    <code>
+     ','
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 331 -->
+<pre>/*
+ * @lc app=leetcode id=331 lang=cpp
+ *
+ * [331] Verify Preorder Serialization of a Binary Tree
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 337. House Robber III
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The thief has found himself a new place for his thievery again. There is only one entrance to this area, called
+   <code>
+    root
+   </code>
+   .
+  </p>
+  <p>
+   Besides the
+   <code>
+    root
+   </code>
+   , each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if
+   <strong>
+    two directly-linked houses were broken into on the same night
+   </strong>
+   .
+  </p>
+  <p>
+   Given the
+   <code>
+    root
+   </code>
+   of the binary tree, return
+   <em>
+    the maximum amount of money the thief can rob
+    <strong>
+     without alerting the police
+    </strong>
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/rob1-tree.jpg" style="width: 277px; height: 293px;"/>
+  <pre><strong>Input:</strong> root = [3,2,3,null,3,null,1]
+<strong>Output:</strong> 7
+<strong>Explanation:</strong> Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/rob2-tree.jpg" style="width: 357px; height: 293px;"/>
+  <pre><strong>Input:</strong> root = [3,4,5,1,3,null,1]
+<strong>Output:</strong> 9
+<strong>Explanation:</strong> Maximum amount of money the thief can rob = 4 + 5 = 9.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is in the range
+    <code>
+     [1, 10
+     <sup>
+      4
+     </sup>
+     ]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     0 &lt;= Node.val &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 337 -->
+<pre>/*
+ * @lc app=leetcode id=337 lang=cpp
+ *
+ * [337] House Robber III
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        queue&lt;TreeNode *&gt;q;
+        q.push(root);
+        vector&lt;int&gt;a;
+        a.push_back(root-&gt;val);
+        while(!q.empty()) {
+            int count = q.size();
+            int sum=0;
+            while(count--){
+                TreeNode* node = q.front();
+                q.pop();
+                if(node-&gt;left){
+                    q.push(node-&gt;left);
+                    sum+=node-&gt;left-&gt;val;
+                }
+                if(node-&gt;right){
+                    q.push(node-&gt;right);
+                    sum+=node-&gt;right-&gt;val;
+                }
+            }
+            a.push_back(sum);
+        }
+        int n=a.size();
+        vector&lt;int&gt;dp(n,0);
+        dp[0]=a[0];
+        dp[1]=max(a[1],a[0]);
+        for(int i=2;i&lt;n;i++){
+            dp[i]=max(dp[i-1],dp[i-2]+a[i]);
+        }
+        return dp[n-1];
     }
 };
 // @lc code=end
@@ -30245,6 +31750,138 @@ public:
             }
         }
         return s;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 347. Top K Frequent Elements
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   and an integer
+   <code>
+    k
+   </code>
+   , return
+   <em>
+    the
+   </em>
+   <code>
+    k
+   </code>
+   <em>
+    most frequent elements
+   </em>
+   . You may return the answer in
+   <strong>
+    any order
+   </strong>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,1,1,2,2,3], k = 2
+<strong>Output:</strong> [1,2]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1], k = 1
+<strong>Output:</strong> [1]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     k
+    </code>
+    is in the range
+    <code>
+     [1, the number of unique elements in the array]
+    </code>
+    .
+   </li>
+   <li>
+    It is
+    <strong>
+     guaranteed
+    </strong>
+    that the answer is
+    <strong>
+     unique
+    </strong>
+    .
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+   Your algorithm's time complexity must be better than
+   <code>
+    O(n log n)
+   </code>
+   , where n is the array's size.
+  </p>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 347 -->
+<pre>/*
+ * @lc app=leetcode id=347 lang=cpp
+ *
+ * [347] Top K Frequent Elements
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt; topKFrequent(vector&lt;int&gt;&amp; nums, int k) {
+        map&lt;int,int&gt;m;
+        vector&lt;int&gt;ans;
+        for(int i=0; i&lt;nums.size(); i++){
+            m[nums[i]]++;
+        }
+        priority_queue&lt;pair&lt;int,int&gt;&gt; pq;
+        for(auto x:m){
+            pq.push(make_pair(x.second,x.first));
+            if(pq.size()&gt;m.size()-k){
+                ans.push_back(pq.top().second);
+                pq.pop();
+            }
+
+        }
+        return ans;
     }
 };
 // @lc code=end
@@ -30908,6 +32545,220 @@ public:
             }
         }
         return a;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 371. Sum of Two Integers
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two integers
+   <code>
+    a
+   </code>
+   and
+   <code>
+    b
+   </code>
+   , return
+   <em>
+    the sum of the two integers without using the operators
+   </em>
+   <code>
+    +
+   </code>
+   <em>
+    and
+   </em>
+   <code>
+    -
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 1, b = 2
+<strong>Output:</strong> 3
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 2, b = 3
+<strong>Output:</strong> 5
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     -1000 &lt;= a, b &lt;= 1000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 371 -->
+<pre>/*
+ * @lc app=leetcode id=371 lang=cpp
+ *
+ * [371] Sum of Two Integers
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int getSum(int a, int b) {
+        int sum=a;
+        while(b!=0){
+            sum=a^b;
+            b=(a&amp;b)&lt;&lt;1;
+            a=sum;
+        }
+        return sum;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 372. Super Pow
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Your task is to calculate
+   <code>
+    a
+    <sup>
+     b
+    </sup>
+   </code>
+   mod
+   <code>
+    1337
+   </code>
+   where
+   <code>
+    a
+   </code>
+   is a positive integer and
+   <code>
+    b
+   </code>
+   is an extremely large positive integer given in the form of an array.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 2, b = [3]
+<strong>Output:</strong> 8
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 2, b = [1,0]
+<strong>Output:</strong> 1024
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 1, b = [4,3,3,8,5,2]
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> a = 2147483647, b = [2,0,0]
+<strong>Output:</strong> 1198
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= a &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= b.length &lt;= 2000
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= b[i] &lt;= 9
+    </code>
+   </li>
+   <li>
+    <code>
+     b
+    </code>
+    doesn't contain leading zeros.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 372 -->
+<pre>/*
+ * @lc app=leetcode id=372 lang=cpp
+ *
+ * [372] Super Pow
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int base=1337;
+    int power(int a,int n){
+        a=a%base;
+        int ans=1;
+        for(int i=0;i&lt;n;i++){
+            ans=(ans*a)%base;
+        }
+        return ans;
+    }
+    int superPow(int a, vector&lt;int&gt;&amp; b) {
+        if(b.empty()) return 1;
+        int n=b.back();
+        b.pop_back();
+        return power(superPow(a,b),10) * power(a,n) %base;
     }
 };
 // @lc code=end
@@ -33115,7 +34966,7 @@ public:
                 else dp[i][j]=dp[i-1][j];
             }
         }
-
+ 
         cout&lt;&lt;&#x27;\n&#x27;;
         for(auto x:dp){
             for(int y:x){
@@ -33663,6 +35514,129 @@ class Solution {
 public:
     int eraseOverlapIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
         
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 438. Find All Anagrams in a String
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two strings
+   <code>
+    s
+   </code>
+   and
+   <code>
+    p
+   </code>
+   , return
+   <em>
+    an array of all the start indices of
+   </em>
+   <code>
+    p
+   </code>
+   <em>
+    's anagrams in
+   </em>
+   <code>
+    s
+   </code>
+   . You may return the answer in
+   <strong>
+    any order
+   </strong>
+   .
+  </p>
+  <p>
+   An
+   <strong>
+    Anagram
+   </strong>
+   is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "cbaebabacd", p = "abc"
+<strong>Output:</strong> [0,6]
+<strong>Explanation:</strong>
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "abab", p = "ab"
+<strong>Output:</strong> [0,1,2]
+<strong>Explanation:</strong>
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length, p.length &lt;= 3 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    and
+    <code>
+     p
+    </code>
+    consist of lowercase English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 438 -->
+<pre>/*
+ * @lc app=leetcode id=438 lang=cpp
+ *
+ * [438] Find All Anagrams in a String
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt; findAnagrams(string s, string p) {
+        vector&lt;int&gt;m(26),m1(26);
+        int total = 0,count = 0;
+        for(int i=0; i&lt;p.length(); i++){
+            m[p[i]-&#x27;a&#x27;]++;
+        }
+        vector&lt;int&gt;ans;
+        for(int i=0; i&lt;s.length(); i++){
+            m1[s[i]-&#x27;a&#x27;]++;
+            if(i&gt;=p.size()) m1[s[i-p.size()]-&#x27;a&#x27;]--;
+            if(m1==m) ans.push_back(i-p.size()+1);
+        }
+        return ans;
     }
 };
 // @lc code=end
@@ -34366,6 +36340,160 @@ class Solution {
 public:
     bool canIWin(int maxChoosableInteger, int desiredTotal) {
         
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 470. Implement Rand10() Using Rand7()
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <strong>
+    API
+   </strong>
+   <code>
+    rand7()
+   </code>
+   that generates a uniform random integer in the range
+   <code>
+    [1, 7]
+   </code>
+   , write a function
+   <code>
+    rand10()
+   </code>
+   that generates a uniform random integer in the range
+   <code>
+    [1, 10]
+   </code>
+   . You can only call the API
+   <code>
+    rand7()
+   </code>
+   , and you shouldn't call any other API. Please
+   <strong>
+    do not
+   </strong>
+   use a language's built-in random API.
+  </p>
+  <p>
+   Each test case will have one
+   <strong>
+    internal
+   </strong>
+   argument
+   <code>
+    n
+   </code>
+   , the number of times that your implemented function
+   <code>
+    rand10()
+   </code>
+   will be called while testing. Note that this is
+   <strong>
+    not an argument
+   </strong>
+   passed to
+   <code>
+    rand10()
+   </code>
+   .
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    What is the
+    <a href="https://en.wikipedia.org/wiki/Expected_value" target="_blank">
+     expected value
+    </a>
+    for the number of calls to
+    <code>
+     rand7()
+    </code>
+    function?
+   </li>
+   <li>
+    Could you minimize the number of calls to
+    <code>
+     rand7()
+    </code>
+    ?
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> [2]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> [2,8]
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> [3,8,10]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 470 -->
+<pre>/*
+ * @lc app=leetcode id=470 lang=cpp
+ *
+ * [470] Implement Rand10() Using Rand7()
+ */
+
+// @lc code=start
+// The rand7() API is already defined for you.
+// int rand7();
+// @return a random integer in the range 1 to 7
+
+class Solution {
+public:
+    int rand10() {
+        int ans=40;
+        while(ans&gt;=40){
+            ans=(rand7()-1) * 7 + rand7()-1;
+        }
+        return ans % 10 +1;
     }
 };
 // @lc code=end
@@ -37787,7 +39915,7 @@ public:
 </div>
 </body></html>
 <!-- Solution for Question 583 -->
-<pre>/*
+<pre>T/*
  * @lc app=leetcode id=583 lang=cpp
  *
  * [583] Delete Operation for Two Strings
@@ -38565,7 +40693,7 @@ In step 3, we use Paste operation to get 'AAA'.
 </div>
 </body></html>
 <!-- Solution for Question 650 -->
-<pre>/*
+<pre> /*
  * @lc app=leetcode id=650 lang=cpp
  *
  * [650] 2 Keys Keyboard
@@ -39610,6 +41738,7 @@ public:
                 }
             }
         }
+        for(int x:dp) cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
         return dp[(1&lt;&lt;n)-1]==0;
     }
 };
@@ -48279,6 +50408,114 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 1301. Number of Paths with Max Score
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are given a square
+   <code>
+    board
+   </code>
+   of characters. You can move on the board starting at the bottom right square marked with the character
+   <code>
+    'S'
+   </code>
+   .
+  </p>
+  <p>
+   You need to reach the top left square marked with the character
+   <code>
+    'E'
+   </code>
+   . The rest of the squares are labeled either with a numeric character
+   <code>
+    1, 2, ..., 9
+   </code>
+   or with an obstacle
+   <code>
+    'X'
+   </code>
+   . In one move you can go up, left or up-left (diagonally) only if there is no obstacle there.
+  </p>
+  <p>
+   Return a list of two integers: the first integer is the maximum sum of numeric characters you can collect, and the second is the number of such paths that you can take to get that maximum sum,
+   <strong>
+    taken modulo
+    <code>
+     10^9 + 7
+    </code>
+   </strong>
+   .
+  </p>
+  <p>
+   In case there is no path, return
+   <code>
+    [0, 0]
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> board = ["E23","2X2","12S"]
+<strong>Output:</strong> [7,1]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> board = ["E12","1X1","21S"]
+<strong>Output:</strong> [4,2]
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> board = ["E11","XXX","11S"]
+<strong>Output:</strong> [0,0]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     2 &lt;= board.length == board[i].length &lt;= 100
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 1301 -->
+<pre>/*
+ * @lc app=leetcode id=1301 lang=cpp
+ *
+ * [1301] Number of Paths with Max Score
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt; pathsWithMaxScore(vector&lt;string&gt;&amp; board) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  1311. Get Watched Videos by Your Friends
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -48972,12 +51209,12 @@ public:
             }
         }
         sort(filtered.begin(), filtered.end(),[](vector&lt;int&gt;&amp; a, vector&lt;int&gt;&amp; b)-&gt;bool{return a[1]==b[1]?a[0]&gt;b[0]:a[1]&gt;b[1];});
-    vector&lt;int&gt;ans;
-    for(auto x:filtered)
-    {
-        ans.push_back(x[0]);
-    }
-    return ans;
+        vector&lt;int&gt;ans;
+        for(auto x:filtered)
+        {
+            ans.push_back(x[0]);
+        }
+        return ans;
     }
 
 };
@@ -50003,6 +52240,205 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 1863. Sum of All Subset XOR Totals
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The
+   <strong>
+    XOR total
+   </strong>
+   of an array is defined as the bitwise
+   <code>
+    XOR
+   </code>
+   of
+   <strong>
+    all its elements
+   </strong>
+   , or
+   <code>
+    0
+   </code>
+   if the array is
+   <strong>
+    empty
+   </strong>
+   .
+  </p>
+  <ul>
+   <li>
+    For example, the
+    <strong>
+     XOR total
+    </strong>
+    of the array
+    <code>
+     [2,5,6]
+    </code>
+    is
+    <code>
+     2 XOR 5 XOR 6 = 1
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+   Given an array
+   <code>
+    nums
+   </code>
+   , return
+   <em>
+    the
+    <strong>
+     sum
+    </strong>
+    of all
+    <strong>
+     XOR totals
+    </strong>
+    for every
+    <strong>
+     subset
+    </strong>
+    of
+   </em>
+   <code>
+    nums
+   </code>
+   .
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+   Subsets with the
+   <strong>
+    same
+   </strong>
+   elements should be counted
+   <strong>
+    multiple
+   </strong>
+   times.
+  </p>
+  <p>
+   An array
+   <code>
+    a
+   </code>
+   is a
+   <strong>
+    subset
+   </strong>
+   of an array
+   <code>
+    b
+   </code>
+   if
+   <code>
+    a
+   </code>
+   can be obtained from
+   <code>
+    b
+   </code>
+   by deleting some (possibly zero) elements of
+   <code>
+    b
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,3]
+<strong>Output:</strong> 6
+<strong>Explanation: </strong>The 4 subsets of [1,3] are:
+- The empty subset has an XOR total of 0.
+- [1] has an XOR total of 1.
+- [3] has an XOR total of 3.
+- [1,3] has an XOR total of 1 XOR 3 = 2.
+0 + 1 + 3 + 2 = 6
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [5,1,6]
+<strong>Output:</strong> 28
+<strong>Explanation: </strong>The 8 subsets of [5,1,6] are:
+- The empty subset has an XOR total of 0.
+- [5] has an XOR total of 5.
+- [1] has an XOR total of 1.
+- [6] has an XOR total of 6.
+- [5,1] has an XOR total of 5 XOR 1 = 4.
+- [5,6] has an XOR total of 5 XOR 6 = 3.
+- [1,6] has an XOR total of 1 XOR 6 = 7.
+- [5,1,6] has an XOR total of 5 XOR 1 XOR 6 = 2.
+0 + 5 + 1 + 6 + 4 + 3 + 7 + 2 = 28
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [3,4,5,6,7,8]
+<strong>Output:</strong> 480
+<strong>Explanation:</strong> The sum of all XOR totals for every subset is 480.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 12
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= nums[i] &lt;= 20
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 1863 -->
+<pre>/*
+ * @lc app=leetcode id=1863 lang=cpp
+ *
+ * [1863] Sum of All Subset XOR Totals
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int subsetXORSum(vector&lt;int&gt;&amp; nums) {
+        int bits=0;
+        for(int i=0;i&lt;nums.size();i++)
+        {
+            bits=bits|nums[i];
+        }
+        return bits* pow(2,nums.size()-1);
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  1877. Minimize Maximum Pair Sum in Array
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -50194,7 +52630,7 @@ public:
         int start=0,end=nums.size()-1;
         while(start&lt;=end){
             maxx=max(maxx,nums[start]+nums[end]);
-            start=start+1;
+            start++;
             end--;
         }
         return maxx;
@@ -50353,6 +52789,14 @@ class Solution {
 public:
 
     int dfs(int mask,int index,vector&lt;int&gt;nums1,vector&lt;int&gt;nums2,vector&lt;vector&lt;int&gt;&gt;&amp;dp){
+        cout&lt;&lt;mask&lt;&lt;&quot; &quot;&lt;&lt;index&lt;&lt;&quot; &quot;&lt;&lt;endl;
+        for(auto x:dp){
+            for(int y:x){
+                cout&lt;&lt;y&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;endl;
+        }
+        cout&lt;&lt;&#x27;\n&#x27;;
         if(index&gt;=nums1.size()) return 0;
         if(dp[index][mask]!=-1) return dp[index][mask];
         int ans=INT_MAX;
@@ -50364,7 +52808,8 @@ public:
         return dp[index][mask]=ans;
     }
     int minimumXORSum(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
-        vector&lt;vector&lt;int&gt;&gt;dp(nums1.size()+1,vector&lt;int&gt;(1&lt;&lt;nums1.size(),-1));
+        int n=nums1.size();
+        vector&lt;vector&lt;int&gt;&gt;dp(n+1,vector&lt;int&gt;(1&lt;&lt;n,-1));
         return dfs(0,0,nums1,nums2,dp);
     }
 };

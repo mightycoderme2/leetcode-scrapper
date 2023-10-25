@@ -271,8 +271,16 @@ public:
         for(int i=1;i&lt;=n1;i++){
             for(int j=1;j&lt;=n2;j++){
                 dp[i][j]=(dp[i-1][j] &amp;&amp; s1[i-1]==s3[i+j-1])||(dp[i][j-1] &amp;&amp; s2[j-1]==s3[i+j-1]);
-            }
+            } 
         }
+
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+
         return dp[n1][n2];
     }
 };

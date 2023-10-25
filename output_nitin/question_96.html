@@ -89,6 +89,9 @@ public:
                 dp[i]+=dp[i-j]*dp[j-1];
             }
         }
+        for(auto y:dp){
+                cout&lt;&lt;y&lt;&lt;&#x27; &#x27;;
+        }
         return dp[n];
     }
 };

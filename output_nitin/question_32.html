@@ -88,7 +88,27 @@
 class Solution {
 public:
     int longestValidParentheses(string s) {
-        
+        stack&lt;int&gt;q;
+        int maxx=0,count;
+        for(int i = 0; i &lt; s.length();i++){
+            if(s[i] == &#x27;(&#x27;) q.push(i);
+            else if(!q.empty()){
+                s[q.top()] = &#x27;1&#x27;;
+                s[i]=&#x27;1&#x27;;
+                q.pop();
+            }
+        }
+        cout&lt;&lt;s;
+        for(int i = 0; i &lt; s.length();i++){
+            if(s[i]!=&#x27;1&#x27;){
+                maxx=max(maxx,count);
+                count=0;
+            }
+            else{
+                count++;
+            }
+        }
+        return max(maxx,count);
     }
 };
 // @lc code=end

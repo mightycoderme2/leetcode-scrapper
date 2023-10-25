@@ -85,19 +85,24 @@ public:
     int minPathSum(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
         int m=grid.size();
         int n=grid[0].size();
-        vector&lt;vector&lt;int&gt;&gt;dp(m+1,vector&lt;int&gt;(n+1,INT_MAX));
-        dp[1][1]=grid[0][0];
-        for(int i=1;i&lt;dp.size();i++)
+        vector&lt;vector&lt;int&gt;&gt;dp(m,vector&lt;int&gt;(n,0));
+        dp[0][0]=grid[0][0];
+        for(int i=1;i&lt;m;i++) dp[i][0]=dp[i-1][0]+grid[i][0];
+        for(int i=1;i&lt;n;i++) dp[0][i]=dp[0][i-1]+grid[0][i];
+        for(int i=1;i&lt;m;i++)
         {
-            for(int j=1;j&lt;dp[0].size();j++)
+            for(int j=1;j&lt;n;j++)
             {
-                if(i!=1 || j!=1)
-                {
-                dp[i][j]=grid[i-1][j-1]+min(dp[i-1][j],dp[i][j-1]);
-                }
+                dp[i][j]=grid[i][j]+min(dp[i-1][j],dp[i][j-1]);
             }
         }
-        return dp[m][n];
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
+        return dp[m-1][n-1];
     }
 };
 // @lc code=end

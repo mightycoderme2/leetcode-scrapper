@@ -191,7 +191,7 @@ public:
         int start=0,end=nums.size()-1;
         while(start&lt;=end){
             maxx=max(maxx,nums[start]+nums[end]);
-            start=start+1;
+            start++;
             end--;
         }
         return maxx;

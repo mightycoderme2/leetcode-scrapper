@@ -131,14 +131,12 @@ public:
     bool containsNearbyAlmostDuplicate(vector&lt;int&gt;&amp; nums, int k, int valueDiff) {
         map&lt;int,vector&lt;int&gt;&gt;m;
         for(int i=0; i&lt;nums.size(); i++){
-            if(m.find(nums[i])==m.end()){
-                m[nums[i]].push_back(i);
-            }
-            else{
-                for(int j=0; j&lt;m[nums[i]].size(); j++){
-                    if(k&gt;=abs(m[nums[i]][j]-i)) return true;
+            for(int j=i+1; j&lt;nums.size(); j++){
+                if(abs(i-j)&lt;=k){
+                    if(abs(nums[i]-nums[j])&lt;=valueDiff){
+                        return true;
+                    }
                 }
-                m[nums[i]].push_back(i);
             }
         }
         return false;

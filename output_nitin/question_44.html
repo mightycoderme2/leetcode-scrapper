@@ -1,21 +1,21 @@
 <html><head></head><body>
 <div id="title">
- 10. Regular Expression Matching
+ 44. Wildcard Matching
 </div>
 <div class="content__u3I1 question-content__JfgR">
  <div>
   <p>
-   Given an input string
+   Given an input string (
    <code>
     s
    </code>
-   and a pattern
+   ) and a pattern (
    <code>
     p
    </code>
-   , implement regular expression matching with support for
+   ), implement wildcard pattern matching with support for
    <code>
-    '.'
+    '?'
    </code>
    and
    <code>
@@ -26,15 +26,15 @@
   <ul>
    <li>
     <code>
-     '.'
+     '?'
     </code>
-    Matches any single character.​​​​
+    Matches any single character.
    </li>
    <li>
     <code>
      '*'
     </code>
-    Matches zero or more of the preceding element.
+    Matches any sequence of characters (including the empty sequence).
    </li>
   </ul>
   <p>
@@ -60,34 +60,34 @@
     Example 2:
    </strong>
   </p>
-  <pre><strong>Input:</strong> s = "aa", p = "a*"
+  <pre><strong>Input:</strong> s = "aa", p = "*"
 <strong>Output:</strong> true
-<strong>Explanation:</strong> '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+<strong>Explanation:</strong> '*' matches any sequence.
 </pre>
   <p>
    <strong>
     Example 3:
    </strong>
   </p>
-  <pre><strong>Input:</strong> s = "ab", p = ".*"
-<strong>Output:</strong> true
-<strong>Explanation:</strong> ".*" means "zero or more (*) of any character (.)".
+  <pre><strong>Input:</strong> s = "cb", p = "?a"
+<strong>Output:</strong> false
+<strong>Explanation:</strong> '?' matches 'c', but the second letter is 'a', which does not match 'b'.
 </pre>
   <p>
    <strong>
     Example 4:
    </strong>
   </p>
-  <pre><strong>Input:</strong> s = "aab", p = "c*a*b"
+  <pre><strong>Input:</strong> s = "adceb", p = "*a*b"
 <strong>Output:</strong> true
-<strong>Explanation:</strong> c can be repeated 0 times, a can be repeated 1 time. Therefore, it matches "aab".
+<strong>Explanation:</strong> The first '*' matches the empty sequence, while the second '*' matches the substring "dce".
 </pre>
   <p>
    <strong>
     Example 5:
    </strong>
   </p>
-  <pre><strong>Input:</strong> s = "mississippi", p = "mis*is*p*."
+  <pre><strong>Input:</strong> s = "acdcb", p = "a*c?b"
 <strong>Output:</strong> false
 </pre>
   <p>
@@ -100,12 +100,7 @@
   <ul>
    <li>
     <code>
-     1 &lt;= s.length &lt;= 20
-    </code>
-   </li>
-   <li>
-    <code>
-     1 &lt;= p.length &lt;= 30
+     0 &lt;= s.length, p.length &lt;= 2000
     </code>
    </li>
    <li>
@@ -120,30 +115,23 @@
     </code>
     contains only lowercase English letters,
     <code>
-     '.'
+     '?'
     </code>
-    , and
+    or
     <code>
      '*'
     </code>
     .
    </li>
-   <li>
-    It is guaranteed for each appearance of the character
-    <code>
-     '*'
-    </code>
-    , there will be a previous valid character to match.
-   </li>
   </ul>
  </div>
 </div>
 </body></html>
-<!-- Solution for Question 10 -->
+<!-- Solution for Question 44 -->
 <pre>/*
- * @lc app=leetcode id=10 lang=cpp
+ * @lc app=leetcode id=44 lang=cpp
  *
- * [10] Regular Expression Matching
+ * [44] Wildcard Matching
  */
 
 // @lc code=start
@@ -167,14 +155,14 @@ public:
 
         for(int i=1;i&lt;=m;i++){
             for(int j=1;j&lt;=n;j++){
-                if(s[i-1]==p[j-1]||p[j-1]==&#x27;.&#x27;){
+                if(s[i-1]==p[j-1]||p[j-1]==&#x27;?&#x27;){
                     dp[i][j]=dp[i-1][j-1];
                 }
                 else if(p[j-1]==&#x27;*&#x27;){
                     if(dp[i][j-2]){
                         dp[i][j]=dp[i][j-2];
                     }
-                    else if(p[j-2]==&#x27;.&#x27;||s[i-1]==p[j-2]){
+                    else if(p[j-2]==&#x27;?&#x27;||s[i-1]==p[j-2]){
                         dp[i][j]=dp[i-1][j];
                     }
                     else{

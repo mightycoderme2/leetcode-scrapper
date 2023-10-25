@@ -124,6 +124,12 @@ public:
                 }
             }
         }
+        for(auto y:dp){
+            for(int x:y){
+                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
+            }
+            cout&lt;&lt;&#x27;\n&#x27;;
+        }
         return dp[m][n];
     }
 };

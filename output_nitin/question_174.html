@@ -129,27 +129,33 @@ class Solution {
 public:
     int calculateMinimumHP(vector&lt;vector&lt;int&gt;&gt;&amp; a) {
         int m=a.size(),n=a[0].size();
-        vector&lt;vector&lt;int&gt;&gt;dp(m+1,vector&lt;int&gt;(n+1,0));
-        for(int i=m;i&gt;=0;i--) dp[i][n]=1e9;
-        for(int i=n;i&gt;=0;i--) dp[m][i]=1e9;
-
-        for(int i=m-1;i&gt;=0;i--){
-            for(int j=n-1;j&gt;=0;j--){
-                if(i==m-1 &amp;&amp; j==n-1){
-                    dp[i][j]=a[i][j]&gt;0?1:1-a[i][j];
-                    continue;
-                }
-                int temp=min(dp[i+1][j],dp[i][j+1])-a[i][j];
-                dp[i][j] = temp&gt;0?temp:1;
+        a[m-1][n-1] = a[m-1][n-1]&gt;0?1:1-a[m-1][n-1];
+        int i,j;
+        j=n-1;
+        for(int i=m-2;i&gt;=0;i--){
+           a[i][j]=a[i+1][j]-a[i][j];
+           if(a[i][j]&lt;=0) a[i][j]=1;
+        }
+        i=m-1;
+        for(int j=n-2;j&gt;=0;j--){
+            a[i][j]=a[i][j+1]-a[i][j];
+            if(a[i][j]&lt;=0) a[i][j]=1;
+        }
+        for(int i=m-2;i&gt;=0;i--){
+            for(int j=n-2;j&gt;=0;j--){
+                a[i][j]=min(a[i][j+1],a[i+1][j])-a[i][j];
+                if(a[i][j]&lt;=0) a[i][j]=1;
             }
         }
-        for(int i=0;i&lt;=m;i++){
-            for(int j=0;j&lt;=n;j++){
-                cout&lt;&lt;dp[i][j]&lt;&lt;&#x27; &#x27;;
+
+        for(int i=0;i&lt;m;i++){
+            for(int j=0;j&lt;n;j++){
+                cout&lt;&lt;a[i][j]&lt;&lt;&#x27; &#x27;;
             }
             cout&lt;&lt;&#x27;\n&#x27;;
         }
-        return dp[0][0];
+
+        return a[0][0];
     }
 };
 // @lc code=end
