@@ -121,10 +121,10 @@ public:
         for(int i=0;i&lt;m;i++){
             for(int j=0;j&lt;n;j++){
                 if(matrix[i][j]==&#x27;0&#x27; || !i || !j) dp[i][j]=matrix[i][j]-&#x27;0&#x27;;
-                else {
+                else{
                     dp[i][j]=min({dp[i-1][j-1],dp[i-1][j],dp[i][j-1]})+1;
                 }
-            a=max(a,dp[i][j]);
+                a=max(a,dp[i][j]);
             }
         }
 

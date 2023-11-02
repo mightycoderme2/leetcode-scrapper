@@ -192,16 +192,25 @@ In total, you spent $17 and covered all the days of your travel.
 class Solution {
 public:
     int mincostTickets(vector&lt;int&gt;&amp; days, vector&lt;int&gt;&amp; costs) {
-        vector&lt;int&gt;dp(days[days.size()-1]+1,0);
-        dp[1]=costs[0];
-        for(int i = 0; i &lt; days.size();i++){
-            for(int j = 0; j &lt; costs.size();j++){
-                if(days[i] &lt;= costs[j]){
-                    dp[days[i]]=min(dp[days[i]], dp[costs[j]-days[i]]+costs[j]);
-                }
+        unordered_map&lt;int, int &gt; tickets;
+        tickets[1] = costs[0];
+        tickets[7] = costs[1];
+        tickets[30] = costs[2];
+
+        vector&lt;int&gt;dp(366,INT_MAX);
+
+        dp[0]=0;
+
+        for(int i=1; i&lt;366;i++){
+            if(find(days.begin(), days.end(),i)==days.end()){
+                dp[i]=dp[i-1];
+                continue;
+            }
+            for( auto ticket : tickets){
+                dp[i]=min(dp[i],dp[max(0,i-ticket.first)]+ticket.second);
             }
         }
-        return dp[days.size()];
+        return dp[365];
     }
 };
 // @lc code=end

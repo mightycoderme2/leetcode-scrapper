@@ -85,7 +85,7 @@ class Solution {
 public:
     int tilingRectangle(int n, int m) {
         if (max(n, m) == 13 &amp;&amp; min(n, m) == 11) return 6;
-        vector&lt;vector&lt;int&gt;&gt;dp(n+1,vector&lt;int&gt;(m+1,INT_MAX));
+        vector&lt;vector&lt;long long &gt;&gt;dp(n+1,vector&lt;long long&gt;(m+1,INT_MAX));
         for(int i = 1; i &lt;=n;i++){
             for(int j = 1; j &lt;=m;j++){
                 cout&lt;&lt;i&lt;&lt;j&lt;&lt;endl;
@@ -93,10 +93,10 @@ public:
                     dp[i][j]=1;
                     continue;
                 }
-                for(int k=1;k&lt;=i/2;k++){
+                for(int k=1;k&lt;=i;k++){
                     dp[i][j]=min(dp[i][j],dp[i-k][j]+dp[k][j]);
                 }
-                for(int k=1;k&lt;=j/2;k++){
+                for(int k=1;k&lt;=j;k++){
                     dp[i][j]=min(dp[i][j],dp[i][j-k]+dp[i][k]);
                 }
             }

@@ -8707,7 +8707,18 @@ From the top-left corner, there are a total of 3 ways to reach the bottom-right 
 class Solution {
 public:
     int uniquePaths(int m, int n) {
-        
+        vector&lt;vector&lt;int&gt;&gt;dp(m+1,vector&lt;int&gt;(n+1,0));
+        dp[0][0]=0;
+        for(int i=1;i&lt;=m;i++){
+            for(int j=1;j&lt;=n;j++){
+                if(i==1 &amp;&amp; j==1){
+                    dp[i][j]=1;
+                    continue;
+                }
+                dp[i][j]=dp[i][j-1]+dp[i-1][j];
+            }
+        }
+        return dp[m][n];
     }
 };
 // @lc code=end
@@ -9916,7 +9927,16 @@ public:
 class Solution {
 public:
     int climbStairs(int n) {
-        
+        if(n&lt;=2){
+            return n;
+        }
+        int a=1,b=2,c=0;
+        for(int i=2;i&lt;n;i++){
+            c=a+b;
+            a=b;
+            b=c;
+        }
+        return c;
     }
 };
 // @lc code=end
@@ -18965,6 +18985,246 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 138. Copy List with Random Pointer
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   A linked list of length
+   <code>
+    n
+   </code>
+   is given such that each node contains an additional random pointer, which could point to any node in the list, or
+   <code>
+    null
+   </code>
+   .
+  </p>
+  <p>
+   Construct a
+   <a href="https://en.wikipedia.org/wiki/Object_copying#Deep_copy" target="_blank">
+    <strong>
+     deep copy
+    </strong>
+   </a>
+   of the list. The deep copy should consist of exactly
+   <code>
+    n
+   </code>
+   <strong>
+    brand new
+   </strong>
+   nodes, where each new node has its value set to the value of its corresponding original node. Both the
+   <code>
+    next
+   </code>
+   and
+   <code>
+    random
+   </code>
+   pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state.
+   <strong>
+    None of the pointers in the new list should point to nodes in the original list
+   </strong>
+   .
+  </p>
+  <p>
+   For example, if there are two nodes
+   <code>
+    X
+   </code>
+   and
+   <code>
+    Y
+   </code>
+   in the original list, where
+   <code>
+    X.random --&gt; Y
+   </code>
+   , then for the corresponding two nodes
+   <code>
+    x
+   </code>
+   and
+   <code>
+    y
+   </code>
+   in the copied list,
+   <code>
+    x.random --&gt; y
+   </code>
+   .
+  </p>
+  <p>
+   Return
+   <em>
+    the head of the copied linked list
+   </em>
+   .
+  </p>
+  <p>
+   The linked list is represented in the input/output as a list of
+   <code>
+    n
+   </code>
+   nodes. Each node is represented as a pair of
+   <code>
+    [val, random_index]
+   </code>
+   where:
+  </p>
+  <ul>
+   <li>
+    <code>
+     val
+    </code>
+    : an integer representing
+    <code>
+     Node.val
+    </code>
+   </li>
+   <li>
+    <code>
+     random_index
+    </code>
+    : the index of the node (range from
+    <code>
+     0
+    </code>
+    to
+    <code>
+     n-1
+    </code>
+    ) that the
+    <code>
+     random
+    </code>
+    pointer points to, or
+    <code>
+     null
+    </code>
+    if it does not point to any node.
+   </li>
+  </ul>
+  <p>
+   Your code will
+   <strong>
+    only
+   </strong>
+   be given the
+   <code>
+    head
+   </code>
+   of the original linked list.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/e1(2).png" style="width: 700px; height: 142px;"/>
+  <pre><strong>Input:</strong> head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+<strong>Output:</strong> [[7,null],[13,0],[11,4],[10,2],[1,0]]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/e2(2).png" style="width: 700px; height: 114px;"/>
+  <pre><strong>Input:</strong> head = [[1,1],[2,1]]
+<strong>Output:</strong> [[1,1],[2,1]]
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <p>
+   <strong>
+    <img alt="" src="./output_files/e3.png" style="width: 700px; height: 122px;"/>
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = [[3,null],[3,0],[3,null]]
+<strong>Output:</strong> [[3,null],[3,0],[3,null]]
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = []
+<strong>Output:</strong> []
+<strong>Explanation:</strong> The given linked list is empty (null pointer), so return null.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= n &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     -10000 &lt;= Node.val &lt;= 10000
+    </code>
+   </li>
+   <li>
+    <code>
+     Node.random
+    </code>
+    is
+    <code>
+     null
+    </code>
+    or is pointing to some node in the linked list.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 138 -->
+<pre>/*
+ * @lc app=leetcode id=138 lang=cpp
+ *
+ * [138] Copy List with Random Pointer
+ */
+
+// @lc code=start
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  139. Word Break
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -19673,6 +19933,119 @@ public:
  * int param_1 = obj-&gt;get(key);
  * obj-&gt;put(key,value);
  */
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 147. Insertion Sort List
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    head
+   </code>
+   of a singly linked list, sort the list using
+   <strong>
+    insertion sort
+   </strong>
+   , and return
+   <em>
+    the sorted list's head
+   </em>
+   .
+  </p>
+  <p>
+   The steps of the
+   <strong>
+    insertion sort
+   </strong>
+   algorithm:
+  </p>
+  <ol>
+   <li>
+    Insertion sort iterates, consuming one input element each repetition and growing a sorted output list.
+   </li>
+   <li>
+    At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list and inserts it there.
+   </li>
+   <li>
+    It repeats until no input elements remain.
+   </li>
+  </ol>
+  <p>
+   The following is a graphical example of the insertion sort algorithm. The partially sorted list (black) initially contains only the first element in the list. One element (red) is removed from the input data and inserted in-place into the sorted list with each iteration.
+  </p>
+  <img alt="" src="./output_files/Insertion-sort-example-300px.gif" style="height:180px; width:300px"/>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/sort1linked-list.jpg" style="width: 422px; height: 222px;"/>
+  <pre><strong>Input:</strong> head = [4,2,1,3]
+<strong>Output:</strong> [1,2,3,4]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/sort2linked-list.jpg" style="width: 542px; height: 222px;"/>
+  <pre><strong>Input:</strong> head = [-1,5,3,4,0]
+<strong>Output:</strong> [-1,0,3,4,5]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the list is in the range
+    <code>
+     [1, 5000]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -5000 &lt;= Node.val &lt;= 5000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 147 -->
+<pre>/*
+ * @lc app=leetcode id=147 lang=cpp
+ *
+ * [147] Insertion Sort List
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        
+    }
+};
 // @lc code=end
 
 </pre><html><head></head><body>
@@ -21666,6 +22039,139 @@ public:
             s2.pop();
         }
         return 0;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 166. Fraction to Recurring Decimal
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two integers representing the
+   <code>
+    numerator
+   </code>
+   and
+   <code>
+    denominator
+   </code>
+   of a fraction, return
+   <em>
+    the fraction in string format
+   </em>
+   .
+  </p>
+  <p>
+   If the fractional part is repeating, enclose the repeating part in parentheses.
+  </p>
+  <p>
+   If multiple answers are possible, return
+   <strong>
+    any of them
+   </strong>
+   .
+  </p>
+  <p>
+   It is
+   <strong>
+    guaranteed
+   </strong>
+   that the length of the answer string is less than
+   <code>
+    10
+    <sup>
+     4
+    </sup>
+   </code>
+   for all the given inputs.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> numerator = 1, denominator = 2
+<strong>Output:</strong> "0.5"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> numerator = 2, denominator = 1
+<strong>Output:</strong> "2"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> numerator = 2, denominator = 3
+<strong>Output:</strong> "0.(6)"
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> numerator = 4, denominator = 333
+<strong>Output:</strong> "0.(012)"
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> numerator = 1, denominator = 5
+<strong>Output:</strong> "0.2"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     -2
+     <sup>
+      31
+     </sup>
+     &lt;= numerator, denominator &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+   <li>
+    <code>
+     denominator != 0
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 166 -->
+<pre>/*
+ * @lc app=leetcode id=166 lang=cpp
+ *
+ * [166] Fraction to Recurring Decimal
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        return to_string((float)(numerator/denominator));
     }
 };
 // @lc code=end
@@ -25822,10 +26328,10 @@ public:
         for(int i=0;i&lt;m;i++){
             for(int j=0;j&lt;n;j++){
                 if(matrix[i][j]==&#x27;0&#x27; || !i || !j) dp[i][j]=matrix[i][j]-&#x27;0&#x27;;
-                else {
+                else{
                     dp[i][j]=min({dp[i-1][j-1],dp[i-1][j],dp[i][j-1]})+1;
                 }
-            a=max(a,dp[i][j]);
+                a=max(a,dp[i][j]);
             }
         }
 
@@ -25985,6 +26491,125 @@ public:
         int count=0;
         inorder(root,count);
         return count;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 223. Rectangle Area
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the coordinates of two
+   <strong>
+    rectilinear
+   </strong>
+   rectangles in a 2D plane, return
+   <em>
+    the total area covered by the two rectangles
+   </em>
+   .
+  </p>
+  <p>
+   The first rectangle is defined by its
+   <strong>
+    bottom-left
+   </strong>
+   corner
+   <code>
+    (ax1, ay1)
+   </code>
+   and its
+   <strong>
+    top-right
+   </strong>
+   corner
+   <code>
+    (ax2, ay2)
+   </code>
+   .
+  </p>
+  <p>
+   The second rectangle is defined by its
+   <strong>
+    bottom-left
+   </strong>
+   corner
+   <code>
+    (bx1, by1)
+   </code>
+   and its
+   <strong>
+    top-right
+   </strong>
+   corner
+   <code>
+    (bx2, by2)
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="Rectangle Area" src="./output_files/rectangle-plane.png" style="width: 700px; height: 365px;"/>
+  <pre><strong>Input:</strong> ax1 = -3, ay1 = 0, ax2 = 3, ay2 = 4, bx1 = 0, by1 = -1, bx2 = 9, by2 = 2
+<strong>Output:</strong> 45
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> ax1 = -2, ay1 = -2, ax2 = 2, ay2 = 2, bx1 = -2, by1 = -2, bx2 = 2, by2 = 2
+<strong>Output:</strong> 16
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     -10
+     <sup>
+      4
+     </sup>
+     &lt;= ax1, ay1, ax2, ay2, bx1, by1, bx2, by2 &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 223 -->
+<pre>/*
+ * @lc app=leetcode id=223 lang=cpp
+ *
+ * [223] Rectangle Area
+ */
+
+// @lc code=start
+class Solution {
+public:
+
+    int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
+        int area1 = abs(ax1-ax2)*abs(ay1-ay2);
+        int area2 = abs(bx1-bx2)*abs(by1-by2);
+        if(ax1&gt;=bx2 || ay1&gt;=by2 || ax2&lt;=bx1 || ay2&lt;=by1)
+            return area1 + area2;
+        return area1 + area2 - (min(bx2,ax2) - max(ax1,bx1))*(min(by2,ay2) - max(ay1,by1));
     }
 };
 // @lc code=end
@@ -29414,6 +30039,118 @@ public:
             }
         }
         return space==pattern.length()?true:false;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 292. Nim Game
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are playing the following Nim Game with your friend:
+  </p>
+  <ul>
+   <li>
+    Initially, there is a heap of stones on the table.
+   </li>
+   <li>
+    You and your friend will alternate taking turns, and
+    <strong>
+     you go first
+    </strong>
+    .
+   </li>
+   <li>
+    On each turn, the person whose turn it is will remove 1 to 3 stones from the heap.
+   </li>
+   <li>
+    The one who removes the last stone is the winner.
+   </li>
+  </ul>
+  <p>
+   Given
+   <code>
+    n
+   </code>
+   , the number of stones in the heap, return
+   <code>
+    true
+   </code>
+   <em>
+    if you can win the game assuming both you and your friend play optimally, otherwise return
+   </em>
+   <code>
+    false
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 4
+<strong>Output:</strong> false
+<strong>Explanation:</strong> These are the possible outcomes:
+1. You remove 1 stone. Your friend removes 3 stones, including the last stone. Your friend wins.
+2. You remove 2 stones. Your friend removes 2 stones, including the last stone. Your friend wins.
+3. You remove 3 stones. Your friend removes the last stone. Your friend wins.
+In all outcomes, your friend wins.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> true
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 292 -->
+<pre>/*
+ * @lc app=leetcode id=292 lang=cpp
+ *
+ * [292] Nim Game
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool canWinNim(int n) {
+        return n%4;
     }
 };
 // @lc code=end
@@ -32886,8 +33623,31 @@ Note that different sequences are counted as different combinations.
 // @lc code=start
 class Solution {
 public:
+    int f(vector&lt;int&gt;&amp;nums,int target,vector&lt;int&gt;&amp;dp)
+    {
+        if(target==0)
+        {
+            return 1;
+        }
+        if(target&lt;0)
+        {
+            return 0;
+        }
+        if(dp[target]!=-1)
+        {
+            return dp[target];
+        }
+        int ans=0;
+        for(int j=0;j&lt;nums.size();j++)
+        {
+            ans=ans+f(nums,target-nums[j],dp);
+        }
+        return dp[target]=ans;
+    }
     int combinationSum4(vector&lt;int&gt;&amp; nums, int target) {
-        
+        int i=0;
+        vector&lt;int&gt;dp(target+1,-1);
+        return f(nums,target,dp);
     }
 };
 // @lc code=end
@@ -40704,16 +41464,13 @@ class Solution {
 public:
     int minSteps(int n) {
         if(n==1) return 0;
-        //generate(n-1,1,&quot;c&quot;,1,1);
-        //return generate(n-1,1,&quot;c&quot;,1,1);
-
         vector&lt;int&gt;dp(n+2);
         iota(dp.begin(), dp.end(), 0);
         dp[0]=0;
         dp[1]=0;
         dp[2]=2;
         for(int i=2;i&lt;=n;i++){
-            for(int j=2;j&lt;=i/2;j++){
+            for(int j=2;j&lt;=i;j++){
                 if(i%j==0)
                 dp[i]=min(dp[i],dp[j]+ i/j);
             }
@@ -41390,8 +42147,19 @@ The total probability the knight stays on the board is 0.0625.
 // @lc code=start
 class Solution {
 public:
+double dp[26][26][101];
+    double knight(int n,int k,int row,int column){
+        if(row&lt;0 || column&lt;0 || row&gt;=n || column&gt;=n) return  0;
+        if(k==0) return 1;
+        if(dp[row][column][k]) return dp[row][column][k];
+        return dp[row][column][k]=
+            (knight(n, k-1, row-2, column -1) + knight(n, k-1, row-1, column -2) +
+            knight(n, k-1, row+2, column +1) + knight(n, k-1, row+1, column +2)+
+            knight(n, k-1, row-2, column +1)+ knight(n, k-1, row+2, column -1) +
+            knight(n, k-1, row-1, column +2) + knight(n, k-1, row+1, column -2))/8;
+    }
     double knightProbability(int n, int k, int row, int column) {
-        
+        return knight(n, k, row, column);
     }
 };
 // @lc code=end
@@ -43833,6 +44601,100 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 790. Domino and Tromino Tiling
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You have two types of tiles: a
+   <code>
+    2 x 1
+   </code>
+   domino shape and a tromino shape. You may rotate these shapes.
+  </p>
+  <img alt="" src="./output_files/lc-domino.jpg" style="width: 362px; height: 195px;"/>
+  <p>
+   Given an integer n, return
+   <em>
+    the number of ways to tile an
+   </em>
+   <code>
+    2 x n
+   </code>
+   <em>
+    board
+   </em>
+   . Since the answer may be very large, return it
+   <strong>
+    modulo
+   </strong>
+   <code>
+    10
+    <sup>
+     9
+    </sup>
+    + 7
+   </code>
+   .
+  </p>
+  <p>
+   In a tiling, every square must be covered by a tile. Two tilings are different if and only if there are two 4-directionally adjacent cells on the board such that exactly one of the tilings has both squares occupied by a tile.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/lc-domino1.jpg" style="width: 500px; height: 226px;"/>
+  <pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 5
+<strong>Explanation:</strong> The five different ways are show above.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 1000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 790 -->
+<pre>/*
+ * @lc app=leetcode id=790 lang=cpp
+ *
+ * [790] Domino and Tromino Tiling
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int numTilings(int n) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  796. Rotate String
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -44133,6 +44995,210 @@ public:
 class Solution {
 public:
     vector&lt;int&gt; eventualSafeNodes(vector&lt;vector&lt;int&gt;&gt;&amp; graph) {
+        
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 808. Soup Servings
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   There are two types of soup:
+   <strong>
+    type A
+   </strong>
+   and
+   <strong>
+    type B
+   </strong>
+   . Initially, we have
+   <code>
+    n
+   </code>
+   ml of each type of soup. There are four kinds of operations:
+  </p>
+  <ol>
+   <li>
+    Serve
+    <code>
+     100
+    </code>
+    ml of
+    <strong>
+     soup A
+    </strong>
+    and
+    <code>
+     0
+    </code>
+    ml of
+    <strong>
+     soup B
+    </strong>
+    ,
+   </li>
+   <li>
+    Serve
+    <code>
+     75
+    </code>
+    ml of
+    <strong>
+     soup A
+    </strong>
+    and
+    <code>
+     25
+    </code>
+    ml of
+    <strong>
+     soup B
+    </strong>
+    ,
+   </li>
+   <li>
+    Serve
+    <code>
+     50
+    </code>
+    ml of
+    <strong>
+     soup A
+    </strong>
+    and
+    <code>
+     50
+    </code>
+    ml of
+    <strong>
+     soup B
+    </strong>
+    , and
+   </li>
+   <li>
+    Serve
+    <code>
+     25
+    </code>
+    ml of
+    <strong>
+     soup A
+    </strong>
+    and
+    <code>
+     75
+    </code>
+    ml of
+    <strong>
+     soup B
+    </strong>
+    .
+   </li>
+  </ol>
+  <p>
+   When we serve some soup, we give it to someone, and we no longer have it. Each turn, we will choose from the four operations with an equal probability
+   <code>
+    0.25
+   </code>
+   . If the remaining volume of soup is not enough to complete the operation, we will serve as much as possible. We stop once we no longer have some quantity of both types of soup.
+  </p>
+  <p>
+   <strong>
+    Note
+   </strong>
+   that we do not have an operation where all
+   <code>
+    100
+   </code>
+   ml's of
+   <strong>
+    soup B
+   </strong>
+   are used first.
+  </p>
+  <p>
+   Return
+   <em>
+    the probability that
+    <strong>
+     soup A
+    </strong>
+    will be empty first, plus half the probability that
+    <strong>
+     A
+    </strong>
+    and
+    <strong>
+     B
+    </strong>
+    become empty at the same time
+   </em>
+   . Answers within
+   <code>
+    10
+    <sup>
+     -5
+    </sup>
+   </code>
+   of the actual answer will be accepted.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 50
+<strong>Output:</strong> 0.62500
+<strong>Explanation:</strong> If we choose the first two operations, A will become empty first.
+For the third operation, A and B will become empty at the same time.
+For the fourth operation, B will become empty first.
+So the total probability of A becoming empty first plus half the probability that A and B become empty at the same time, is 0.25 * (1 + 1 + 0.5 + 0) = 0.625.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 100
+<strong>Output:</strong> 0.71875
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= n &lt;= 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 808 -->
+<pre>/*
+ * @lc app=leetcode id=808 lang=cpp
+ *
+ * [808] Soup Servings
+ */
+
+// @lc code=start
+class Solution {
+public:
+    double soupServings(int n) {
         
     }
 };
@@ -46001,6 +47067,180 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 935. Knight Dialer
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The chess knight has a
+   <strong>
+    unique movement
+   </strong>
+   , it may move two squares vertically and one square horizontally, or two squares horizontally and one square vertically (with both forming the shape of an
+   <strong>
+    L
+   </strong>
+   ). The possible movements of chess knight are shown in this diagaram:
+  </p>
+  <p>
+   A chess knight can move as indicated in the chess diagram below:
+  </p>
+  <img alt="" src="./output_files/chess.jpg" style="width: 402px; height: 402px;"/>
+  <p>
+   We have a chess knight and a phone pad as shown below, the knight
+   <strong>
+    can only stand on a numeric cell
+   </strong>
+   (i.e. blue cell).
+  </p>
+  <img alt="" src="./output_files/phone.jpg" style="width: 242px; height: 322px;"/>
+  <p>
+   Given an integer
+   <code>
+    n
+   </code>
+   , return how many distinct phone numbers of length
+   <code>
+    n
+   </code>
+   we can dial.
+  </p>
+  <p>
+   You are allowed to place the knight
+   <strong>
+    on any numeric cell
+   </strong>
+   initially and then you should perform
+   <code>
+    n - 1
+   </code>
+   jumps to dial a number of length
+   <code>
+    n
+   </code>
+   . All jumps should be
+   <strong>
+    valid
+   </strong>
+   knight jumps.
+  </p>
+  <p>
+   As the answer may be very large,
+   <strong>
+    return the answer modulo
+   </strong>
+   <code>
+    10
+    <sup>
+     9
+    </sup>
+    + 7
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> 10
+<strong>Explanation:</strong> We need to dial a number of length 1, so placing the knight over any numeric cell of the 10 cells is sufficient.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> 20
+<strong>Explanation:</strong> All the valid number we can dial are [04, 06, 16, 18, 27, 29, 34, 38, 40, 43, 49, 60, 61, 67, 72, 76, 81, 83, 92, 94]
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 46
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 4
+<strong>Output:</strong> 104
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 3131
+<strong>Output:</strong> 136006598
+<strong>Explanation:</strong> Please take care of the mod.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 5000
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 935 -->
+<pre>/*
+ * @lc app=leetcode id=935 lang=cpp
+ *
+ * [935] Knight Dialer
+ */
+
+// @lc code=start
+class Solution {
+public:
+
+    long func(int i, int j, int hops, vector&lt;vector&lt;vector&lt;long&gt;&gt;&gt; &amp;dp){
+        if(i&lt;0 || i&gt;=4 || j&lt;0 || j&gt;=3 || (i==3 &amp;&amp; j!=1))  return 0;
+        if(hops == 1)   return 1;
+
+        if(dp[i][j][hops] != -1)
+            return dp[i][j][hops];
+
+        dp[i][j][hops] = func(i-2, j-1, hops-1, dp)%mod+func(i-2, j+1, hops-1, dp)%mod+
+                       func(i-1, j-2, hops-1, dp)%mod+func(i+1, j-2, hops-1, dp)%mod+
+                       func(i-1, j+2, hops-1, dp)%mod+func(i+1, j+2, hops-1, dp)%mod+
+                       func(i+2, j-1, hops-1, dp)%mod+func(i+2, j+1, hops-1, dp)%mod;
+
+        return dp[i][j][hops];
+    }
+    
+    int mod = 1e9+7;
+    int knightDialer(int n) {
+        vector&lt;vector&lt;vector&lt;long&gt;&gt;&gt; dp (4, vector&lt;vector&lt;long&gt;&gt; (3, vector&lt;long&gt; (n+1, -1)));
+        long ans=0;
+        for(int i=0; i&lt;4; i++)
+            for(int j=0; j&lt;3; j++)
+                ans = (ans+func(i, j, n, dp))%mod;
+
+        return (int)ans;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  938. Range Sum of BST
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -47373,16 +48613,25 @@ In total, you spent $17 and covered all the days of your travel.
 class Solution {
 public:
     int mincostTickets(vector&lt;int&gt;&amp; days, vector&lt;int&gt;&amp; costs) {
-        vector&lt;int&gt;dp(days[days.size()-1]+1,0);
-        dp[1]=costs[0];
-        for(int i = 0; i &lt; days.size();i++){
-            for(int j = 0; j &lt; costs.size();j++){
-                if(days[i] &lt;= costs[j]){
-                    dp[days[i]]=min(dp[days[i]], dp[costs[j]-days[i]]+costs[j]);
-                }
+        unordered_map&lt;int, int &gt; tickets;
+        tickets[1] = costs[0];
+        tickets[7] = costs[1];
+        tickets[30] = costs[2];
+
+        vector&lt;int&gt;dp(366,INT_MAX);
+
+        dp[0]=0;
+
+        for(int i=1; i&lt;366;i++){
+            if(find(days.begin(), days.end(),i)==days.end()){
+                dp[i]=dp[i-1];
+                continue;
+            }
+            for( auto ticket : tickets){
+                dp[i]=min(dp[i],dp[max(0,i-ticket.first)]+ticket.second);
             }
         }
-        return dp[days.size()];
+        return dp[365];
     }
 };
 // @lc code=end
@@ -49195,6 +50444,162 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 1049. Last Stone Weight II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are given an array of integers
+   <code>
+    stones
+   </code>
+   where
+   <code>
+    stones[i]
+   </code>
+   is the weight of the
+   <code>
+    i
+    <sup>
+     th
+    </sup>
+   </code>
+   stone.
+  </p>
+  <p>
+   We are playing a game with the stones. On each turn, we choose any two stones and smash them together. Suppose the stones have weights
+   <code>
+    x
+   </code>
+   and
+   <code>
+    y
+   </code>
+   with
+   <code>
+    x &lt;= y
+   </code>
+   . The result of this smash is:
+  </p>
+  <ul>
+   <li>
+    If
+    <code>
+     x == y
+    </code>
+    , both stones are destroyed, and
+   </li>
+   <li>
+    If
+    <code>
+     x != y
+    </code>
+    , the stone of weight
+    <code>
+     x
+    </code>
+    is destroyed, and the stone of weight
+    <code>
+     y
+    </code>
+    has new weight
+    <code>
+     y - x
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+   At the end of the game, there is
+   <strong>
+    at most one
+   </strong>
+   stone left.
+  </p>
+  <p>
+   Return
+   <em>
+    the smallest possible weight of the left stone
+   </em>
+   . If there are no stones left, return
+   <code>
+    0
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> stones = [2,7,4,1,8,1]
+<strong>Output:</strong> 1
+<strong>Explanation:</strong>
+We can combine 2 and 4 to get 2, so the array converts to [2,7,1,8,1] then,
+we can combine 7 and 8 to get 1, so the array converts to [2,1,1,1] then,
+we can combine 2 and 1 to get 1, so the array converts to [1,1,1] then,
+we can combine 1 and 1 to get 0, so the array converts to [1], then that's the optimal value.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> stones = [31,26,33,21,40]
+<strong>Output:</strong> 5
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> stones = [1,2]
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= stones.length &lt;= 30
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= stones[i] &lt;= 100
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 1049 -->
+<pre>/*
+ * @lc app=leetcode id=1049 lang=cpp
+ *
+ * [1049] Last Stone Weight II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int lastStoneWeightII(vector&lt;int&gt;&amp; stones) {
+        int n = stones.size();
+        vector&lt;int&gt;dp(n,INT_MAX);
+        return 0;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  1092. Shortest Common Supersequence
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -50222,7 +51627,7 @@ class Solution {
 public:
     int tilingRectangle(int n, int m) {
         if (max(n, m) == 13 &amp;&amp; min(n, m) == 11) return 6;
-        vector&lt;vector&lt;int&gt;&gt;dp(n+1,vector&lt;int&gt;(m+1,INT_MAX));
+        vector&lt;vector&lt;long long &gt;&gt;dp(n+1,vector&lt;long long&gt;(m+1,INT_MAX));
         for(int i = 1; i &lt;=n;i++){
             for(int j = 1; j &lt;=m;j++){
                 cout&lt;&lt;i&lt;&lt;j&lt;&lt;endl;
@@ -50230,10 +51635,10 @@ public:
                     dp[i][j]=1;
                     continue;
                 }
-                for(int k=1;k&lt;=i/2;k++){
+                for(int k=1;k&lt;=i;k++){
                     dp[i][j]=min(dp[i][j],dp[i-k][j]+dp[k][j]);
                 }
-                for(int k=1;k&lt;=j/2;k++){
+                for(int k=1;k&lt;=j;k++){
                     dp[i][j]=min(dp[i][j],dp[i][j-k]+dp[i][k]);
                 }
             }
