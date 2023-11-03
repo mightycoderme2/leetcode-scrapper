@@ -197,7 +197,22 @@ So the total probability of A becoming empty first plus half the probability tha
 class Solution {
 public:
     double soupServings(int n) {
-        
+        if(n&gt;4800) return 1;
+        vector&lt;vector&lt;double&gt;&gt;dp(n+1,vector&lt;double&gt;(n+1,0));
+        dp[0][0]=0.5;
+        for(int i=1;i&lt;=n;i++){
+            dp[0][i]=1;
+        }
+        for(int i=1;i&lt;=n;i++){
+            for(int j=1;j&lt;=n;j++){
+                dp[i][j]=
+                (dp[max(0,i-100)][j]+
+                dp[max(0,i-75)][max(0,j-25)]+
+                dp[max(0,i-50)][max(0,j-50)]+
+                dp[max(0,i-25)][max(0,j-75)])/4;
+            }
+        }
+        return dp[n][n];
     }
 };
 // @lc code=end
