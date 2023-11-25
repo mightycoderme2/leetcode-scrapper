@@ -138,7 +138,28 @@
 class Solution {
 public:
     double findMedianSortedArrays(vector&lt;int&gt;&amp; nums1, vector&lt;int&gt;&amp; nums2) {
-    
+    vector&lt;int&gt; a(nums1.size() + nums2.size());
+    int m = 0, i = 0;
+    while (i &lt; nums1.size()) {
+        a[m] = nums1[i];
+        i++;
+        m++;
+    }
+    i = 0;
+    while (i &lt; nums2.size()) {
+        a[m] = nums2[i];
+        m++;
+        i++;
+    }
+    sort(a.begin(), a.end());
+    int k = a.size() / 2;
+
+    if (a.size() % 2 != 0) {
+        return a[k];
+    } else {
+        double x = a[k - 1] + a[k];
+        return x / 2.0;
+    }
     }
 };
 // @lc code=end

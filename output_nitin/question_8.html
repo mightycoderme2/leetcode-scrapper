@@ -265,33 +265,36 @@ Since -91283472332 is less than the lower bound of the range [-2<sup>31</sup>, 2
 class Solution {
 public:
     int myAtoi(string s) {
-              if(s.length()==0) return 0;
+        int n = s.size();
 
-        int i=0;
-         while(i&lt;s.size() &amp;&amp; s[i]== &#x27; &#x27;) {
-             i++;
-         }
-        s = s.substr(i); //i ---&gt; last of string
+        long long int ans=0;
+        int neg=1;
+        bool flag = true;
 
-        int sign = +1;
-        long ans = 0;
-
-        if(s[0] == &#x27;-&#x27;) sign = -1;
-
-        int MAX = INT_MAX, MIN = INT_MIN;
-        i = (s[0] == &#x27;+&#x27; || s[0] == &#x27;-&#x27;) ? 1 : 0;
-
-        while(i &lt; s.length()) {
-            if(s[0] == &#x27; &#x27; || !isdigit(s[i])) break;
-
-            ans = ans * 10 + s[i]-&#x27;0&#x27;;
-            if(sign == -1 &amp;&amp; -1*ans &lt; MIN) return MIN;
-            if(sign == 1 &amp;&amp; ans &gt; MAX) return MAX;
-
-            i++;
+        for (int i = 0; i &lt; n; i++)
+        {
+            if(s[i] == &#x27; &#x27; &amp;&amp; flag){
+                continue;
+            }
+            else if(s[i] == &#x27;-&#x27; &amp;&amp; flag){
+                neg=-1;
+                flag = false;
+            }
+            else if(s[i] == &#x27;+&#x27; &amp;&amp; flag){
+                neg=1;
+                flag = false;
+            }
+            else if(s[i]&gt;=&#x27;0&#x27; &amp;&amp; s[i]&lt;=&#x27;9&#x27;){
+                ans=(ans*10) + s[i]-&#x27;0&#x27;;
+                flag = false;
+            }
+            else{
+                break;
+            }
+            if(neg*ans&gt;INT_MAX)return INT_MAX;
+            else if(neg*ans&lt;INT_MIN) return INT_MIN;
         }
-
-        return (int)(sign*ans);
+        return neg*ans;
     }
 };
 // @lc code=end

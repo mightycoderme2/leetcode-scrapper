@@ -115,13 +115,11 @@ public:
     int reverse(int x) {
 
         int y=0;
-        while(x)
-        {
+        while(x){
             if(y&gt;INT_MAX/10 || y&lt;INT_MIN/10){
                 return 0;
             }
-            else
-            {
+            else{
                 y=y*10 + x%10;
                 x=x/10;
             }

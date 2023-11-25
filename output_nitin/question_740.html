@@ -116,7 +116,18 @@ You earn a total of 9 points.</pre>
 class Solution {
 public:
     int deleteAndEarn(vector&lt;int&gt;&amp; nums) {
-
+        map&lt;int,int&gt;m;
+        for(int x:nums){
+            m[x]+=x;
+        }
+        int take=0,skip=0;
+        for(int i=0; i&lt;10001; i++){
+            int take1=skip+m[i];
+            int skip1 = max(take,skip);
+            take=take1;
+            skip=skip1;
+        }
+        return max(take,skip);
     }
 };
 // @lc code=end

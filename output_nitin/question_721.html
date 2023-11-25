@@ -110,7 +110,37 @@ We could return these lists in any order, for example the answer [['Mary', 'mary
 class Solution {
 public:
     vector&lt;vector&lt;string&gt;&gt; accountsMerge(vector&lt;vector&lt;string&gt;&gt;&amp; accounts) {
-        
+        map&lt;string,vector&lt;string&gt;&gt;m;
+        map&lt;string,string&gt;s;
+        for(auto x:accounts){
+            if(m.find(x[0])==m.end()){
+                for(int i=1;i&lt;=x.size();i++){
+                    m[x[0]].push_back(x[i]);
+                    s[x[i]]=x[0];
+                }
+            }
+            else{
+                for(int i=1;i&lt;=x.size();i++){
+                    if(s[x[i]]==x[0]){
+                        for(int i=1;i&lt;=x.size();i++){
+                            m[x[0]].push_back(x[i]);
+                            s[x[i]]=x[0];
+                        }
+                        continue;
+                    }
+                    else{
+                        string n=x[0]+&#x27;*&#x27;;
+                        while(m[n]!=&quot;&quot;){
+                            n=n+&#x27;*&#x27;;
+                        }
+                        for(int i=1;i&lt;=x.size();i++){
+                            m[x[0]].push_back(x[i]);
+                            s[x[i]]=x[0];
+                        }
+                    }
+                }
+            }
+        }
     }
 };
 // @lc code=end
