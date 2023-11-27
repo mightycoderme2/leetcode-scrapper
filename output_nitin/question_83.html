@@ -95,7 +95,21 @@
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        
+        if(head==NULL) return NULL;
+        while(head-&gt;next!=NULL &amp;&amp; head-&gt;val==head-&gt;next-&gt;val){
+            head=head-&gt;next;
+        }
+        ListNode *temp=head,*ptr=head;
+        while(temp!=NULL){
+            if(temp-&gt;next!=NULL &amp;&amp; temp-&gt;val==temp-&gt;next-&gt;val ){
+                ptr-&gt;next=temp-&gt;next;
+            }
+            else{
+                ptr=temp;
+            }
+            temp=temp-&gt;next;
+        }
+        return head;
     }
 };
 // @lc code=end

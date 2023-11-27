@@ -115,26 +115,32 @@ As shown below, there are 5 ways you can generate "bag" from S.
 class Solution {
 public:
     int numDistinct(string s, string t) {
-        int m=t.length();
-        int n=s.length();
+        int m=s.length();
+        int n=t.length();
         int mod = 1e9+7;
-        vector&lt;vector&lt;long long&gt;&gt;dp(m+1,vector&lt;long long&gt;(n+1,0));
-        for(int i=0;i&lt;=n;i++) dp[0][i] =1;
-
-        for(int j=1;j&lt;=n;j++){
-            for(int i=1;i&lt;=m;i++){
-                dp[i][j] = dp[i][j-1]%mod + (t[i-1]==s[j-1]?dp[i-1][j-1]%mod:0);
-                dp[i][j]=dp[i][j]%mod;
+        if(m&lt;n) return 0;
+        vector&lt;vector&lt;long long&gt;&gt;dp(m,vector&lt;long long&gt;(n,0));
+        dp[0][0] = s[0]==t[0];
+        for(int i=1;i&lt;m;i++){
+            if(s[i]==t[0]){
+                dp[i][0] = dp[i-1][0] + 1;
+            }
+            else{
+                dp[i][0] = dp[i-1][0];
+            }
+        }
+        for(int i=1;i&lt;m;i++){
+            for(int j=1;j&lt;n;j++){
+                if(s[i]==t[j]){
+                    dp[i][j] = (dp[i-1][j]%mod + dp[i-1][j-1]%mod)%mod;
+                }
+                else{
+                    dp[i][j] = dp[i-1][j]%mod;
+                }
             }
         }
 
-        for(auto y:dp){
-            for(int x:y){
-                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
-            }
-            cout&lt;&lt;&#x27;\n&#x27;;
-        }
-        return dp[m][n]%mod;
+        return dp[m-1][n-1]%mod;
     }
 };
 // @lc code=end

@@ -159,62 +159,6 @@ Since the largest window of s only has one 'a', return empty string.
 // @lc code=start
 class Solution {
 public:
-/*
-int check(string s,string t){
-    map&lt;char,int&gt;m1,m2;
-    for(int i=0;i&lt;t.length();i++){
-        m1[t[i]]++;
-    }
-    for(int i=0;i&lt;s.length();i++){
-        m2[s[i]]++;
-    }
-    for(auto x : m1)
-    {
-        if(x.second&gt;m2[x.first])
-        {
-            return false;
-        }
-    }
-    return true;
-}
-string val(string s,int start,int end){
-    string ans=&quot;&quot;;
-    for(int i=start;i&lt;end;i++)
-    {
-        ans=ans+s[i];
-    }
-    return ans;
-}
-    string minWindow(string s, string t) {
-         if(s.length() &lt; t.length()) return &quot;&quot;;
-        if(s==t) return s;
-       if(check(s,t)==0) return &quot;&quot;;
-       if(t.length()==1) return t;
-       int start=0,end=0;
-        string ans=&quot;&quot;,minn=s;
-        while(start&lt;=end &amp;&amp; end&lt;=s.length())
-        {
-            cout&lt;&lt;val(s,start,end)&lt;&lt;&#x27;\n&#x27;;
-            if(check(val(s,start,end),t)==0)
-            {
-                end++;
-            }
-
-            else if(check(val(s,start,end),t)==1)
-            {
-                if(minn.length()&gt;val(s,start,end).length() )
-                {
-                    minn=val(s,start,end);
-                }
-                start++;
-            }
-            cout&lt;&lt;start&lt;&lt;end&lt;&lt;&#x27;\n&#x27;;
-        }
-        return minn;
-
-    }
-};
-*/
 
 string minWindow(string s, string t) {
     vector&lt;int&gt;m(128,0);

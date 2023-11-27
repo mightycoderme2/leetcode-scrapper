@@ -1716,21 +1716,18 @@ public:
     int maxArea(vector&lt;int&gt;&amp; height) {
         int area=0;
         int i=0,j=height.size()-1;
-        while (j&gt;i)
-        {
+        while(j&gt;i){
+            cout&lt;&lt;i&lt;&lt;j&lt;&lt;&#x27;\n&#x27;;
             int h= min(height[i],height[j]);
             area = max(area,h*(j-i));
-            while(h&gt;=height[i] &amp;&amp; j&gt;i)
-            {
+            while(h&gt;=height[i] &amp;&amp; j&gt;i){
                 i++;
             }
-            while(h&gt;=height[j] &amp;&amp; j&gt;i)
-            {
+            while(h&gt;=height[j] &amp;&amp; j&gt;i){
                 j--;
             }
         }
         return area;
-
     }
 };
 // @lc code=end
@@ -5812,10 +5809,10 @@ public:
             return;
         }
         if(i==candidates.size() || target&lt;0) return;
-        generate(b,candidates,target,i+1);
         b.push_back(candidates[i]);
         generate(b,candidates,target-candidates[i],i);
         b.pop_back();
+        generate(b,candidates,target,i+1);
     }
     vector&lt;vector&lt;int&gt;&gt; combinationSum(vector&lt;int&gt;&amp; candidates, int target) {
         vector&lt;int&gt;b;
@@ -5932,8 +5929,36 @@ public:
 // @lc code=start
 class Solution {
 public:
+vector&lt;vector&lt;int&gt;&gt;a;
+vector&lt;int&gt; b;
+void ans(int i,int n,vector&lt;int&gt;&amp;candidates,int target)
+{
+    if(target==0)
+    {
+        a.push_back(b);
+        return ;
+    }
+    if(i==n||target&lt;0)
+    {
+        return;
+    }
+    for(int j=i;j&lt;n;j++)
+    {
+        if(target-candidates[j]&lt;0)
+        break;
+        b.push_back(candidates[j]);
+        ans(j+1,n,candidates,target-candidates[j]);
+        b.pop_back();
+        while (j + 1 &lt; n &amp;&amp; candidates[j] == candidates[j + 1]) j++;
+    }
+}
     vector&lt;vector&lt;int&gt;&gt; combinationSum2(vector&lt;int&gt;&amp; candidates, int target) {
-        
+        int i=0;
+        int sum=0;
+        int n=candidates.size();
+        sort(candidates.begin(),candidates.end());
+        ans(i,n,candidates,target);
+        return a;
     }
 };
 // @lc code=end
@@ -6028,7 +6053,22 @@ public:
 class Solution {
 public:
     int firstMissingPositive(vector&lt;int&gt;&amp; nums) {
-        
+        int n=nums.size();
+        unordered_map&lt;int,int&gt; m;
+
+        for(auto num:nums){
+            if(1&lt;=num &amp;&amp; num&lt;=n){
+
+            m[num]++;
+            }
+        }
+
+        for(int i=1;i&lt;=n;i++){
+            if(m[i]==0){
+                return i;
+            }
+        }
+        return n+1;
     }
 };
 // @lc code=end
@@ -6243,38 +6283,21 @@ public:
 class Solution {
 public:
     string multiply(string num1, string num2) {
-  vector&lt;string&gt;ans(num1.length()+num2.length(),&quot;0&quot;);
-            int k=0;
-            int l=0;
-            for(int i = num2.length()-1; i &gt;=0;i--){
-                k=l;
-                for(int j = num1.length()-1; j &gt;=0;j--){
-                    ans[k]=to_string(stoi(ans[k])+((int(num2[i])-48)*(int(num1[j])-48)));
-                    k++;
-                }
-                l++;
+        if(num1==&quot;0&quot;|| num2==&quot;0&quot;) return &quot;0&quot;;
+        vector&lt;int&gt;ans(num1.length()+num2.length(),0);
+        for(int i=num1.length()-1; i&gt;=0;i--){
+            for(int j=num2.length()-1; j&gt;=0;j--){
+                ans[i+j+1]+=(num1[i]-&#x27;0&#x27;)*(num2[j]-&#x27;0&#x27;);
+                ans[i+j]+=ans[i+j+1]/10;
+                ans[i+j+1]=ans[i+j+1]%10;
             }
-            int carry=0;
-            for(int i=0;i&lt;ans.size();i++){
-                string y;
-                y=to_string((stoi(ans[i])+carry));
-                carry=stoi(y)/10;
-                ans[i]=to_string(stoi(y)%10);
-                cout&lt;&lt;ans[i]&lt;&lt;&#x27; &#x27;&lt;&lt;carry;
-            }
-            string s=&quot;&quot;;
-            for(string x:ans){
-                s=x+s;
-            }
-            int i=0;
-            while(s[i]==&#x27;0&#x27;){
-                i++;
-            }
-            cout&lt;&lt;i&lt;&lt;s.substr(i);
-            if(s.substr(i)==&quot;&quot;) return &quot;0&quot;;
-            if(i!=0)
-            return s.substr(i);
-            return s;
+        }
+
+        int i=0;
+        string result=&quot;&quot;;
+        while(ans[i]==0) i++;
+        while(i&lt;ans.size()) result+=to_string(ans[i++]);
+        return result;
     }
 };
 // @lc code=end
@@ -8470,22 +8493,22 @@ public:
 
         //method 2
 
-        vector&lt;int&gt;dict{1,1,2,6,24,120,720,5040,40320,362880};
-        vector&lt;int&gt;a;
-        string s=&quot;&quot;;
-        for(int i=0; i&lt;n;i++) a.push_back(i+1);
-        while(k&gt;0 &amp;&amp; n){
-            int count=dict[n-1];
-            int value=1;
-            while(count*value&lt;k){
-                value=value+1;
-            }
-            k=k-count*(value-1);
-            n--;
-            s=s+to_string(a[value-1]);
-            remove(a.begin(), a.end(),a[value-1]);
-        }
-        return s;
+        // vector&lt;int&gt;dict{1,1,2,6,24,120,720,5040,40320,362880};
+        // vector&lt;int&gt;a;
+        // string s=&quot;&quot;;
+        // for(int i=0; i&lt;n;i++) a.push_back(i+1);
+        // while(k&gt;0 &amp;&amp; n){
+        //     int count=dict[n-1];
+        //     int value=1;
+        //     while(count*value&lt;k){
+        //         value=value+1;
+        //     }
+        //     k=k-count*(value-1);
+        //     n--;
+        //     s=s+to_string(a[value-1]);
+        //     remove(a.begin(), a.end(),a[value-1]);
+        // }
+        // return s;
     }
 };
 // @lc code=end
@@ -9368,28 +9391,16 @@ class Solution {
 public:
     vector&lt;int&gt; plusOne(vector&lt;int&gt;&amp; digits) {
         int i=digits.size()-1;
-        int next=1;
-        while(next)
-        {
-            digits[i]+=1;
-            if(i==0 &amp;&amp; digits[i]==10)
-            {
-                digits[i]=0;
-                digits.insert(digits.begin(),1);
-                break;
-            }
-            else
-            {
-            //i&gt;0?i--:-1;
-            if(digits[i]==10)
-            {
-                digits[i]=0;
-                next=1;
-            }
-            else
-            next=0;
-            i&gt;0?i--:-1;
-            }
+        int carry=1;
+        digits[i]+=carry;
+        while(digits[i]==10 &amp;&amp; i&gt;=1){
+            digits[i-1]=digits[i-1] + digits[i]/10;
+            digits[i]%=10;
+            i--;
+        }
+        if(digits[i]==10){
+            digits.insert(digits.begin(),1);
+            digits[i+1]=0;
         }
         return digits;
     }
@@ -10443,7 +10454,37 @@ public:
 class Solution {
 public:
     void setZeroes(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
-        
+        vector&lt;pair&lt;int,int&gt;&gt;a;
+        for(int i=0;i&lt;matrix.size();i++){
+            for(int j=0;j&lt;matrix[0].size();j++){
+                if(matrix[i][j]==0){
+                    a.push_back({i,j});
+                }
+            }
+        }
+        for(auto x:a){
+            //cout&lt;&lt;x.first&lt;&lt;x.second&lt;&lt;&#x27;\n&#x27;;
+            int m=x.first,n=x.second;
+            while(m!=-1){
+                matrix[m][n]=0;
+                m--;
+            }
+            m++;
+            while(m!=matrix.size()){
+                matrix[m][n]=0;
+                m++;
+            }
+            m=x.first;
+            while(n!=-1){
+                matrix[m][n]=0;
+                n--;
+            }
+            n++;
+            while(n!=matrix[0].size()){
+                matrix[m][n]=0;
+                n++;
+            }
+        }
     }
 };
 // @lc code=end
@@ -10696,8 +10737,31 @@ public:
 // @lc code=start
 class Solution {
 public:
-    void sortColors(vector&lt;int&gt;&amp; nums) {
-        
+    void sortColors(vector&lt;int&gt;&amp; a) {
+        int count0=0;
+        int count1=0;
+        int count2=0;
+        for(int i=0;i&lt;a.size();i++){
+            if(a[i]==0){
+                count0++;
+            }
+            else if(a[i]==1){
+                count1++;
+            }
+            else{
+                count2++;
+            }
+        }
+        int i=0,j,k;
+        for(i=0;i&lt;count0;i++){
+            a[i]=0;
+        }
+        for(j=0;j&lt;count1;j++){
+            a[i+j]=1;
+        }
+        for(k=0;k&lt;count2;k++){
+            a[i+j+k]=2;
+        }
     }
 };
 // @lc code=end
@@ -10863,62 +10927,6 @@ Since the largest window of s only has one 'a', return empty string.
 // @lc code=start
 class Solution {
 public:
-/*
-int check(string s,string t){
-    map&lt;char,int&gt;m1,m2;
-    for(int i=0;i&lt;t.length();i++){
-        m1[t[i]]++;
-    }
-    for(int i=0;i&lt;s.length();i++){
-        m2[s[i]]++;
-    }
-    for(auto x : m1)
-    {
-        if(x.second&gt;m2[x.first])
-        {
-            return false;
-        }
-    }
-    return true;
-}
-string val(string s,int start,int end){
-    string ans=&quot;&quot;;
-    for(int i=start;i&lt;end;i++)
-    {
-        ans=ans+s[i];
-    }
-    return ans;
-}
-    string minWindow(string s, string t) {
-         if(s.length() &lt; t.length()) return &quot;&quot;;
-        if(s==t) return s;
-       if(check(s,t)==0) return &quot;&quot;;
-       if(t.length()==1) return t;
-       int start=0,end=0;
-        string ans=&quot;&quot;,minn=s;
-        while(start&lt;=end &amp;&amp; end&lt;=s.length())
-        {
-            cout&lt;&lt;val(s,start,end)&lt;&lt;&#x27;\n&#x27;;
-            if(check(val(s,start,end),t)==0)
-            {
-                end++;
-            }
-
-            else if(check(val(s,start,end),t)==1)
-            {
-                if(minn.length()&gt;val(s,start,end).length() )
-                {
-                    minn=val(s,start,end);
-                }
-                start++;
-            }
-            cout&lt;&lt;start&lt;&lt;end&lt;&lt;&#x27;\n&#x27;;
-        }
-        return minn;
-
-    }
-};
-*/
 
 string minWindow(string s, string t) {
     vector&lt;int&gt;m(128,0);
@@ -11036,8 +11044,24 @@ string minWindow(string s, string t) {
 // @lc code=start
 class Solution {
 public:
+void ans(int i,int n,int k,vector&lt;vector&lt;int&gt;&gt;&amp;a,vector&lt;int&gt;&amp;b){
+    if(i&lt;=n+1){
+    if(k==0){
+        a.push_back(b);
+        return;
+    }
+    b.push_back(i);
+    ans(i+1,n,k-1,a,b);
+    b.pop_back();
+    ans(i+1,n,k,a,b);
+    }
+}
     vector&lt;vector&lt;int&gt;&gt; combine(int n, int k) {
-        
+        int i=1;
+        vector&lt;vector&lt;int&gt;&gt;a;
+        vector&lt;int&gt;b;
+        ans(i,n,k,a,b);
+        return a;
     }
 };
 // @lc code=end
@@ -11967,7 +11991,21 @@ public:
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        
+        if(head==NULL) return NULL;
+        while(head-&gt;next!=NULL &amp;&amp; head-&gt;val==head-&gt;next-&gt;val){
+            head=head-&gt;next;
+        }
+        ListNode *temp=head,*ptr=head;
+        while(temp!=NULL){
+            if(temp-&gt;next!=NULL &amp;&amp; temp-&gt;val==temp-&gt;next-&gt;val ){
+                ptr-&gt;next=temp-&gt;next;
+            }
+            else{
+                ptr=temp;
+            }
+            temp=temp-&gt;next;
+        }
+        return head;
     }
 };
 // @lc code=end
@@ -14995,24 +15033,20 @@ public:
 class Solution {
 public:
     int pre=0;
+    map&lt;int,int&gt;m;
     TreeNode* create(vector&lt;int&gt;&amp; preorder, vector&lt;int&gt;&amp; inorder,int start,int end){
         if(start&gt;end) return NULL;
         TreeNode *node = new TreeNode(preorder[pre++]);
         if(start==end) return node;
-        int pos;
-        for(int i=start; i&lt;end;i++)
-        {
-            if(node-&gt;val==inorder[i])
-            {
-                pos=i;
-                break;
-            }
-        }
+        int pos=m[node-&gt;val];
         node-&gt;left = create(preorder,inorder,start,pos-1);
         node-&gt;right = create(preorder,inorder,pos+1,end);
         return node;
     }
     TreeNode* buildTree(vector&lt;int&gt;&amp; preorder, vector&lt;int&gt;&amp; inorder) {
+        for(int i=0;i&lt;inorder.size();i++){
+            m[inorder[i]] = i;
+        }
         return create(preorder, inorder,0,inorder.size()-1);
     }
 };
@@ -15783,16 +15817,13 @@ public:
     int minDepth(TreeNode* root) {
         if(root==NULL) return 0;
         if(root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL) return 1;
-        if(root-&gt;left ==NULL &amp;&amp; root-&gt;right!=NULL)
-        {
+        if(root-&gt;left ==NULL &amp;&amp; root-&gt;right!=NULL){
             return 1+minDepth(root-&gt;right);
         }
-        if(root-&gt;left !=NULL &amp;&amp; root-&gt;right==NULL)
-        {
+        if(root-&gt;left !=NULL &amp;&amp; root-&gt;right==NULL){
             return 1+minDepth(root-&gt;left);
         }
-        else
-        {
+        else{
         return 1+min({minDepth(root-&gt;left),minDepth(root-&gt;right)});
         }
     }
@@ -15916,16 +15947,13 @@ public:
     bool hasPathSum(TreeNode* root, int targetSum) {
         if(root==NULL) return 0;
         bool ans=0;
-        if(targetSum- root-&gt;val==0 &amp;&amp; root-&gt;left ==NULL &amp;&amp; root-&gt;right==NULL)
-        {
+        if(targetSum- root-&gt;val==0 &amp;&amp; root-&gt;left ==NULL &amp;&amp; root-&gt;right==NULL){
             return 1;
         }
-        if(root-&gt;left)
-        {
+        if(root-&gt;left){
             ans=ans||hasPathSum(root-&gt;left,targetSum- root-&gt;val);
         }
-        if(root-&gt;right)
-        {
+        if(root-&gt;right){
             ans=ans||hasPathSum(root-&gt;right,targetSum- root-&gt;val);
         }
         return ans;
@@ -16060,20 +16088,18 @@ public:
  */
 class Solution {
 public:
-void inorder(TreeNode* root,int targetSum,vector&lt;int&gt;b,vector&lt;vector&lt;int&gt;&gt;&amp;a)
-{
-    if(root==NULL){
-        return;
-    }
-    b.push_back(root-&gt;val);
-    if(targetSum==root-&gt;val &amp;&amp;  root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL)
-    {
-        a.push_back(b);
-        return;
-    }
+    void inorder(TreeNode* root,int targetSum,vector&lt;int&gt;b,vector&lt;vector&lt;int&gt;&gt;&amp;a){
+        if(root==NULL){
+            return;
+        }
+        b.push_back(root-&gt;val);
+        if(targetSum==root-&gt;val &amp;&amp;  root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL){
+            a.push_back(b);
+            return;
+        }
         inorder(root-&gt;left,targetSum-root-&gt;val,b,a);
         inorder(root-&gt;right,targetSum-root-&gt;val,b,a);
-}
+    }
     vector&lt;vector&lt;int&gt;&gt; pathSum(TreeNode* root, int targetSum) {
         vector&lt;vector&lt;int&gt;&gt;a;
         vector&lt;int&gt;b;
@@ -16216,14 +16242,14 @@ public:
         if(root){
             if(root-&gt;left){
                 flatten(root-&gt;left);
-                TreeNode *temp=root-&gt;right;
+                TreeNode *node = root-&gt;right;
                 root-&gt;right=root-&gt;left;
                 root-&gt;left=NULL;
-                TreeNode *temp2=root-&gt;right;
-                while(temp2-&gt;right!=NULL){
-                    temp2=temp2-&gt;right;
+                TreeNode * temp=root-&gt;right;
+                while(temp-&gt;right!=NULL){
+                    temp=temp-&gt;right;
                 }
-                temp2-&gt;right=temp;
+                temp-&gt;right=node;
             }
             flatten(root-&gt;right);
         }
@@ -16348,26 +16374,32 @@ As shown below, there are 5 ways you can generate "bag" from S.
 class Solution {
 public:
     int numDistinct(string s, string t) {
-        int m=t.length();
-        int n=s.length();
+        int m=s.length();
+        int n=t.length();
         int mod = 1e9+7;
-        vector&lt;vector&lt;long long&gt;&gt;dp(m+1,vector&lt;long long&gt;(n+1,0));
-        for(int i=0;i&lt;=n;i++) dp[0][i] =1;
-
-        for(int j=1;j&lt;=n;j++){
-            for(int i=1;i&lt;=m;i++){
-                dp[i][j] = dp[i][j-1]%mod + (t[i-1]==s[j-1]?dp[i-1][j-1]%mod:0);
-                dp[i][j]=dp[i][j]%mod;
+        if(m&lt;n) return 0;
+        vector&lt;vector&lt;long long&gt;&gt;dp(m,vector&lt;long long&gt;(n,0));
+        dp[0][0] = s[0]==t[0];
+        for(int i=1;i&lt;m;i++){
+            if(s[i]==t[0]){
+                dp[i][0] = dp[i-1][0] + 1;
+            }
+            else{
+                dp[i][0] = dp[i-1][0];
+            }
+        }
+        for(int i=1;i&lt;m;i++){
+            for(int j=1;j&lt;n;j++){
+                if(s[i]==t[j]){
+                    dp[i][j] = (dp[i-1][j]%mod + dp[i-1][j-1]%mod)%mod;
+                }
+                else{
+                    dp[i][j] = dp[i-1][j]%mod;
+                }
             }
         }
 
-        for(auto y:dp){
-            for(int x:y){
-                cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
-            }
-            cout&lt;&lt;&#x27;\n&#x27;;
-        }
-        return dp[m][n]%mod;
+        return dp[m-1][n-1]%mod;
     }
 };
 // @lc code=end
@@ -16739,17 +16771,17 @@ public:
 class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; generate(int numRows) {
-         vector&lt;vector&lt;int&gt;&gt;a;
+         vector&lt;vector&lt;int&gt;&gt;dp;
         for(int i = 0; i &lt; numRows; i++)
         {
             vector&lt;int&gt;ans(i+1,1);
             for(int j = 1; j &lt; i; j++)
             {
-                ans[j]=a[i-1][j-1]+a[i-1][j];
+                ans[j]=dp[i-1][j-1]+dp[i-1][j];
             }
-            a.push_back(ans);
+            dp.push_back(ans);
         }
-        return a;
+        return dp;
     }
 };
 // @lc code=end
@@ -17241,39 +17273,12 @@ Total profit is 4.
 // @lc code=start
 class Solution {
 public:
-/*
-    int find(vector&lt;int&gt;&amp;prices,int i,bool buy,vector&lt;vector&lt;int&gt;&gt;&amp;dp)
-    {
-        if(i&gt;=prices.size())
-        {
-            return 0;
-        }
-        if(dp[i][buy]!=-1)
-        {
-            return dp[i][buy];
-        }
-        if(buy)
-        {
-            return dp[i][buy] = max(-prices[i]+find(prices,i+1,!buy,dp),find(prices,i+1,buy,dp));
-        }
-        else
-        {
-            return dp[i][buy] = max(prices[i]+find(prices,i+1,!buy,dp),find(prices,i+1,buy,dp));
-        }
-    }
-    int maxProfit(vector&lt;int&gt;&amp; prices) {
-        int n=prices.size();
-        vector&lt;vector&lt;int&gt;&gt;dp(n,vector&lt;int&gt;(2,-1));
-        return find(prices,0,1,dp);
-    }
-*/
     int find(int i,int state,vector&lt;int&gt;&amp;prices,vector&lt;vector&lt;int&gt;&gt;&amp;dp)
     {
         if(i&gt;=prices.size()) return 0;
         if(dp[i][state]!=-1) return dp[i][state];
         if(state) return dp[i][state]=max(-prices[i]+find(i+1,0,prices,dp),find(i+1,1,prices,dp));
-        else
-        return dp[i][state]=max(prices[i]+find(i+1,1,prices,dp),find(i+1,0,prices,dp));
+        else return dp[i][state]=max(prices[i]+find(i+1,1,prices,dp),find(i+1,0,prices,dp));
     }
     int maxProfit(vector&lt;int&gt;&amp; prices) {
         vector&lt;vector&lt;int&gt;&gt;dp(prices.size(),vector&lt;int&gt;(2,-1));
@@ -18192,30 +18197,24 @@ public:
 class Solution {
 public:
     int longestConsecutive(vector&lt;int&gt;&amp; nums) {
-       sort(nums.begin(),nums.end());
+        sort(nums.begin(),nums.end());
         int count=1,max_ele=1;
         int n=nums.size();
-        if(n&lt;=1)
-        {
+        if(n&lt;=1){
             return n;
         }
-        for(int i=0;i&lt;n-1;i++)
-        {
-            if(nums[i+1]!=nums[i])
-            {
-            if(nums[i+1]==nums[i]+1)
-            {
-                count++;
-            }
-            else
-            {
-                max_ele=max(count,max_ele);
-                count=1;
-            }
+        for(int i=0;i&lt;n-1;i++){
+            if(nums[i+1]!=nums[i]){
+                if(nums[i+1]==nums[i]+1){
+                    count++;
+                }
+                else{
+                    max_ele=max(count,max_ele);
+                    count=1;
+                }
             }
         }
-        max_ele=max(count,max_ele);
-        return max_ele;
+        return max(count,max_ele);
     }
 };
 // @lc code=end
@@ -18611,34 +18610,27 @@ public:
 // @lc code=start
 class Solution {
 public:
-vector&lt;vector&lt;string&gt;&gt;a;
-int check(string s1,string s2)
-{
-    reverse(s2.begin(),s2.end());
-    if(s1.compare(s2)==0)
-    {
-        return 1;
+    vector&lt;vector&lt;string&gt;&gt;a;
+    int check(string s1,string s2){
+        reverse(s2.begin(),s2.end());
+        if(s1.compare(s2)==0){
+            return 1;
+        }
+        return 0;
     }
-    return 0;
-}
-void ans(vector&lt;string&gt;b,string s)
-{
-    if(s.size()==0)
-    {
-        a.push_back(b);
-        return;
-    }
-    for(int i=0;i&lt;s.size();i++)
-    {
-        if(check(s.substr(0,i+1),s.substr(0,i+1)))
-        {
-        b.push_back(s.substr(0,i+1));
-        ans(b,s.substr(i+1,s.size()-i-1));
-        b.pop_back();
+    void ans(vector&lt;string&gt;b,string s){
+        if(s.size()==0){
+            a.push_back(b);
+            return;
+        }
+        for(int i=0;i&lt;s.size();i++){
+            if(check(s.substr(0,i+1),s.substr(0,i+1))){
+                b.push_back(s.substr(0,i+1));
+                ans(b,s.substr(i+1,s.size()-i-1));
+                b.pop_back();
+            }
         }
     }
-}
-
     vector&lt;vector&lt;string&gt;&gt; partition(string s) {
             int i=0,n=s.length();
             vector&lt;string&gt;b;
@@ -18982,15 +18974,19 @@ public:
 class Solution {
 public:
     int singleNumber(vector&lt;int&gt;&amp; nums) {
-    int ones = 0;
-    int twos = 0;
+        unordered_map&lt;int,int&gt; m;
 
-    for (const int num : nums) {
-      ones ^= (num &amp; ~twos);
-      twos ^= (num &amp; ~ones);
-    }
+        for(auto v:nums){
+            m[v]++;
+        }
 
-    return ones;
+        for(auto val:m){
+            if(val.second == 1){
+                return val.first;
+            }
+        }
+
+        return -1;
     }
 };
 // @lc code=end
@@ -19353,8 +19349,392 @@ Note that you are allowed to reuse a dictionary word.
 // @lc code=start
 class Solution {
 public:
-    bool wordBreak(string s, vector&lt;string&gt;&amp; wordDict) {
-        
+    bool f(int i,string s ,vector&lt;string&gt;&amp;a,vector&lt;int&gt;&amp;dp){
+        if(i==s.size()){
+            return 1;
+        }
+        if(dp[i]!=-1){
+            return dp[i];
+        }
+        string temp;
+        for(int j=i;j&lt;s.length();j++){
+            temp=temp+s[j];
+            if(find(a.begin(),a.end(),temp)!=a.end()){
+                if(f(j+1,s,a,dp)){
+                    return dp[i]=1;
+                }
+            }
+        }
+        return dp[i]=0;
+    }
+    bool wordBreak(string s, vector&lt;string&gt;&amp; a) {
+        int i=0;
+        vector&lt;int&gt;dp(s.length(),-1);
+        return f(i,s,a,dp);
+    }
+
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 141. Linked List Cycle
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given
+   <code>
+    head
+   </code>
+   , the head of a linked list, determine if the linked list has a cycle in it.
+  </p>
+  <p>
+   There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the
+   <code>
+    next
+   </code>
+   pointer. Internally,
+   <code>
+    pos
+   </code>
+   is used to denote the index of the node that tail's
+   <code>
+    next
+   </code>
+   pointer is connected to.
+   <strong>
+    Note that
+    <code>
+     pos
+    </code>
+    is not passed as a parameter
+   </strong>
+   .
+  </p>
+  <p>
+   Return
+   <code>
+    true
+   </code>
+   <em>
+    if there is a cycle in the linked list
+   </em>
+   . Otherwise, return
+   <code>
+    false
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist.png" style="width: 300px; height: 97px; margin-top: 8px; margin-bottom: 8px;"/>
+  <pre><strong>Input:</strong> head = [3,2,0,-4], pos = 1
+<strong>Output:</strong> true
+<strong>Explanation:</strong> There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist_test2.png" style="width: 141px; height: 74px;"/>
+  <pre><strong>Input:</strong> head = [1,2], pos = 0
+<strong>Output:</strong> true
+<strong>Explanation:</strong> There is a cycle in the linked list, where the tail connects to the 0th node.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist_test3.png" style="width: 45px; height: 45px;"/>
+  <pre><strong>Input:</strong> head = [1], pos = -1
+<strong>Output:</strong> false
+<strong>Explanation:</strong> There is no cycle in the linked list.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of the nodes in the list is in the range
+    <code>
+     [0, 10
+     <sup>
+      4
+     </sup>
+     ]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -10
+     <sup>
+      5
+     </sup>
+     &lt;= Node.val &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     pos
+    </code>
+    is
+    <code>
+     -1
+    </code>
+    or a
+    <strong>
+     valid index
+    </strong>
+    in the linked-list.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+   Can you solve it using
+   <code>
+    O(1)
+   </code>
+   (i.e. constant) memory?
+  </p>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 141 -->
+<pre>/*
+ * @lc app=leetcode id=141 lang=cpp
+ *
+ * [141] Linked List Cycle
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode *temp= head;
+        map&lt;ListNode * , int&gt;m;
+        while(temp!=NULL)
+        {
+            if(m[temp]==1){
+                return 1;
+            }
+            m[temp]=1;
+            temp=temp-&gt;next;
+        }
+        return 0;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 142. Linked List Cycle II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given the
+   <code>
+    head
+   </code>
+   of a linked list, return
+   <em>
+    the node where the cycle begins. If there is no cycle, return
+   </em>
+   <code>
+    null
+   </code>
+   .
+  </p>
+  <p>
+   There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the
+   <code>
+    next
+   </code>
+   pointer. Internally,
+   <code>
+    pos
+   </code>
+   is used to denote the index of the node that tail's
+   <code>
+    next
+   </code>
+   pointer is connected to (
+   <strong>
+    0-indexed
+   </strong>
+   ). It is
+   <code>
+    -1
+   </code>
+   if there is no cycle.
+   <strong>
+    Note that
+   </strong>
+   <code>
+    pos
+   </code>
+   <strong>
+    is not passed as a parameter
+   </strong>
+   .
+  </p>
+  <p>
+   <strong>
+    Do not modify
+   </strong>
+   the linked list.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist.png" style="height: 145px; width: 450px;"/>
+  <pre><strong>Input:</strong> head = [3,2,0,-4], pos = 1
+<strong>Output:</strong> tail connects to node index 1
+<strong>Explanation:</strong> There is a cycle in the linked list, where tail connects to the second node.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist_test2.png" style="height: 105px; width: 201px;"/>
+  <pre><strong>Input:</strong> head = [1,2], pos = 0
+<strong>Output:</strong> tail connects to node index 0
+<strong>Explanation:</strong> There is a cycle in the linked list, where tail connects to the first node.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/circularlinkedlist_test3.png" style="height: 65px; width: 65px;"/>
+  <pre><strong>Input:</strong> head = [1], pos = -1
+<strong>Output:</strong> no cycle
+<strong>Explanation:</strong> There is no cycle in the linked list.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of the nodes in the list is in the range
+    <code>
+     [0, 10
+     <sup>
+      4
+     </sup>
+     ]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -10
+     <sup>
+      5
+     </sup>
+     &lt;= Node.val &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     pos
+    </code>
+    is
+    <code>
+     -1
+    </code>
+    or a
+    <strong>
+     valid index
+    </strong>
+    in the linked-list.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+   Can you solve it using
+   <code>
+    O(1)
+   </code>
+   (i.e. constant) memory?
+  </p>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 142 -->
+<pre>/*
+ * @lc app=leetcode id=142 lang=cpp
+ *
+ * [142] Linked List Cycle II
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *temp= head;
+        map&lt;ListNode * , pair&lt;ListNode *,int&gt;&gt;m;
+        while(temp!=NULL)
+        {
+            if(m[temp].second==1){
+                return m[temp].first;
+            }
+            m[temp]={temp,1};
+            temp=temp-&gt;next;
+        }
+        return NULL;
     }
 };
 // @lc code=end
@@ -20766,7 +21146,17 @@ public:
 class Solution {
 public:
     int maxProduct(vector&lt;int&gt;&amp; nums) {
-        
+        int max_1=nums[0];
+        int max_till=nums[0];
+        int min_till=nums[0];
+        for(int i=1;i&lt;nums.size();i++)
+        {
+            int temp=max({nums[i],max_till*nums[i],min_till*nums[i]});
+            min_till=min({nums[i],max_till*nums[i],min_till*nums[i]});
+            max_till=temp;
+            max_1=max(max_1,max_till);
+        }
+        return max_1;
     }
 };
 // @lc code=end
@@ -22332,20 +22722,17 @@ public:
 // @lc code=start
 class Solution {
 public:
-    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; a, int target) {
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
         map&lt;int,int&gt;m;
-        for(int i=0; i&lt;a.size(); i++)
-        {
-            m[a[i]]=i;
-        }
-        for(int i=0; i&lt;a.size(); i++)
-        {
-            if(m[target-a[i]]!=0)
-            {
-                return {i+1,m[target-a[i]]+1};
+        for(int i=0; i&lt;nums.size();i++){
+            if(m.find(target-nums[i])==m.end()){
+                m[nums[i]]=i;
+            }
+            else{
+                return {m[target-nums[i]]+1,i+1};
             }
         }
-        return {};
+        return {-1,-1};
     }
 };
 // @lc code=end
@@ -22446,6 +22833,125 @@ class Solution {
 public:
     string convertToTitle(int columnNumber) {
         
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 169. Majority Element
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an array
+   <code>
+    nums
+   </code>
+   of size
+   <code>
+    n
+   </code>
+   , return
+   <em>
+    the majority element
+   </em>
+   .
+  </p>
+  <p>
+   The majority element is the element that appears more than
+   <code>
+    ⌊n / 2⌋
+   </code>
+   times. You may assume that the majority element always exists in the array.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [3,2,3]
+<strong>Output:</strong> 3
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [2,2,1,1,1,2,2]
+<strong>Output:</strong> 2
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     n == nums.length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     -2
+     <sup>
+      31
+     </sup>
+     &lt;= nums[i] &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow-up:
+  </strong>
+  Could you solve the problem in linear time and in
+  <code>
+   O(1)
+  </code>
+  space?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 169 -->
+<pre>/*
+ * @lc app=leetcode id=169 lang=cpp
+ *
+ * [169] Majority Element
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int majorityElement(vector&lt;int&gt;&amp; nums) {
+        map&lt;int,int&gt;m;
+        int max=INT_MIN,max_ele=INT_MIN;
+        for(int i=0;i&lt;nums.size();i++){
+            m[nums[i]]++;
+            if(m[nums[i]]&gt;max){
+                max=m[nums[i]];
+                max_ele=nums[i];
+            }
+        }
+        return max_ele;
     }
 };
 // @lc code=end
@@ -23023,13 +23529,11 @@ public:
 
 // @lc code=start
 
-bool compare(string a,string b){
-    return a+b &gt; b+a;
-}
+    bool compare(string a,string b){
+        return a+b &gt; b+a;
+    }
 class Solution {
 public:
-
-
     string largestNumber(vector&lt;int&gt;&amp; nums) {
         vector&lt;string&gt;s;
         for(int x:nums){
@@ -25431,45 +25935,32 @@ Total amount you can rob = 1 + 3 = 4.
 // @lc code=start
 class Solution {
 public:
-int f(vector&lt;int&gt;nums,int i,vector&lt;int&gt;&amp;dp)
+int f(vector&lt;int&gt;nums)
 {
-    if(i==0)
-    {
-        return nums[i];
+    int ans=0;
+    if(nums.size()==0) return 0;
+    if(nums.size()==1) return nums[0];
+    vector&lt;int&gt;dp(nums.size(),0);
+    dp[0]=nums[0];
+    dp[1]=max(nums[0],nums[1]);
+    for(int i=2; i&lt;nums.size(); i++){
+        dp[i]=max(dp[i-1],dp[i-2]+nums[i]);
     }
-    if(i&lt;0)
-    {
-        return 0;
-    }
-    if(dp[i]!=-1)
-    {
-        return dp[i];
-    }
-    int pick=nums[i]+f(nums,i-2,dp);
-    int notpick=f(nums,i-1,dp);
-    return dp[i]=max(pick,notpick);
+    return dp[nums.size()-1];
 }
     int rob(vector&lt;int&gt;&amp; nums) {
         int j=nums.size()-1;
         vector&lt;int&gt;a1,a2;
-        if(nums.size()==1)
-        {
-            return nums[0];
-        }
-        for(int i=0;i&lt;nums.size();i++)
-        {
-            if(i!=0)
-            {
+        if(nums.size()==1) return nums[0];
+        for(int i=0;i&lt;nums.size();i++){
+            if(i!=0){
                 a2.push_back(nums[i]);
             }
-            if(i!=nums.size()-1)
-            {
+            if(i!=nums.size()-1){
                 a1.push_back(nums[i]);
             }
         }
-        vector&lt;int&gt;dp1(nums.size(),-1);
-        vector&lt;int&gt;dp2(nums.size(),-1);
-        return max(f(a1,j-1,dp1),f(a2,j-1,dp2);
+        return max(f(a1),f(a2));
     }
 };
 // @lc code=end
@@ -25812,26 +26303,25 @@ There are no other valid combinations.
 class Solution {
 public:
  vector&lt;vector&lt;int&gt;&gt;a;
- void ans(int i,int k,int n,int index,vector&lt;int&gt;b)
- {
-     if(k==i)
-     {
-         if(n==0)
-         a.push_back(b);
-         return;
-     }
-     if(n&lt;0 || k&lt;0) return;
-     for(int j=index;j&lt;10;j++){
-         if(n-j&gt;=0){
-             b.push_back(j);
-             ans(i+1,k,n-j,j+1,b);
-             b.pop_back();
-         }
-     }
- }
+    void ans(int i,int k,int n,int index,vector&lt;int&gt;b)
+    {
+        if(k==i)
+        {
+            if(n==0)a.push_back(b);
+            return;
+        }
+        if(n&lt;0 || k&lt;0) return;
+        for(int j=index;j&lt;10;j++){
+            if(n-j&gt;=0){
+                b.push_back(j);
+                ans(i+1,k,n-j,j+1,b);
+                b.pop_back();
+            }
+        }
+    }
     vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
         int i=0,index=1;
-         vector&lt;int&gt;b;
+        vector&lt;int&gt;b;
         ans(i,k,n,index,b);
         return a;
     }
@@ -25932,7 +26422,16 @@ public:
 class Solution {
 public:
     bool containsDuplicate(vector&lt;int&gt;&amp; nums) {
-        
+        map&lt;int,int&gt;m;
+        for(auto x : nums)
+        {
+            if(m[x]!=0)
+            {
+                return 1;
+            }
+            m[x]++;
+        }
+        return 0 ;
     }
 };
 // @lc code=end
@@ -27307,7 +27806,10 @@ public:
 class Solution {
 public:
     bool isPowerOfTwo(int n) {
-        
+        if(n&lt;=0) return 0;
+        n=(n&amp;(n-1));
+        if(n==0) return 1;
+        return 0;
     }
 };
 // @lc code=end
@@ -28713,9 +29215,8 @@ public:
     bool isUgly(int k) {
         if(k&lt;=0) return false;
         if(k&lt;=2) return true;
-        for(int i=2;i&lt;6 &amp;&amp; k ;i++){
-            while(k%i==0)
-            k=k/i;
+        for(int i=2;i&lt;6;i++){
+            while(k%i==0) k=k/i;
         }
         return k==1;
     }

@@ -88,7 +88,22 @@
 class Solution {
 public:
     int firstMissingPositive(vector&lt;int&gt;&amp; nums) {
-        
+        int n=nums.size();
+        unordered_map&lt;int,int&gt; m;
+
+        for(auto num:nums){
+            if(1&lt;=num &amp;&amp; num&lt;=n){
+
+            m[num]++;
+            }
+        }
+
+        for(int i=1;i&lt;=n;i++){
+            if(m[i]==0){
+                return i;
+            }
+        }
+        return n+1;
     }
 };
 // @lc code=end

@@ -93,8 +93,24 @@
 // @lc code=start
 class Solution {
 public:
+void ans(int i,int n,int k,vector&lt;vector&lt;int&gt;&gt;&amp;a,vector&lt;int&gt;&amp;b){
+    if(i&lt;=n+1){
+    if(k==0){
+        a.push_back(b);
+        return;
+    }
+    b.push_back(i);
+    ans(i+1,n,k-1,a,b);
+    b.pop_back();
+    ans(i+1,n,k,a,b);
+    }
+}
     vector&lt;vector&lt;int&gt;&gt; combine(int n, int k) {
-        
+        int i=1;
+        vector&lt;vector&lt;int&gt;&gt;a;
+        vector&lt;int&gt;b;
+        ans(i,n,k,a,b);
+        return a;
     }
 };
 // @lc code=end

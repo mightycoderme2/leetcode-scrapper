@@ -130,14 +130,14 @@ public:
         if(root){
             if(root-&gt;left){
                 flatten(root-&gt;left);
-                TreeNode *temp=root-&gt;right;
+                TreeNode *node = root-&gt;right;
                 root-&gt;right=root-&gt;left;
                 root-&gt;left=NULL;
-                TreeNode *temp2=root-&gt;right;
-                while(temp2-&gt;right!=NULL){
-                    temp2=temp2-&gt;right;
+                TreeNode * temp=root-&gt;right;
+                while(temp-&gt;right!=NULL){
+                    temp=temp-&gt;right;
                 }
-                temp2-&gt;right=temp;
+                temp-&gt;right=node;
             }
             flatten(root-&gt;right);
         }

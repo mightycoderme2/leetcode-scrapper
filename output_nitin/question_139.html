@@ -116,9 +116,30 @@ Note that you are allowed to reuse a dictionary word.
 // @lc code=start
 class Solution {
 public:
-    bool wordBreak(string s, vector&lt;string&gt;&amp; wordDict) {
-        
+    bool f(int i,string s ,vector&lt;string&gt;&amp;a,vector&lt;int&gt;&amp;dp){
+        if(i==s.size()){
+            return 1;
+        }
+        if(dp[i]!=-1){
+            return dp[i];
+        }
+        string temp;
+        for(int j=i;j&lt;s.length();j++){
+            temp=temp+s[j];
+            if(find(a.begin(),a.end(),temp)!=a.end()){
+                if(f(j+1,s,a,dp)){
+                    return dp[i]=1;
+                }
+            }
+        }
+        return dp[i]=0;
     }
+    bool wordBreak(string s, vector&lt;string&gt;&amp; a) {
+        int i=0;
+        vector&lt;int&gt;dp(s.length(),-1);
+        return f(i,s,a,dp);
+    }
+
 };
 // @lc code=end
 

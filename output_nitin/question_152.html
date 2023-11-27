@@ -104,7 +104,17 @@
 class Solution {
 public:
     int maxProduct(vector&lt;int&gt;&amp; nums) {
-        
+        int max_1=nums[0];
+        int max_till=nums[0];
+        int min_till=nums[0];
+        for(int i=1;i&lt;nums.size();i++)
+        {
+            int temp=max({nums[i],max_till*nums[i],min_till*nums[i]});
+            min_till=min({nums[i],max_till*nums[i],min_till*nums[i]});
+            max_till=temp;
+            max_1=max(max_1,max_till);
+        }
+        return max_1;
     }
 };
 // @lc code=end

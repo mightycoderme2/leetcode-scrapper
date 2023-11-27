@@ -156,22 +156,22 @@ public:
 
         //method 2
 
-        vector&lt;int&gt;dict{1,1,2,6,24,120,720,5040,40320,362880};
-        vector&lt;int&gt;a;
-        string s=&quot;&quot;;
-        for(int i=0; i&lt;n;i++) a.push_back(i+1);
-        while(k&gt;0 &amp;&amp; n){
-            int count=dict[n-1];
-            int value=1;
-            while(count*value&lt;k){
-                value=value+1;
-            }
-            k=k-count*(value-1);
-            n--;
-            s=s+to_string(a[value-1]);
-            remove(a.begin(), a.end(),a[value-1]);
-        }
-        return s;
+        // vector&lt;int&gt;dict{1,1,2,6,24,120,720,5040,40320,362880};
+        // vector&lt;int&gt;a;
+        // string s=&quot;&quot;;
+        // for(int i=0; i&lt;n;i++) a.push_back(i+1);
+        // while(k&gt;0 &amp;&amp; n){
+        //     int count=dict[n-1];
+        //     int value=1;
+        //     while(count*value&lt;k){
+        //         value=value+1;
+        //     }
+        //     k=k-count*(value-1);
+        //     n--;
+        //     s=s+to_string(a[value-1]);
+        //     remove(a.begin(), a.end(),a[value-1]);
+        // }
+        // return s;
     }
 };
 // @lc code=end

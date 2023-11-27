@@ -69,17 +69,17 @@
 class Solution {
 public:
     vector&lt;vector&lt;int&gt;&gt; generate(int numRows) {
-         vector&lt;vector&lt;int&gt;&gt;a;
+         vector&lt;vector&lt;int&gt;&gt;dp;
         for(int i = 0; i &lt; numRows; i++)
         {
             vector&lt;int&gt;ans(i+1,1);
             for(int j = 1; j &lt; i; j++)
             {
-                ans[j]=a[i-1][j-1]+a[i-1][j];
+                ans[j]=dp[i-1][j-1]+dp[i-1][j];
             }
-            a.push_back(ans);
+            dp.push_back(ans);
         }
-        return a;
+        return dp;
     }
 };
 // @lc code=end

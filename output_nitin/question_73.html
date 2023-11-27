@@ -131,7 +131,37 @@
 class Solution {
 public:
     void setZeroes(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
-        
+        vector&lt;pair&lt;int,int&gt;&gt;a;
+        for(int i=0;i&lt;matrix.size();i++){
+            for(int j=0;j&lt;matrix[0].size();j++){
+                if(matrix[i][j]==0){
+                    a.push_back({i,j});
+                }
+            }
+        }
+        for(auto x:a){
+            //cout&lt;&lt;x.first&lt;&lt;x.second&lt;&lt;&#x27;\n&#x27;;
+            int m=x.first,n=x.second;
+            while(m!=-1){
+                matrix[m][n]=0;
+                m--;
+            }
+            m++;
+            while(m!=matrix.size()){
+                matrix[m][n]=0;
+                m++;
+            }
+            m=x.first;
+            while(n!=-1){
+                matrix[m][n]=0;
+                n--;
+            }
+            n++;
+            while(n!=matrix[0].size()){
+                matrix[m][n]=0;
+                n++;
+            }
+        }
     }
 };
 // @lc code=end

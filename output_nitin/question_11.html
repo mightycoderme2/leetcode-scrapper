@@ -144,21 +144,18 @@ public:
     int maxArea(vector&lt;int&gt;&amp; height) {
         int area=0;
         int i=0,j=height.size()-1;
-        while (j&gt;i)
-        {
+        while(j&gt;i){
+            cout&lt;&lt;i&lt;&lt;j&lt;&lt;&#x27;\n&#x27;;
             int h= min(height[i],height[j]);
             area = max(area,h*(j-i));
-            while(h&gt;=height[i] &amp;&amp; j&gt;i)
-            {
+            while(h&gt;=height[i] &amp;&amp; j&gt;i){
                 i++;
             }
-            while(h&gt;=height[j] &amp;&amp; j&gt;i)
-            {
+            while(h&gt;=height[j] &amp;&amp; j&gt;i){
                 j--;
             }
         }
         return area;
-
     }
 };
 // @lc code=end

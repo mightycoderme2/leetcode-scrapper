@@ -100,38 +100,21 @@
 class Solution {
 public:
     string multiply(string num1, string num2) {
-  vector&lt;string&gt;ans(num1.length()+num2.length(),&quot;0&quot;);
-            int k=0;
-            int l=0;
-            for(int i = num2.length()-1; i &gt;=0;i--){
-                k=l;
-                for(int j = num1.length()-1; j &gt;=0;j--){
-                    ans[k]=to_string(stoi(ans[k])+((int(num2[i])-48)*(int(num1[j])-48)));
-                    k++;
-                }
-                l++;
+        if(num1==&quot;0&quot;|| num2==&quot;0&quot;) return &quot;0&quot;;
+        vector&lt;int&gt;ans(num1.length()+num2.length(),0);
+        for(int i=num1.length()-1; i&gt;=0;i--){
+            for(int j=num2.length()-1; j&gt;=0;j--){
+                ans[i+j+1]+=(num1[i]-&#x27;0&#x27;)*(num2[j]-&#x27;0&#x27;);
+                ans[i+j]+=ans[i+j+1]/10;
+                ans[i+j+1]=ans[i+j+1]%10;
             }
-            int carry=0;
-            for(int i=0;i&lt;ans.size();i++){
-                string y;
-                y=to_string((stoi(ans[i])+carry));
-                carry=stoi(y)/10;
-                ans[i]=to_string(stoi(y)%10);
-                cout&lt;&lt;ans[i]&lt;&lt;&#x27; &#x27;&lt;&lt;carry;
-            }
-            string s=&quot;&quot;;
-            for(string x:ans){
-                s=x+s;
-            }
-            int i=0;
-            while(s[i]==&#x27;0&#x27;){
-                i++;
-            }
-            cout&lt;&lt;i&lt;&lt;s.substr(i);
-            if(s.substr(i)==&quot;&quot;) return &quot;0&quot;;
-            if(i!=0)
-            return s.substr(i);
-            return s;
+        }
+
+        int i=0;
+        string result=&quot;&quot;;
+        while(ans[i]==0) i++;
+        while(i&lt;ans.size()) result+=to_string(ans[i++]);
+        return result;
     }
 };
 // @lc code=end

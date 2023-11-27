@@ -92,7 +92,16 @@
 class Solution {
 public:
     bool containsDuplicate(vector&lt;int&gt;&amp; nums) {
-        
+        map&lt;int,int&gt;m;
+        for(auto x : nums)
+        {
+            if(m[x]!=0)
+            {
+                return 1;
+            }
+            m[x]++;
+        }
+        return 0 ;
     }
 };
 // @lc code=end

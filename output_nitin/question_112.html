@@ -115,16 +115,13 @@ public:
     bool hasPathSum(TreeNode* root, int targetSum) {
         if(root==NULL) return 0;
         bool ans=0;
-        if(targetSum- root-&gt;val==0 &amp;&amp; root-&gt;left ==NULL &amp;&amp; root-&gt;right==NULL)
-        {
+        if(targetSum- root-&gt;val==0 &amp;&amp; root-&gt;left ==NULL &amp;&amp; root-&gt;right==NULL){
             return 1;
         }
-        if(root-&gt;left)
-        {
+        if(root-&gt;left){
             ans=ans||hasPathSum(root-&gt;left,targetSum- root-&gt;val);
         }
-        if(root-&gt;right)
-        {
+        if(root-&gt;right){
             ans=ans||hasPathSum(root-&gt;right,targetSum- root-&gt;val);
         }
         return ans;

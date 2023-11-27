@@ -140,24 +140,20 @@
 class Solution {
 public:
     int pre=0;
+    map&lt;int,int&gt;m;
     TreeNode* create(vector&lt;int&gt;&amp; preorder, vector&lt;int&gt;&amp; inorder,int start,int end){
         if(start&gt;end) return NULL;
         TreeNode *node = new TreeNode(preorder[pre++]);
         if(start==end) return node;
-        int pos;
-        for(int i=start; i&lt;end;i++)
-        {
-            if(node-&gt;val==inorder[i])
-            {
-                pos=i;
-                break;
-            }
-        }
+        int pos=m[node-&gt;val];
         node-&gt;left = create(preorder,inorder,start,pos-1);
         node-&gt;right = create(preorder,inorder,pos+1,end);
         return node;
     }
     TreeNode* buildTree(vector&lt;int&gt;&amp; preorder, vector&lt;int&gt;&amp; inorder) {
+        for(int i=0;i&lt;inorder.size();i++){
+            m[inorder[i]] = i;
+        }
         return create(preorder, inorder,0,inorder.size()-1);
     }
 };

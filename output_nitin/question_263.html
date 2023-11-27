@@ -121,9 +121,8 @@ public:
     bool isUgly(int k) {
         if(k&lt;=0) return false;
         if(k&lt;=2) return true;
-        for(int i=2;i&lt;6 &amp;&amp; k ;i++){
-            while(k%i==0)
-            k=k/i;
+        for(int i=2;i&lt;6;i++){
+            while(k%i==0) k=k/i;
         }
         return k==1;
     }

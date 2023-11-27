@@ -103,15 +103,19 @@
 class Solution {
 public:
     int singleNumber(vector&lt;int&gt;&amp; nums) {
-    int ones = 0;
-    int twos = 0;
+        unordered_map&lt;int,int&gt; m;
 
-    for (const int num : nums) {
-      ones ^= (num &amp; ~twos);
-      twos ^= (num &amp; ~ones);
-    }
+        for(auto v:nums){
+            m[v]++;
+        }
 
-    return ones;
+        for(auto val:m){
+            if(val.second == 1){
+                return val.first;
+            }
+        }
+
+        return -1;
     }
 };
 // @lc code=end

@@ -81,34 +81,27 @@
 // @lc code=start
 class Solution {
 public:
-vector&lt;vector&lt;string&gt;&gt;a;
-int check(string s1,string s2)
-{
-    reverse(s2.begin(),s2.end());
-    if(s1.compare(s2)==0)
-    {
-        return 1;
+    vector&lt;vector&lt;string&gt;&gt;a;
+    int check(string s1,string s2){
+        reverse(s2.begin(),s2.end());
+        if(s1.compare(s2)==0){
+            return 1;
+        }
+        return 0;
     }
-    return 0;
-}
-void ans(vector&lt;string&gt;b,string s)
-{
-    if(s.size()==0)
-    {
-        a.push_back(b);
-        return;
-    }
-    for(int i=0;i&lt;s.size();i++)
-    {
-        if(check(s.substr(0,i+1),s.substr(0,i+1)))
-        {
-        b.push_back(s.substr(0,i+1));
-        ans(b,s.substr(i+1,s.size()-i-1));
-        b.pop_back();
+    void ans(vector&lt;string&gt;b,string s){
+        if(s.size()==0){
+            a.push_back(b);
+            return;
+        }
+        for(int i=0;i&lt;s.size();i++){
+            if(check(s.substr(0,i+1),s.substr(0,i+1))){
+                b.push_back(s.substr(0,i+1));
+                ans(b,s.substr(i+1,s.size()-i-1));
+                b.pop_back();
+            }
         }
     }
-}
-
     vector&lt;vector&lt;string&gt;&gt; partition(string s) {
             int i=0,n=s.length();
             vector&lt;string&gt;b;

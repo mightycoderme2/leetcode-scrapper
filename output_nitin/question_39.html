@@ -175,10 +175,10 @@ public:
             return;
         }
         if(i==candidates.size() || target&lt;0) return;
-        generate(b,candidates,target,i+1);
         b.push_back(candidates[i]);
         generate(b,candidates,target-candidates[i],i);
         b.pop_back();
+        generate(b,candidates,target,i+1);
     }
     vector&lt;vector&lt;int&gt;&gt; combinationSum(vector&lt;int&gt;&amp; candidates, int target) {
         vector&lt;int&gt;b;

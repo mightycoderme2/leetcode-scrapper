@@ -130,26 +130,25 @@ There are no other valid combinations.
 class Solution {
 public:
  vector&lt;vector&lt;int&gt;&gt;a;
- void ans(int i,int k,int n,int index,vector&lt;int&gt;b)
- {
-     if(k==i)
-     {
-         if(n==0)
-         a.push_back(b);
-         return;
-     }
-     if(n&lt;0 || k&lt;0) return;
-     for(int j=index;j&lt;10;j++){
-         if(n-j&gt;=0){
-             b.push_back(j);
-             ans(i+1,k,n-j,j+1,b);
-             b.pop_back();
-         }
-     }
- }
+    void ans(int i,int k,int n,int index,vector&lt;int&gt;b)
+    {
+        if(k==i)
+        {
+            if(n==0)a.push_back(b);
+            return;
+        }
+        if(n&lt;0 || k&lt;0) return;
+        for(int j=index;j&lt;10;j++){
+            if(n-j&gt;=0){
+                b.push_back(j);
+                ans(i+1,k,n-j,j+1,b);
+                b.pop_back();
+            }
+        }
+    }
     vector&lt;vector&lt;int&gt;&gt; combinationSum3(int k, int n) {
         int i=0,index=1;
-         vector&lt;int&gt;b;
+        vector&lt;int&gt;b;
         ans(i,k,n,index,b);
         return a;
     }

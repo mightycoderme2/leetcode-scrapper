@@ -105,8 +105,36 @@
 // @lc code=start
 class Solution {
 public:
+vector&lt;vector&lt;int&gt;&gt;a;
+vector&lt;int&gt; b;
+void ans(int i,int n,vector&lt;int&gt;&amp;candidates,int target)
+{
+    if(target==0)
+    {
+        a.push_back(b);
+        return ;
+    }
+    if(i==n||target&lt;0)
+    {
+        return;
+    }
+    for(int j=i;j&lt;n;j++)
+    {
+        if(target-candidates[j]&lt;0)
+        break;
+        b.push_back(candidates[j]);
+        ans(j+1,n,candidates,target-candidates[j]);
+        b.pop_back();
+        while (j + 1 &lt; n &amp;&amp; candidates[j] == candidates[j + 1]) j++;
+    }
+}
     vector&lt;vector&lt;int&gt;&gt; combinationSum2(vector&lt;int&gt;&amp; candidates, int target) {
-        
+        int i=0;
+        int sum=0;
+        int n=candidates.size();
+        sort(candidates.begin(),candidates.end());
+        ans(i,n,candidates,target);
+        return a;
     }
 };
 // @lc code=end

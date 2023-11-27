@@ -125,7 +125,10 @@
 class Solution {
 public:
     bool isPowerOfTwo(int n) {
-        
+        if(n&lt;=0) return 0;
+        n=(n&amp;(n-1));
+        if(n==0) return 1;
+        return 0;
     }
 };
 // @lc code=end

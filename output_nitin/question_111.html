@@ -87,16 +87,13 @@ public:
     int minDepth(TreeNode* root) {
         if(root==NULL) return 0;
         if(root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL) return 1;
-        if(root-&gt;left ==NULL &amp;&amp; root-&gt;right!=NULL)
-        {
+        if(root-&gt;left ==NULL &amp;&amp; root-&gt;right!=NULL){
             return 1+minDepth(root-&gt;right);
         }
-        if(root-&gt;left !=NULL &amp;&amp; root-&gt;right==NULL)
-        {
+        if(root-&gt;left !=NULL &amp;&amp; root-&gt;right==NULL){
             return 1+minDepth(root-&gt;left);
         }
-        else
-        {
+        else{
         return 1+min({minDepth(root-&gt;left),minDepth(root-&gt;right)});
         }
     }

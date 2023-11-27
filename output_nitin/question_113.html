@@ -125,20 +125,18 @@
  */
 class Solution {
 public:
-void inorder(TreeNode* root,int targetSum,vector&lt;int&gt;b,vector&lt;vector&lt;int&gt;&gt;&amp;a)
-{
-    if(root==NULL){
-        return;
-    }
-    b.push_back(root-&gt;val);
-    if(targetSum==root-&gt;val &amp;&amp;  root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL)
-    {
-        a.push_back(b);
-        return;
-    }
+    void inorder(TreeNode* root,int targetSum,vector&lt;int&gt;b,vector&lt;vector&lt;int&gt;&gt;&amp;a){
+        if(root==NULL){
+            return;
+        }
+        b.push_back(root-&gt;val);
+        if(targetSum==root-&gt;val &amp;&amp;  root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL){
+            a.push_back(b);
+            return;
+        }
         inorder(root-&gt;left,targetSum-root-&gt;val,b,a);
         inorder(root-&gt;right,targetSum-root-&gt;val,b,a);
-}
+    }
     vector&lt;vector&lt;int&gt;&gt; pathSum(TreeNode* root, int targetSum) {
         vector&lt;vector&lt;int&gt;&gt;a;
         vector&lt;int&gt;b;
