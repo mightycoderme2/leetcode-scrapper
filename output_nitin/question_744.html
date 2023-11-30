@@ -150,7 +150,12 @@
 class Solution {
 public:
     char nextGreatestLetter(vector&lt;char&gt;&amp; letters, char target) {
-        
+        for(char x:letters){
+            if(x-&#x27;0&#x27;&gt;target-&#x27;0&#x27;){
+                return x;
+            }
+        }
+        return letters[0];
     }
 };
 // @lc code=end

@@ -111,7 +111,16 @@
 class Solution {
 public:
     char findTheDifference(string s, string t) {
-        
+        if(s.length()==0) return t[0];
+        int ans=t[0]^s[0];
+        for(int i=1;i&lt;s.length();i++){
+            int x=t[i];
+            int y=s[i];
+            ans=ans^x^y;
+        }
+        ans=ans^t[t.length()-1];
+        char ans1=ans;
+        return ans1;
     }
 };
 // @lc code=end

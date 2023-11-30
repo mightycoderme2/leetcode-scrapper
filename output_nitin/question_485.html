@@ -88,15 +88,12 @@ public:
         int maxx=0;
         int i=0;
         int count=0;
-        for(int x:nums)
-        {
-            if(x==1)
-            {
+        for(int x:nums){
+            if(x==1){
                 count++;
                 i++;
             }
-            else
-            {
+            else{
                 i++;
                 maxx=max(maxx,count);
                 count=0;

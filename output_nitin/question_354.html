@@ -111,22 +111,22 @@ public:
         return a[0]&lt;b[0];
     }
     int maxEnvelopes(vector&lt;vector&lt;int&gt;&gt;&amp; envelopes) {
-    sort(envelopes.begin(), envelopes.end(),comp);
-    vector&lt;int&gt; ans;
-    for(auto x:envelopes){
-        for(int y:x) cout&lt;&lt;y;
-        cout&lt;&lt;endl;
-    }
-    ans.push_back(envelopes[0][1]);
-    for(int i=1; i&lt;envelopes.size(); i++) {
-        if(envelopes[i][1]&gt;ans.back())
-           ans.push_back(envelopes[i][1]);
-        else{
-            int index = lower_bound(ans.begin(),ans.end(),envelopes[i][1]) - ans.begin();
-            ans[index] = envelopes[i][1];
+        sort(envelopes.begin(), envelopes.end(),comp);
+        vector&lt;int&gt; ans;
+        for(auto x:envelopes){
+            for(int y:x) cout&lt;&lt;y;
+            cout&lt;&lt;endl;
         }
-    }
-    return ans.size();
+        ans.push_back(envelopes[0][1]);
+        for(int i=1; i&lt;envelopes.size(); i++) {
+            if(envelopes[i][1]&gt;ans.back())
+            ans.push_back(envelopes[i][1]);
+            else{
+                int index = lower_bound(ans.begin(),ans.end(),envelopes[i][1]) - ans.begin();
+                ans[index] = envelopes[i][1];
+            }
+        }
+        return ans.size();
 
     }
 };

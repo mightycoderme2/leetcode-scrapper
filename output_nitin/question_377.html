@@ -123,21 +123,11 @@ class Solution {
 public:
     int f(vector&lt;int&gt;&amp;nums,int target,vector&lt;int&gt;&amp;dp)
     {
-        if(target==0)
-        {
-            return 1;
-        }
-        if(target&lt;0)
-        {
-            return 0;
-        }
-        if(dp[target]!=-1)
-        {
-            return dp[target];
-        }
+        if(target==0) return 1;
+        if(target&lt;0) return 0;
+        if(dp[target]!=-1) return dp[target];
         int ans=0;
-        for(int j=0;j&lt;nums.size();j++)
-        {
+        for(int j=0;j&lt;nums.size();j++){
             ans=ans+f(nums,target-nums[j],dp);
         }
         return dp[target]=ans;

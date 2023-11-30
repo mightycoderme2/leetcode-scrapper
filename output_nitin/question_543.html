@@ -110,8 +110,13 @@
  */
 class Solution {
 public:
-    int diameterOfBinaryTree(TreeNode* root) {
-        
+    int height(TreeNode * root){
+        if(root==NULL) return 0;
+        return 1+max(height(root-&gt;left),height(root-&gt;right));
+    }
+    int diameterOfBinaryTree(TreeNode* root){
+        if(root==NULL) return 0;
+        return max({height(root-&gt;right)+height(root-&gt;left),diameterOfBinaryTree(root-&gt;right),diameterOfBinaryTree(root-&gt;left)});
     }
 };
 // @lc code=end

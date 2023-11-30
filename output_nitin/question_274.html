@@ -131,18 +131,17 @@ Since the researcher has 3 papers with at least 3 citations each and the remaini
 // @lc code=start
 class Solution {
 public:
-int hIndex(vector&lt;int&gt;&amp; c) {
-    int low=0 , high = c.size();
-    while(low &lt; high){
-    int mid = (low+high+1)/2;
-    int cnt=0;
-    for(int i=0 ; i&lt;c.size() ; i++){
-        if(c[i] &gt;= mid) cnt++;
+int hIndex(vector&lt;int&gt;&amp; citations) {
+    sort(citations.begin(), citations.end());
+    
+    int start = 0,end=citations.size()-1;
+    int n=citations.size();
+    while (start &lt;= end){
+        int mid = (start +end)/2;
+        if(citations[n-mid-1]&gt;=mid+1) start=mid+1;
+        else end=mid-1;
     }
-    if(cnt &gt;= mid) low = mid;
-    else high =mid-1;
-    }
-    return low;
+    return start;
 }
 };
 // @lc code=end

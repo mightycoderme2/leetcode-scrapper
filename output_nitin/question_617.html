@@ -103,7 +103,13 @@
 class Solution {
 public:
     TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
-        
+        if(root2==NULL &amp;&amp; root1==NULL) return NULL;
+        if(root1==NULL) return root2;
+        if(root2==NULL) return root1;
+        root1-&gt;val=root1-&gt;val+root2-&gt;val;
+        root1-&gt;left=mergeTrees(root1-&gt;left,root2-&gt;left);
+        root1-&gt;right=mergeTrees(root1-&gt;right,root2-&gt;right);
+        return root1;
     }
 };
 // @lc code=end

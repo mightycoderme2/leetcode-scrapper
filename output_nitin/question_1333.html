@@ -230,8 +230,7 @@ public:
     vector&lt;int&gt; filterRestaurants(vector&lt;vector&lt;int&gt;&gt;&amp; restaurants, int veganFriendly, int maxPrice, int maxDistance) {
         vector&lt;vector&lt;int&gt;&gt;filtered;
         for(auto x:restaurants){
-            if(maxPrice &gt;= x[3] &amp;&amp; maxDistance &gt;= x[4])
-            {
+            if(maxPrice &gt;= x[3] &amp;&amp; maxDistance &gt;= x[4]){
                 if(veganFriendly==0 || (veganFriendly==1 &amp;&amp; x[2]==1))
                 filtered.push_back(x);
             }

@@ -113,17 +113,15 @@ public:
     vector&lt;string&gt; findWords(vector&lt;string&gt;&amp; words) {
         vector&lt;int&gt; dict{1,2,2,1,0,1,1,1,0,1,1,1,2,2,0,0,0,0,1,0,0,2,0,2,0,2};
         vector&lt;string&gt;ans;
-        for(string x:words)
-        {
-        int main=dict[(int)(tolower(x[0])-&#x27;a&#x27;)];
-        ans.push_back(x);
-        for(int i=1; i&lt;x.length(); i++) {
-            if(dict[(int)(tolower(x[i])-&#x27;a&#x27;)]!=main)
-            {
-                ans.pop_back();
-                break;
+        for(string x:words){
+            int main=dict[(int)(tolower(x[0])-&#x27;a&#x27;)];
+            ans.push_back(x);
+            for(int i=1; i&lt;x.length(); i++) {
+                if(dict[(int)(tolower(x[i])-&#x27;a&#x27;)]!=main){
+                    ans.pop_back();
+                    break;
+                }
             }
-        }
         }
         return ans;
     }

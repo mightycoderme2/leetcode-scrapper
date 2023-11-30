@@ -127,7 +127,15 @@
 class Solution {
 public:
     vector&lt;int&gt; findDuplicates(vector&lt;int&gt;&amp; nums) {
-        
+        map&lt;int,int&gt;m;
+        vector&lt;int&gt;a;
+        for(int i=0;i&lt;nums.size();i++){
+            if(m[nums[i]]==1){
+                a.push_back(nums[i]);
+            }
+            m[nums[i]]=1;
+        }
+        return a;
     }
 };
 // @lc code=end

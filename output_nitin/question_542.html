@@ -132,6 +132,7 @@ public:
         int m=grid.size(),n=grid[0].size();
         if(m*n==1) return grid;
         int maxx=-1;
+        
         vector&lt;vector&lt;int&gt;&gt; ans(m,vector&lt;int&gt;(n,-1));
         for(int i=0; i&lt;m; i++){
             for(int j=0; j&lt;n; j++){
@@ -143,21 +144,19 @@ public:
         }
 
         while(!q.empty()){
-                pair&lt;int,int&gt;p=q.front();
-                q.pop();
-                int i=p.first;
-                int j=p.second;
-                for(auto x:dis){
-                    int row=i+x[0];
-                    int col=j+x[1];
-                    if(row&gt;=0 &amp;&amp; col&gt;=0 &amp;&amp; row&lt;m&amp;&amp; col&lt;n &amp;&amp; ans[row][col]==-1){
+            pair&lt;int,int&gt;p=q.front();
+            q.pop();
+            int i=p.first;
+            int j=p.second;
+            for(auto x:dis){
+                int row=i+x[0];
+                int col=j+x[1];
+                if(row&gt;=0 &amp;&amp; col&gt;=0 &amp;&amp; row&lt;m&amp;&amp; col&lt;n &amp;&amp; ans[row][col]==-1){
                         ans[row][col]=ans[i][j]+1;
                         q.push({row,col});
                     }
                 }
         }
-
-
 
         return ans;
     }

@@ -92,3 +92,10 @@ with open(index_filename, 'a', encoding='utf-8') as index_file:
 
 print("All HTML files have been merged into 'index.html'.")
 print(count)
+
+import shutil
+
+
+file_to_copy = 'E:\\Data Analyst\\leetcode scrapper\\merged\\index.html' 
+destination_directory = 'E:\\Data Analyst\\leetcodesolutions\\'
+shutil.copy2(file_to_copy, destination_directory)

@@ -82,7 +82,7 @@ public:
     string find(int num){
         if(num&lt;20) return ones[num];
         else if(num&lt;100) return tens[num/10] + find(num%10);
-        else if(num &lt; 1000) return find(num/100) + &quot; Hundred&quot; + find(num%100);
+        else if(num &lt; 1000) return ones[num/100] + &quot; Hundred&quot; + find(num%100);
         for(int i=3;i&gt;=0;i--){
             if(num&gt;=pow(1000,i)) return find(num/pow(1000,i)) + thousands[i] + find(num% (int) pow(1000,i));
         }

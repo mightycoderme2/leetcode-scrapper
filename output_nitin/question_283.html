@@ -89,7 +89,15 @@
 class Solution {
 public:
     void moveZeroes(vector&lt;int&gt;&amp; nums) {
-        
+        int count=0;
+        for(int i=0;i&lt;nums.size();i++){
+            if(nums[i]==0 &amp;&amp; count&lt; nums.size()){
+                nums.push_back(0);
+                nums.erase(nums.begin()+i);
+                i--;
+                count++;
+            }
+        }
     }
 };
 // @lc code=end

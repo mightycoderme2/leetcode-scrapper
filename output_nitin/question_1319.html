@@ -97,16 +97,12 @@ public:
         if(connections.size()&lt;n-1) return -1;
         parent.resize(n);
         iota(parent.begin(), parent.end(),0);
-        int count=0;
         int connected = 0;
         for(auto a:connections){
             int x=find(a[0]);
             int y=find(a[1]);
             if(x!=y){
                 parent[y]=x;
-            }
-            else{
-                count++;
             }
         }
         for(int i=0;i&lt;n;i++) if(parent[i]==i) connected++;
