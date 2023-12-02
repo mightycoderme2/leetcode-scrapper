@@ -125,9 +125,21 @@ Window position                Max
 class Solution {
 public:
     vector&lt;int&gt; maxSlidingWindow(vector&lt;int&gt;&amp; a, int k) {
-        int pos=0,maxx=0;
         vector&lt;int&gt;ans;
-        
+        if(k==0) return ans;
+        priority_queue&lt;pair&lt;int,int&gt;&gt;pq;
+        for(int i=0; i&lt;k;i++){
+            pq.push({a[i],i});
+        }
+        ans.push_back(pq.top().first);
+        cout&lt;&lt;pq.top().first&lt;&lt;endl;
+        for(int i=k; i&lt;a.size();i++){
+            while(!pq.empty() &amp;&amp; pq.top().second &lt;=i-k){
+                pq.pop();
+            }
+            pq.push({a[i],i});
+            ans.push_back(pq.top().first);
+        }
         return ans;
     }
 };

@@ -150,7 +150,13 @@
 class Solution {
 public:
     int divide(int dividend, int divisor) {
-        
+        if(dividend == INT_MAX &amp;&amp; divisor == INT_MIN) return 0;
+        if(dividend==0) return 0;
+        if(divisor==0) return INT_MAX;
+        long long ans=double(exp(log(fabs(dividend))-log(fabs(divisor))))+0.00001;
+        if((dividend&lt;0)^(divisor&lt;0)) ans=-ans;
+        if(ans&gt;INT_MAX) return INT_MAX;
+        return ans;
     }
 };
 // @lc code=end

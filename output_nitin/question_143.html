@@ -88,13 +88,25 @@
 class Solution {
 public:
     void reorderList(ListNode* head) {
-        if(!head || !head-&gt;next || !head-&gt;next-&gt;next) return;
-
-        ListNode* temp = head;
-        while(temp-&gt;next-&gt;next) temp = temp-&gt;next-&gt;next;
-
-        
-
+        vector&lt;int&gt;a;
+        ListNode *temp=head;
+        while(temp!=NULL){
+            a.push_back(temp-&gt;val);
+            temp=temp-&gt;next;
+        }
+        if(a.size()==1) return;
+        temp=head;
+        int start=0,end=a.size()-1;
+        ListNode *prev=NULL;
+        while(start&lt;=end &amp;&amp; temp-&gt;next!=NULL){
+            temp-&gt;val=a[start++];
+            temp-&gt;next-&gt;val=a[end--];
+            prev=temp-&gt;next;
+            temp=temp-&gt;next-&gt;next;
+        }
+        if(a.size()%2==1){
+            prev-&gt;next-&gt;val=a[start];
+        }
     }
 };
 // @lc code=end

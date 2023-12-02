@@ -4423,7 +4423,13 @@ public:
 class Solution {
 public:
     int divide(int dividend, int divisor) {
-        
+        if(dividend == INT_MAX &amp;&amp; divisor == INT_MIN) return 0;
+        if(dividend==0) return 0;
+        if(divisor==0) return INT_MAX;
+        long long ans=double(exp(log(fabs(dividend))-log(fabs(divisor))))+0.00001;
+        if((dividend&lt;0)^(divisor&lt;0)) ans=-ans;
+        if(ans&gt;INT_MAX) return INT_MAX;
+        return ans;
     }
 };
 // @lc code=end
@@ -12092,16 +12098,26 @@ The largest rectangle is shown in the red area, which has an area = 10 units.
 class Solution {
 public:
     int largestRectangleArea(vector&lt;int&gt;&amp; a) {
-        if(a.size()==1) return a[0];
-        int start=0,end=a.size()-1;
-        int area=0;
-        while(start&lt;end){
-            area=max({area,a[end],a[start],min(a[start],a[end])*(end-start+1)});
-            cout&lt;&lt;start&lt;&lt;&quot; &quot;&lt;&lt;end&lt;&lt;&quot; &quot;&lt;&lt;area&lt;&lt;endl;
-            if(a[start]&gt;a[end])end--;
-            else start++;
+        stack&lt;int&gt;s;
+        a.push_back(0);
+        int maxx=0;
+        for(int i = 0; i &lt; a.size();i++){
+            if(s.empty() || a[i] &gt;= a[s.top()]){
+                s.push(i);
+            }
+            else{
+                int temp=a[s.top()];
+                s.pop();
+                if(s.empty()){
+                    maxx = max(maxx, temp*i);
+                }
+                else{
+                    maxx = max(maxx, temp*(i-1-s.top()));
+                }
+                i--;
+            }
         }
-        return area;
+        return maxx;
     }
 };
 // @lc code=end
@@ -12234,28 +12250,42 @@ public:
 // @lc code=start
 class Solution {
 public:
-    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; a1) {
-        vector&lt;vector&lt;int&gt;&gt;a;
-        for(int i = 0; i &lt; a1.size();i++){
-            for(int j = 0; j &lt; a1[i].size();j++){
-                if(i==0) a[i][j] =a1[i][j]-&#x27;0&#x27;;
-                else a[i][j]+=a1[i-1][j]-&#x27;0&#x27;-&#x27;0&#x27;;
+    int largestRectangleArea(vector&lt;int&gt;&amp; a) {
+        stack&lt;int&gt;s;
+        a.push_back(0);
+        int maxx=0;
+        for(int i = 0; i &lt; a.size();i++){
+            if(s.empty() || a[i] &gt;= a[s.top()]){
+                s.push(i);
             }
-        }
-        int area = 1;
-        for(int k = 0; k &lt; a.size();k++){
-            vector&lt;int&gt;b(a[k]);
-            int i=0,j=b.size();
-            while(j&gt;i){
-                int h=min(b[i],b[j]);
-                area=max(area,h*(j-i));
-                if(h&gt;=b[i]){
-                    i++;
+            else{
+                int temp=a[s.top()];
+                s.pop();
+                if(s.empty()){
+                    maxx = max(maxx, temp*i);
                 }
                 else{
-                    j--;
+                    maxx = max(maxx, temp*(i-1-s.top()));
+                }
+                i--;
+            }
+        }
+        return maxx;
+    }
+
+    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; a) {
+        vector&lt;int&gt;b(a[0].size(),0);
+        int area=0;
+        for(int i = 0; i &lt; a.size();i++){
+            for(int j = 0; j &lt; a[i].size();j++){
+                if(a[i][j]==&#x27;0&#x27;){
+                    b[j]=0;
+                }
+                else{
+                    b[j]++;
                 }
             }
+            area=max(area,largestRectangleArea(b));
         }
         return area;
     }
@@ -18610,6 +18640,7 @@ public:
 // @lc code=start
 class Solution {
 public:
+    int res=0;
     vector&lt;vector&lt;string&gt;&gt;a;
     int check(string s1,string s2){
         reverse(s2.begin(),s2.end());
@@ -18620,6 +18651,7 @@ public:
     }
     void ans(vector&lt;string&gt;b,string s){
         if(s.size()==0){
+            res=min(res,b.size()-1);
             a.push_back(b);
             return;
         }
@@ -18635,7 +18667,7 @@ public:
             int i=0,n=s.length();
             vector&lt;string&gt;b;
             ans(b,s);
-            return a;
+            return res;
     }
 };
 // @lc code=end
@@ -19829,13 +19861,25 @@ public:
 class Solution {
 public:
     void reorderList(ListNode* head) {
-        if(!head || !head-&gt;next || !head-&gt;next-&gt;next) return;
-
-        ListNode* temp = head;
-        while(temp-&gt;next-&gt;next) temp = temp-&gt;next-&gt;next;
-
-        
-
+        vector&lt;int&gt;a;
+        ListNode *temp=head;
+        while(temp!=NULL){
+            a.push_back(temp-&gt;val);
+            temp=temp-&gt;next;
+        }
+        if(a.size()==1) return;
+        temp=head;
+        int start=0,end=a.size()-1;
+        ListNode *prev=NULL;
+        while(start&lt;=end &amp;&amp; temp-&gt;next!=NULL){
+            temp-&gt;val=a[start++];
+            temp-&gt;next-&gt;val=a[end--];
+            prev=temp-&gt;next;
+            temp=temp-&gt;next-&gt;next;
+        }
+        if(a.size()%2==1){
+            prev-&gt;next-&gt;val=a[start];
+        }
     }
 };
 // @lc code=end
@@ -22573,7 +22617,7 @@ public:
 class Solution {
 public:
     string fractionToDecimal(int numerator, int denominator) {
-        return to_string((float)(numerator/denominator));
+        return to_string((double)numerator/(double)denominator);
     }
 };
 // @lc code=end
@@ -23550,6 +23594,222 @@ public:
 // @lc code=end
 
 </pre><html><head></head><body>
+874. Walking Robot Simulation<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   A robot on an infinite XY-plane starts at point
+   <code>
+    (0, 0)
+   </code>
+   and faces north. The robot can receive one of three possible types of
+   <code>
+    commands
+   </code>
+   :
+  </p>
+  <ul>
+   <li>
+    <code>
+     -2
+    </code>
+    : turn left
+    <code>
+     90
+    </code>
+    degrees,
+   </li>
+   <li>
+    <code>
+     -1
+    </code>
+    : turn right
+    <code>
+     90
+    </code>
+    degrees, or
+   </li>
+   <li>
+    <code>
+     1 &lt;= k &lt;= 9
+    </code>
+    : move forward
+    <code>
+     k
+    </code>
+    units.
+   </li>
+  </ul>
+  <p>
+   Some of the grid squares are
+   <code>
+    obstacles
+   </code>
+   . The
+   <code>
+    i
+    <sup>
+     th
+    </sup>
+   </code>
+   obstacle is at grid point
+   <code>
+    obstacles[i] = (x
+    <sub>
+     i
+    </sub>
+    , y
+    <sub>
+     i
+    </sub>
+    )
+   </code>
+   .
+  </p>
+  <p>
+   If the robot would try to move onto them, the robot stays on the previous grid square instead (but still continues following the rest of the route.)
+  </p>
+  <p>
+   Return
+   <em>
+    the maximum Euclidean distance that the robot will be from the origin
+    <strong>
+     squared
+    </strong>
+    (i.e. if the distance is
+   </em>
+   <code>
+    5
+   </code>
+   <em>
+    , return
+   </em>
+   <code>
+    25
+   </code>
+   <em>
+    )
+   </em>
+   .
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    North means +Y direction.
+   </li>
+   <li>
+    East means +X direction.
+   </li>
+   <li>
+    South means -Y direction.
+   </li>
+   <li>
+    West means -X direction.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> commands = [4,-1,3], obstacles = []
+<strong>Output:</strong> 25
+<strong>Explanation:</strong> The robot starts at (0, 0):
+1. Move north 4 units to (0, 4).
+2. Turn right.
+3. Move east 3 units to (3, 4).
+The furthest point away from the origin is (3, 4), which is 3<sup>2</sup> + 4<sup>2</sup> = 25 units away.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> commands = [4,-1,4,-2,4], obstacles = [[2,4]]
+<strong>Output:</strong> 65
+<strong>Explanation:</strong> The robot starts at (0, 0):
+1. Move north 4 units to (0, 4).
+2. Turn right.
+3. Move east 1 unit and get blocked by the obstacle at (2, 4), robot is at (1, 4).
+4. Turn left.
+5. Move north 4 units to (1, 8).
+The furthest point away from the origin is (1, 8), which is 1<sup>2</sup> + 8<sup>2</sup> = 65 units away.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= commands.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     commands[i]
+    </code>
+    is one of the values in the list
+    <code>
+     [-2,-1,1,2,3,4,5,6,7,8,9]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     0 &lt;= obstacles.length &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     -3 * 10
+     <sup>
+      4
+     </sup>
+     &lt;= x
+     <sub>
+      i
+     </sub>
+     , y
+     <sub>
+      i
+     </sub>
+     &lt;= 3 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    The answer is guaranteed to be less than
+    <code>
+     2
+     <sup>
+      31
+     </sup>
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 182 -->
+<pre></pre><html><head></head><body>
 <div id="title">
  188. Best Time to Buy and Sell Stock IV
 </div>
@@ -24807,6 +25067,115 @@ public:
             }
         }
         return ans;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 201. Bitwise AND of Numbers Range
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two integers
+   <code>
+    left
+   </code>
+   and
+   <code>
+    right
+   </code>
+   that represent the range
+   <code>
+    [left, right]
+   </code>
+   , return
+   <em>
+    the bitwise AND of all numbers in this range, inclusive
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> left = 5, right = 7
+<strong>Output:</strong> 4
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> left = 0, right = 0
+<strong>Output:</strong> 0
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> left = 1, right = 2147483647
+<strong>Output:</strong> 0
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= left &lt;= right &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 201 -->
+<pre>/*
+ * @lc app=leetcode id=201 lang=cpp
+ *
+ * [201] Bitwise AND of Numbers Range
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int get(int left){
+        int quol=0;
+        if(left==INT_MAX) quol=31;
+        else{
+            while(pow(2,quol)&lt;=left){
+                quol++;
+            }
+        }
+        return quol;
+    }
+    int ans=-1;
+    int rangeBitwiseAnd(int left, int right) {
+        if(left==0) return 0;
+        if(left==right) return left;
+        int l=get(left);
+        int r=get(right);
+        if(l==r) return value(left,right);
+        return 0;
+    }
+
+    int value(int left, int right) {
+        if(left==right) return right;
+        return left &amp; value(left+1,right);
     }
 };
 // @lc code=end
@@ -27229,6 +27598,181 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 227. Basic Calculator II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   which represents an expression,
+   <em>
+    evaluate this expression and return its value
+   </em>
+   .
+  </p>
+  <p>
+   The integer division should truncate toward zero.
+  </p>
+  <p>
+   You may assume that the given expression is always valid. All intermediate results will be in the range of
+   <code>
+    [-2
+    <sup>
+     31
+    </sup>
+    , 2
+    <sup>
+     31
+    </sup>
+    - 1]
+   </code>
+   .
+  </p>
+  <p>
+   <strong>
+    Note:
+   </strong>
+   You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as
+   <code>
+    eval()
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "3+2*2"
+<strong>Output:</strong> 7
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = " 3/2 "
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = " 3+5 / 2 "
+<strong>Output:</strong> 5
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 3 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of integers and operators
+    <code>
+     ('+', '-', '*', '/')
+    </code>
+    separated by some number of spaces.
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    represents
+    <strong>
+     a valid expression
+    </strong>
+    .
+   </li>
+   <li>
+    All the integers in the expression are non-negative integers in the range
+    <code>
+     [0, 2
+     <sup>
+      31
+     </sup>
+     - 1]
+    </code>
+    .
+   </li>
+   <li>
+    The answer is
+    <strong>
+     guaranteed
+    </strong>
+    to fit in a
+    <strong>
+     32-bit integer
+    </strong>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 227 -->
+<pre>/*
+ * @lc app=leetcode id=227 lang=cpp
+ *
+ * [227] Basic Calculator II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int calculate(string s) {
+        stack&lt;int&gt;a;
+        long n=0;
+        char sign=&#x27;+&#x27;;
+        for(int i=0; i&lt;s.length();i++){
+            if(isdigit(s[i])) n=n*10 + (s[i] - &#x27;0&#x27;);
+            if(!isdigit(s[i]) &amp;&amp; !isspace(s[i]) || i==s.length()-1){
+                if(sign == &#x27;+&#x27;) a.push(n);
+                else if(sign == &#x27;-&#x27;) a.push(-n);
+                else{
+                    int temp=a.top();
+                    a.pop();
+                    if(sign == &#x27;*&#x27;){
+                        a.push(temp*n);
+                    }
+                    else{
+                        a.push(temp/n);
+                    }
+                }
+                sign=s[i];
+                n=0;
+            }
+        }
+        while(!a.empty()){
+            n=n+a.top();
+            a.pop();
+        }
+        return n;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  228. Summary Ranges
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -28332,6 +28876,160 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 237. Delete Node in a Linked List
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Write a function to
+   <strong>
+    delete a node
+   </strong>
+   in a singly-linked list. You will
+   <strong>
+    not
+   </strong>
+   be given access to the
+   <code>
+    head
+   </code>
+   of the list, instead you will be given access to
+   <strong>
+    the node to be deleted
+   </strong>
+   directly.
+  </p>
+  <p>
+   It is
+   <strong>
+    guaranteed
+   </strong>
+   that the node to be deleted is
+   <strong>
+    not a tail node
+   </strong>
+   in the list.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/node1.jpg" style="width: 450px; height: 322px;"/>
+  <pre><strong>Input:</strong> head = [4,5,1,9], node = 5
+<strong>Output:</strong> [4,1,9]
+<strong>Explanation: </strong>You are given the second node with value 5, the linked list should become 4 -&gt; 1 -&gt; 9 after calling your function.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/node2.jpg" style="width: 450px; height: 354px;"/>
+  <pre><strong>Input:</strong> head = [4,5,1,9], node = 1
+<strong>Output:</strong> [4,5,9]
+<strong>Explanation: </strong>You are given the third node with value 1, the linked list should become 4 -&gt; 5 -&gt; 9 after calling your function.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = [1,2,3,4], node = 3
+<strong>Output:</strong> [1,2,4]
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = [0,1], node = 0
+<strong>Output:</strong> [1]
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> head = [-3,5,-99], node = -3
+<strong>Output:</strong> [5,-99]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of the nodes in the given list is in the range
+    <code>
+     [2, 1000]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -1000 &lt;= Node.val &lt;= 1000
+    </code>
+   </li>
+   <li>
+    The value of each node in the list is
+    <strong>
+     unique
+    </strong>
+    .
+   </li>
+   <li>
+    The
+    <code>
+     node
+    </code>
+    to be deleted is
+    <strong>
+     in the list
+    </strong>
+    and is
+    <strong>
+     not a tail
+    </strong>
+    node
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 237 -->
+<pre>/*
+ * @lc app=leetcode id=237 lang=cpp
+ *
+ * [237] Delete Node in a Linked List
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        node-&gt;val=node-&gt;next-&gt;val;
+        node-&gt;next=node-&gt;next-&gt;next;
+        return;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  238. Product of Array Except Self
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -28620,9 +29318,21 @@ Window position                Max
 class Solution {
 public:
     vector&lt;int&gt; maxSlidingWindow(vector&lt;int&gt;&amp; a, int k) {
-        int pos=0,maxx=0;
         vector&lt;int&gt;ans;
-        
+        if(k==0) return ans;
+        priority_queue&lt;pair&lt;int,int&gt;&gt;pq;
+        for(int i=0; i&lt;k;i++){
+            pq.push({a[i],i});
+        }
+        ans.push_back(pq.top().first);
+        cout&lt;&lt;pq.top().first&lt;&lt;endl;
+        for(int i=k; i&lt;a.size();i++){
+            while(!pq.empty() &amp;&amp; pq.top().second &lt;=i-k){
+                pq.pop();
+            }
+            pq.push({a[i],i});
+            ans.push_back(pq.top().first);
+        }
         return ans;
     }
 };
@@ -28763,6 +29473,105 @@ public:
             matrix[r][c] &gt; target ? c--:r++;
         }
         return false;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 241. Different Ways to Add Parentheses
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    expression
+   </code>
+   of numbers and operators, return
+   <em>
+    all possible results from computing all the different possible ways to group numbers and operators
+   </em>
+   . You may return the answer in
+   <strong>
+    any order
+   </strong>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> expression = "2-1-1"
+<strong>Output:</strong> [0,2]
+<strong>Explanation:</strong>
+((2-1)-1) = 0 
+(2-(1-1)) = 2
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> expression = "2*3-4*5"
+<strong>Output:</strong> [-34,-14,-10,-10,10]
+<strong>Explanation:</strong>
+(2*(3-(4*5))) = -34 
+((2*3)-(4*5)) = -14 
+((2*(3-4))*5) = -10 
+(2*((3-4)*5)) = -10 
+(((2*3)-4)*5) = 10
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= expression.length &lt;= 20
+    </code>
+   </li>
+   <li>
+    <code>
+     expression
+    </code>
+    consists of digits and the operator
+    <code>
+     '+'
+    </code>
+    ,
+    <code>
+     '-'
+    </code>
+    , and
+    <code>
+     '*'
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 241 -->
+<pre>/*
+ * @lc app=leetcode id=241 lang=cpp
+ *
+ * [241] Different Ways to Add Parentheses
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt; diffWaysToCompute(string expression) {
+
     }
 };
 // @lc code=end
@@ -31902,6 +32711,127 @@ public:
             }
         }
         return k[n-1];
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 318. Maximum Product of Word Lengths
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string array
+   <code>
+    words
+   </code>
+   , return
+   <em>
+    the maximum value of
+   </em>
+   <code>
+    length(word[i]) * length(word[j])
+   </code>
+   <em>
+    where the two words do not share common letters
+   </em>
+   . If no such two words exist, return
+   <code>
+    0
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["abcw","baz","foo","bar","xtfn","abcdef"]
+<strong>Output:</strong> 16
+<strong>Explanation:</strong> The two words can be "abcw", "xtfn".
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["a","ab","abc","d","cd","bcd","abcd"]
+<strong>Output:</strong> 4
+<strong>Explanation:</strong> The two words can be "ab", "cd".
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> words = ["a","aa","aaa","aaaa"]
+<strong>Output:</strong> 0
+<strong>Explanation:</strong> No such pair of words.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     2 &lt;= words.length &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= words[i].length &lt;= 1000
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i]
+    </code>
+    consists only of lowercase English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 318 -->
+<pre>/*
+ * @lc app=leetcode id=318 lang=cpp
+ *
+ * [318] Maximum Product of Word Lengths
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int maxProduct(vector&lt;string&gt;&amp; words) {
+        int maxx=0;
+        for(int i = 0; i &lt; words.size();i++){
+            map&lt;char,int&gt;m;
+            int s1=words[i].length();
+            for(char x: words[i]){
+                m[x]++;
+            }
+            for(int j = i+1; j &lt; words.size();j++){
+                int s2=words[j].length();
+                int flag=1;
+                for(char x: words[j]){
+                    if(m[x]&gt;0){
+                        flag=0;
+                        break;
+                    }
+                }
+                if(flag){
+                    maxx=max(maxx,s1*s2);
+                }
+            }
+        }
+        return maxx;
     }
 };
 // @lc code=end
@@ -35191,7 +36121,29 @@ public:
 class Solution {
 public:
     string decodeString(string s) {
-        
+        int end,start;
+        string ans=&quot;&quot;;
+        for(int i = s.length()-1; i &gt;=0; i--){
+            if(s[i] == &#x27;]&#x27;){
+                end=i;
+            }
+            if(s[i] == &#x27;[&#x27;){
+                start=i;
+                string value=&quot;&quot;;
+                i--;
+                value=value+s[i];
+                while(i&gt;0 &amp;&amp; s[i-1]-&#x27;0&#x27;&gt;=0 &amp;&amp; s[i-1]-&#x27;0&#x27;&lt;=9){
+                    value=s[i-1]+value;
+                    i--;
+                }
+                string a=&quot;&quot;;
+                for(int j = 0; j&lt;stoi(value);j++){
+                    a=a+s.substr(start+1,end-start-1);
+                }
+                return decodeString(s.substr(0,i)+a+s.substr(end+1,s.length()-end-1));
+            }
+        }
+        return s;
     }
 };
 // @lc code=end
@@ -35941,8 +36893,16 @@ public:
  */
 class Solution {
 public:
+    int ans=0;
     int sumOfLeftLeaves(TreeNode* root) {
-        
+        if(root!=NULL){
+            if(root-&gt;left!=NULL &amp;&amp; root-&gt;left-&gt;left==NULL &amp;&amp; root-&gt;left-&gt;right ==NULL){
+                ans=ans+root-&gt;left-&gt;val;
+            }
+            sumOfLeftLeaves(root-&gt;left);
+            sumOfLeftLeaves(root-&gt;right);
+        }
+        return ans;
     }
 };
 // @lc code=end
@@ -43662,6 +44622,90 @@ public:
         }
         //for(int x:dp) cout&lt;&lt;x&lt;&lt;&#x27; &#x27;;
         return dp[(1&lt;&lt;n)-1]==0;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 709. To Lower Case
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a string
+   <code>
+    s
+   </code>
+   , return
+   <em>
+    the string after replacing every uppercase letter with the same lowercase letter
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "Hello"
+<strong>Output:</strong> "hello"
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "here"
+<strong>Output:</strong> "here"
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "LOVELY"
+<strong>Output:</strong> "lovely"
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= s.length &lt;= 100
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of printable ASCII characters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 709 -->
+<pre>/*
+ * @lc app=leetcode id=709 lang=cpp
+ *
+ * [709] To Lower Case
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string toLowerCase(string s) {
+        if(s==&quot;&quot;) return &quot;&quot;;
+        string ans=(char)(tolower(s[0]))+toLowerCase(s.substr(1));
+        return ans;
     }
 };
 // @lc code=end

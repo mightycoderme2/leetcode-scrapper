@@ -126,28 +126,42 @@
 // @lc code=start
 class Solution {
 public:
-    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; a1) {
-        vector&lt;vector&lt;int&gt;&gt;a;
-        for(int i = 0; i &lt; a1.size();i++){
-            for(int j = 0; j &lt; a1[i].size();j++){
-                if(i==0) a[i][j] =a1[i][j]-&#x27;0&#x27;;
-                else a[i][j]+=a1[i-1][j]-&#x27;0&#x27;-&#x27;0&#x27;;
+    int largestRectangleArea(vector&lt;int&gt;&amp; a) {
+        stack&lt;int&gt;s;
+        a.push_back(0);
+        int maxx=0;
+        for(int i = 0; i &lt; a.size();i++){
+            if(s.empty() || a[i] &gt;= a[s.top()]){
+                s.push(i);
             }
-        }
-        int area = 1;
-        for(int k = 0; k &lt; a.size();k++){
-            vector&lt;int&gt;b(a[k]);
-            int i=0,j=b.size();
-            while(j&gt;i){
-                int h=min(b[i],b[j]);
-                area=max(area,h*(j-i));
-                if(h&gt;=b[i]){
-                    i++;
+            else{
+                int temp=a[s.top()];
+                s.pop();
+                if(s.empty()){
+                    maxx = max(maxx, temp*i);
                 }
                 else{
-                    j--;
+                    maxx = max(maxx, temp*(i-1-s.top()));
+                }
+                i--;
+            }
+        }
+        return maxx;
+    }
+
+    int maximalRectangle(vector&lt;vector&lt;char&gt;&gt;&amp; a) {
+        vector&lt;int&gt;b(a[0].size(),0);
+        int area=0;
+        for(int i = 0; i &lt; a.size();i++){
+            for(int j = 0; j &lt; a[i].size();j++){
+                if(a[i][j]==&#x27;0&#x27;){
+                    b[j]=0;
+                }
+                else{
+                    b[j]++;
                 }
             }
+            area=max(area,largestRectangleArea(b));
         }
         return area;
     }

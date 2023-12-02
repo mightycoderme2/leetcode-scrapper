@@ -81,6 +81,7 @@
 // @lc code=start
 class Solution {
 public:
+    int res=0;
     vector&lt;vector&lt;string&gt;&gt;a;
     int check(string s1,string s2){
         reverse(s2.begin(),s2.end());
@@ -91,6 +92,7 @@ public:
     }
     void ans(vector&lt;string&gt;b,string s){
         if(s.size()==0){
+            res=min(res,b.size()-1);
             a.push_back(b);
             return;
         }
@@ -106,7 +108,7 @@ public:
             int i=0,n=s.length();
             vector&lt;string&gt;b;
             ans(b,s);
-            return a;
+            return res;
     }
 };
 // @lc code=end

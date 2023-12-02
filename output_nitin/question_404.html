@@ -76,8 +76,16 @@
  */
 class Solution {
 public:
+    int ans=0;
     int sumOfLeftLeaves(TreeNode* root) {
-        
+        if(root!=NULL){
+            if(root-&gt;left!=NULL &amp;&amp; root-&gt;left-&gt;left==NULL &amp;&amp; root-&gt;left-&gt;right ==NULL){
+                ans=ans+root-&gt;left-&gt;val;
+            }
+            sumOfLeftLeaves(root-&gt;left);
+            sumOfLeftLeaves(root-&gt;right);
+        }
+        return ans;
     }
 };
 // @lc code=end

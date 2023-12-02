@@ -80,16 +80,26 @@ The largest rectangle is shown in the red area, which has an area = 10 units.
 class Solution {
 public:
     int largestRectangleArea(vector&lt;int&gt;&amp; a) {
-        if(a.size()==1) return a[0];
-        int start=0,end=a.size()-1;
-        int area=0;
-        while(start&lt;end){
-            area=max({area,a[end],a[start],min(a[start],a[end])*(end-start+1)});
-            cout&lt;&lt;start&lt;&lt;&quot; &quot;&lt;&lt;end&lt;&lt;&quot; &quot;&lt;&lt;area&lt;&lt;endl;
-            if(a[start]&gt;a[end])end--;
-            else start++;
+        stack&lt;int&gt;s;
+        a.push_back(0);
+        int maxx=0;
+        for(int i = 0; i &lt; a.size();i++){
+            if(s.empty() || a[i] &gt;= a[s.top()]){
+                s.push(i);
+            }
+            else{
+                int temp=a[s.top()];
+                s.pop();
+                if(s.empty()){
+                    maxx = max(maxx, temp*i);
+                }
+                else{
+                    maxx = max(maxx, temp*(i-1-s.top()));
+                }
+                i--;
+            }
         }
-        return area;
+        return maxx;
     }
 };
 // @lc code=end

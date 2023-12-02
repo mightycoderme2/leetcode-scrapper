@@ -137,7 +137,29 @@
 class Solution {
 public:
     string decodeString(string s) {
-        
+        int end,start;
+        string ans=&quot;&quot;;
+        for(int i = s.length()-1; i &gt;=0; i--){
+            if(s[i] == &#x27;]&#x27;){
+                end=i;
+            }
+            if(s[i] == &#x27;[&#x27;){
+                start=i;
+                string value=&quot;&quot;;
+                i--;
+                value=value+s[i];
+                while(i&gt;0 &amp;&amp; s[i-1]-&#x27;0&#x27;&gt;=0 &amp;&amp; s[i-1]-&#x27;0&#x27;&lt;=9){
+                    value=s[i-1]+value;
+                    i--;
+                }
+                string a=&quot;&quot;;
+                for(int j = 0; j&lt;stoi(value);j++){
+                    a=a+s.substr(start+1,end-start-1);
+                }
+                return decodeString(s.substr(0,i)+a+s.substr(end+1,s.length()-end-1));
+            }
+        }
+        return s;
     }
 };
 // @lc code=end
