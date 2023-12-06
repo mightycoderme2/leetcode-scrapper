@@ -74,13 +74,41 @@
 class Solution {
 public:
     int getSum(int a, int b) {
+
+        /*
+
+        a = 0101
+        b = 0111
+
+        First Iteration:
+
+        sum = a ^ b: 0101 ^ 0111 = 0010 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (0101 &amp; 0111) &lt;&lt; 1 = 0101 &lt;&lt; 1 = 1010 (carry)
+        a = sum: a is now 0010
+
+        Second Iteration:
+
+        sum = a ^ b: 0010 ^ 1010 = 1000 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (0010 &amp; 1010) &lt;&lt; 1 = 0010 &lt;&lt; 1 = 0100 (carry)
+        a = sum: a is now 1000
+
+        Third Iteration:
+
+        sum = a ^ b: 1000 ^ 0100 = 1100 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (1000 &amp; 0100) &lt;&lt; 1 = 0000 (carry)
+        a = sum: a is now 1100
+
+        */
+
         int sum=a;
-        while(b!=0){
-            sum=a^b;
-            b=(a&amp;b)&lt;&lt;1;
+        while(b!=0){// add carry till it is zero
+            sum=a^b; // sum without carrry
+            b=(a&amp;b)&lt;&lt;1; // carry
             a=sum;
         }
         return sum;
+
+
     }
 };
 // @lc code=end

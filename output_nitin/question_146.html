@@ -177,45 +177,38 @@ lRUCache.get(4);    // return 4
 // @lc code=start
 class LRUCache {
 public:
-    queue&lt;int&gt;lru;
+    queue&lt;int&gt;q;
     int val[10001];
     int count[10001];
-    int frame;
-    int total=0;
+    int total=0,frame;
     LRUCache(int capacity) {
         frame=capacity;
     }
 
     int get(int key) {
         if(count[key]==0) return -1;
-        else{
-            count[key]++;
-            lru.push(key);
-            return val[key];
-        }
+        put(key,val[key]);
+        return val[key];
     }
 
     void put(int key, int value) {
-        if(frame&gt;total){
-            if(count[key]==0)total++;
-        }
-        else{
-            if(count[key]==0){
-                while (true) {
-                    if (!--count[lru.front()]) {
-                        lru.pop();
+        if(count[key]==0){
+            if(frame&gt;total) total++;
+            else{
+                while(true){
+                    if(--count[q.front()]==0){
+                        q.pop();
                         break;
                     }
-                    lru.pop();
+                    q.pop();
                 }
             }
         }
-        val[key]=value;
         count[key]++;
-        lru.push(key);
+        val[key]=value;
+        q.push(key);
     }
 };
-
 /**
  * Your LRUCache object will be instantiated and called as such:
  * LRUCache* obj = new LRUCache(capacity);

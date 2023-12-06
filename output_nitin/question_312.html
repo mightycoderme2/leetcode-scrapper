@@ -118,7 +118,7 @@ public:
         a.insert(a.begin(),1);
         int n= a.size();
         vector&lt;vector&lt;int&gt;&gt;dp(n,vector&lt;int&gt;(n));
-        for(int len=2;len&lt;=n;len++){
+        for(int len=3;len&lt;=n;len++){
             for(int i=0;i+len&lt;=n;i++){
                 int j=i+len-1;
                 for(int k=i+1;k&lt;j;k++){

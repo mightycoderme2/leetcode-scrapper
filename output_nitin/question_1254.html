@@ -120,8 +120,7 @@ Islands in gray are closed because they are completely surrounded by water (grou
 class Solution {
 public:
     int count=0;
-    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y,int&amp; t)
-    {
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y,int&amp; t){
         if(x&lt;0 || x&gt;=grid.size() || y&lt;0 || y&gt;=grid[0].size()){
             if(t==0){
                 t++;
@@ -136,6 +135,7 @@ public:
         dfs(grid,x,y-1,t);
         dfs(grid,x,y+1,t);
     }
+
 
     int closedIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
         int ans =0 ;

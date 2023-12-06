@@ -222,31 +222,7 @@
 // @lc code=start
 class Solution {
 public:
-    vector&lt;vector&lt;string&gt;&gt;ans;
-    int check(string s1, string s2){
-        int count = 0;
-        for(int i = 0; i &lt;s1.length(); i++){
-            if(s1[i] != s2[i]){
-                count++;
-            }
-        }
-        return count;
-    }
-    void backtrack(string beginWord,string check, string endWord, vector&lt;string&gt;&amp; wordList,int start,vector&lt;string&gt; a){
-        if(start==wordList.size()-1){
-            ans.push_back(a);
-            return;
-        }
-        if(check(beginWord, check)==1){
-            a.push_back(wordList[start]);
-            backtrack(wordList[start],wordList[start+1], endWord, wordList,start+1,a);
-            a.pop_back();
-        }
-    }
     vector&lt;vector&lt;string&gt;&gt; findLadders(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
-        vector&lt;string&gt;a;
-        backtrack(begin,wordList[0],endWord,wordList,0,a);
-        return ans;
     }
 };
 // @lc code=end

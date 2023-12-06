@@ -1,0 +1,153 @@
+<html><head></head><body>
+<div id="title">
+ 212. Word Search II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an
+   <code>
+    m x n
+   </code>
+   <code>
+    board
+   </code>
+   of characters and a list of strings
+   <code>
+    words
+   </code>
+   , return
+   <em>
+    all words on the board
+   </em>
+   .
+  </p>
+  <p>
+   Each word must be constructed from letters of sequentially adjacent cells, where
+   <strong>
+    adjacent cells
+   </strong>
+   are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/search1.jpg" style="width: 322px; height: 322px;"/>
+  <pre><strong>Input:</strong> board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+<strong>Output:</strong> ["eat","oath"]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/search2.jpg" style="width: 162px; height: 162px;"/>
+  <pre><strong>Input:</strong> board = [["a","b"],["c","d"]], words = ["abcb"]
+<strong>Output:</strong> []
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == board.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == board[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 12
+    </code>
+   </li>
+   <li>
+    <code>
+     board[i][j]
+    </code>
+    is a lowercase English letter.
+   </li>
+   <li>
+    <code>
+     1 &lt;= words.length &lt;= 3 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= words[i].length &lt;= 10
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i]
+    </code>
+    consists of lowercase English letters.
+   </li>
+   <li>
+    All the strings of
+    <code>
+     words
+    </code>
+    are unique.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 212 -->
+<pre>/*
+ * @lc app=leetcode id=212 lang=cpp
+ *
+ * [212] Word Search II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board,int i,int j,string s){
+        if(!s.size()) return true;
+        if(i&lt;0 || j&lt;0 || i&gt;=board.size() || j&gt;= board[0].size() || board[i][j]!=s[0] || board[i][j]==&#x27;*&#x27;) return false;
+        char c = board[i][j];
+        board[i][j]=&#x27;*&#x27;;
+        s=s.substr(1);
+        bool ans = dfs(board,i+1,j,s) || dfs(board,i-1,j,s) ||dfs(board,i,j-1,s) ||dfs(board,i,j+1,s);
+        board[i][j]=c;
+        return ans;
+    }
+    vector&lt;string&gt; findWords(vector&lt;vector&lt;char&gt;&gt;&amp; board, vector&lt;string&gt;&amp; words) {
+        set&lt;string&gt;a;
+        map&lt;char,vector&lt;pair&lt;int,int&gt;&gt;&gt;m;
+        for(int i=0;i&lt;board.size();i++){
+            for(int j=0;j&lt;board[i].size();j++){
+                m[board[i][j]].push_back({i,j});
+            }
+        }
+        for(int i=0;i&lt;words.size();i++){
+            for(auto x:m[words[i][0]]){
+                if(dfs(board,x.first,x.second,words[i])){
+                    a.insert(words[i]);
+                }
+            }
+        }
+        vector&lt;string&gt;ans;
+        for(auto x:a)ans.push_back(x);
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre>

@@ -215,7 +215,35 @@
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
-        
+        if(beginWord == endWord) return 0;
+        if(find(wordList.begin(),wordList.end(),endWord) == wordList.end()) return 0;
+        set&lt;string&gt;dict;
+        for(int i = 0; i &lt; wordList.size();i++){
+            dict.insert(wordList[i]);
+        }
+        int n=endWord.length(),level=0;
+        queue&lt;string&gt; q;
+        q.push(beginWord);
+        while(!q.empty()) {
+            level++;
+            int m=q.size();
+            for(int i=0;i&lt;m;i++){
+                string word=q.front();
+                q.pop();
+                for(int i=0; i&lt;n; i++){
+                    char org=word[i];
+                    for(char j=&#x27;a&#x27;; j&lt;=&#x27;z&#x27;; j++){
+                        word[i]=j;
+                        if(word==endWord) return level+1;
+                        if(dict.find(word) == dict.end()) continue;
+                        q.push(word);
+                        dict.erase(word);
+                    }
+                    word[i]=org;
+                }
+            }
+        }
+        return 0;
     }
 };
 // @lc code=end

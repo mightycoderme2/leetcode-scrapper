@@ -11314,12 +11314,9 @@ vector&lt;vector&lt;int&gt;&gt;ans;
 class Solution {
 public:
     bool exist(vector&lt;vector&lt;char&gt;&gt;&amp; board, string word) {
-        for(int i=0;i&lt;board.size();i++)
-        {
-            for(int j=0;j&lt;board[0].size();j++)
-            {
-                if(dfs(board,i,j,word))
-                {
+        for(int i=0;i&lt;board.size();i++){
+            for(int j=0;j&lt;board[0].size();j++){
+                if(dfs(board,i,j,word)){
                     return true;
                 }
 
@@ -17891,31 +17888,7 @@ public:
 // @lc code=start
 class Solution {
 public:
-    vector&lt;vector&lt;string&gt;&gt;ans;
-    int check(string s1, string s2){
-        int count = 0;
-        for(int i = 0; i &lt;s1.length(); i++){
-            if(s1[i] != s2[i]){
-                count++;
-            }
-        }
-        return count;
-    }
-    void backtrack(string beginWord,string check, string endWord, vector&lt;string&gt;&amp; wordList,int start,vector&lt;string&gt; a){
-        if(start==wordList.size()-1){
-            ans.push_back(a);
-            return;
-        }
-        if(check(beginWord, check)==1){
-            a.push_back(wordList[start]);
-            backtrack(wordList[start],wordList[start+1], endWord, wordList,start+1,a);
-            a.pop_back();
-        }
-    }
     vector&lt;vector&lt;string&gt;&gt; findLadders(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
-        vector&lt;string&gt;a;
-        backtrack(begin,wordList[0],endWord,wordList,0,a);
-        return ans;
     }
 };
 // @lc code=end
@@ -18137,7 +18110,35 @@ public:
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) {
-        
+        if(beginWord == endWord) return 0;
+        if(find(wordList.begin(),wordList.end(),endWord) == wordList.end()) return 0;
+        set&lt;string&gt;dict;
+        for(int i = 0; i &lt; wordList.size();i++){
+            dict.insert(wordList[i]);
+        }
+        int n=endWord.length(),level=0;
+        queue&lt;string&gt; q;
+        q.push(beginWord);
+        while(!q.empty()) {
+            level++;
+            int m=q.size();
+            for(int i=0;i&lt;m;i++){
+                string word=q.front();
+                q.pop();
+                for(int i=0; i&lt;n; i++){
+                    char org=word[i];
+                    for(char j=&#x27;a&#x27;; j&lt;=&#x27;z&#x27;; j++){
+                        word[i]=j;
+                        if(word==endWord) return level+1;
+                        if(dict.find(word) == dict.end()) continue;
+                        q.push(word);
+                        dict.erase(word);
+                    }
+                    word[i]=org;
+                }
+            }
+        }
+        return 0;
     }
 };
 // @lc code=end
@@ -19372,7 +19373,7 @@ Note that you are allowed to reuse a dictionary word.
 </div>
 </body></html>
 <!-- Solution for Question 139 -->
-<pre>/*
+<pre>x/*
  * @lc app=leetcode id=139 lang=cpp
  *
  * [139] Word Break
@@ -20324,45 +20325,38 @@ lRUCache.get(4);    // return 4
 // @lc code=start
 class LRUCache {
 public:
-    queue&lt;int&gt;lru;
+    queue&lt;int&gt;q;
     int val[10001];
     int count[10001];
-    int frame;
-    int total=0;
+    int total=0,frame;
     LRUCache(int capacity) {
         frame=capacity;
     }
 
     int get(int key) {
         if(count[key]==0) return -1;
-        else{
-            count[key]++;
-            lru.push(key);
-            return val[key];
-        }
+        put(key,val[key]);
+        return val[key];
     }
 
     void put(int key, int value) {
-        if(frame&gt;total){
-            if(count[key]==0)total++;
-        }
-        else{
-            if(count[key]==0){
-                while (true) {
-                    if (!--count[lru.front()]) {
-                        lru.pop();
+        if(count[key]==0){
+            if(frame&gt;total) total++;
+            else{
+                while(true){
+                    if(--count[q.front()]==0){
+                        q.pop();
                         break;
                     }
-                    lru.pop();
+                    q.pop();
                 }
             }
         }
-        val[key]=value;
         count[key]++;
-        lru.push(key);
+        val[key]=value;
+        q.push(key);
     }
 };
-
 /**
  * Your LRUCache object will be instantiated and called as such:
  * LRUCache* obj = new LRUCache(capacity);
@@ -23594,6 +23588,125 @@ public:
 // @lc code=end
 
 </pre><html><head></head><body>
+872. Leaf-Similar Trees<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Consider all the leaves of a binary tree, from left to right order, the values of those leaves form a
+   <strong>
+    leaf value sequence
+   </strong>
+   <em>
+    .
+   </em>
+  </p>
+  <p>
+   <img alt="" src="./output_files/tree.png" style="width: 400px; height: 336px;"/>
+  </p>
+  <p>
+   For example, in the given tree above, the leaf value sequence is
+   <code>
+    (6, 7, 4, 9, 8)
+   </code>
+   .
+  </p>
+  <p>
+   Two binary trees are considered
+   <em>
+    leaf-similar
+   </em>
+   if their leaf value sequence is the same.
+  </p>
+  <p>
+   Return
+   <code>
+    true
+   </code>
+   if and only if the two given trees with head nodes
+   <code>
+    root1
+   </code>
+   and
+   <code>
+    root2
+   </code>
+   are leaf-similar.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/leaf-similar-1.jpg" style="width: 750px; height: 297px;"/>
+  <pre><strong>Input:</strong> root1 = [3,5,1,6,2,9,8,null,null,7,4], root2 = [3,5,1,6,7,4,2,null,null,null,null,null,null,9,8]
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root1 = [1], root2 = [1]
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root1 = [1], root2 = [2]
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root1 = [1,2], root2 = [2,2]
+<strong>Output:</strong> true
+</pre>
+  <p>
+   <strong>
+    Example 5:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/leaf-similar-2.jpg" style="width: 450px; height: 165px;"/>
+  <pre><strong>Input:</strong> root1 = [1,2,3], root2 = [1,3,2]
+<strong>Output:</strong> false
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in each tree will be in the range
+    <code>
+     [1, 200]
+    </code>
+    .
+   </li>
+   <li>
+    Both of the given trees will have values in the range
+    <code>
+     [0, 200]
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 181 -->
+<pre>select e1.name as Employee  from Employee e1
+inner join Employee e2
+on e1.managerId=e2.id
+where e1.salary&gt;e2.salary
+</pre><html><head></head><body>
 874. Walking Robot Simulation<div class="content__u3I1 question-content__JfgR">
  <div>
   <p>
@@ -25833,6 +25946,224 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 208. Implement Trie (Prefix Tree)
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   A
+   <a href="https://en.wikipedia.org/wiki/Trie" target="_blank">
+    <strong>
+     trie
+    </strong>
+   </a>
+   (pronounced as "try") or
+   <strong>
+    prefix tree
+   </strong>
+   is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+  </p>
+  <p>
+   Implement the Trie class:
+  </p>
+  <ul>
+   <li>
+    <code>
+     Trie()
+    </code>
+    Initializes the trie object.
+   </li>
+   <li>
+    <code>
+     void insert(String word)
+    </code>
+    Inserts the string
+    <code>
+     word
+    </code>
+    into the trie.
+   </li>
+   <li>
+    <code>
+     boolean search(String word)
+    </code>
+    Returns
+    <code>
+     true
+    </code>
+    if the string
+    <code>
+     word
+    </code>
+    is in the trie (i.e., was inserted before), and
+    <code>
+     false
+    </code>
+    otherwise.
+   </li>
+   <li>
+    <code>
+     boolean startsWith(String prefix)
+    </code>
+    Returns
+    <code>
+     true
+    </code>
+    if there is a previously inserted string
+    <code>
+     word
+    </code>
+    that has the prefix
+    <code>
+     prefix
+    </code>
+    , and
+    <code>
+     false
+    </code>
+    otherwise.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input</strong>
+["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+<strong>Output</strong>
+[null, null, true, false, true, null, true]
+
+<strong>Explanation</strong>
+Trie trie = new Trie();
+trie.insert("apple");
+trie.search("apple");   // return True
+trie.search("app");     // return False
+trie.startsWith("app"); // return True
+trie.insert("app");
+trie.search("app");     // return True
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= word.length, prefix.length &lt;= 2000
+    </code>
+   </li>
+   <li>
+    <code>
+     word
+    </code>
+    and
+    <code>
+     prefix
+    </code>
+    consist only of lowercase English letters.
+   </li>
+   <li>
+    At most
+    <code>
+     3 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+    calls
+    <strong>
+     in total
+    </strong>
+    will be made to
+    <code>
+     insert
+    </code>
+    ,
+    <code>
+     search
+    </code>
+    , and
+    <code>
+     startsWith
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 208 -->
+<pre>/*
+ * @lc app=leetcode id=208 lang=cpp
+ *
+ * [208] Implement Trie (Prefix Tree)
+ */
+
+// @lc code=start
+
+class TrieNode{
+    public:
+        map&lt;char, TrieNode*&gt; children;
+        bool end=false;
+};
+
+class Trie {
+public:
+    TrieNode * root;
+    Trie() {
+        root= new TrieNode();
+    }
+
+    void insert(string word) {
+        TrieNode *node = root;
+        for(char c: word){
+            if(node-&gt;children.find(c)==node-&gt;children.end()){
+                node-&gt;children[c]= new TrieNode();
+            }
+            node=node-&gt;children[c];
+        }
+        node-&gt;end=true;
+    }
+
+    bool searchmain(string word,bool prefix) {
+        TrieNode *node = root;
+        for(char c: word){
+            if(node-&gt;children.find(c)==node-&gt;children.end()){
+                return false;
+            }
+            node=node-&gt;children[c];
+        }
+        if(prefix==true) return true;
+        return node!=NULL &amp;&amp; node-&gt;end;
+    }
+
+    bool search(string word) {
+        return searchmain(word,false);
+    }
+
+    bool startsWith(string prefix) {
+        return searchmain(prefix,true);
+    }
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj-&gt;insert(word);
+ * bool param_2 = obj-&gt;search(word);
+ * bool param_3 = obj-&gt;startsWith(prefix);
+ */
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  209. Minimum Size Subarray Sum
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -26208,6 +26539,158 @@ public:
     }
     vector&lt;int&gt;ans2={};
     return nodes==numCourses?ans:ans2;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 212. Word Search II
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an
+   <code>
+    m x n
+   </code>
+   <code>
+    board
+   </code>
+   of characters and a list of strings
+   <code>
+    words
+   </code>
+   , return
+   <em>
+    all words on the board
+   </em>
+   .
+  </p>
+  <p>
+   Each word must be constructed from letters of sequentially adjacent cells, where
+   <strong>
+    adjacent cells
+   </strong>
+   are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/search1.jpg" style="width: 322px; height: 322px;"/>
+  <pre><strong>Input:</strong> board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+<strong>Output:</strong> ["eat","oath"]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/search2.jpg" style="width: 162px; height: 162px;"/>
+  <pre><strong>Input:</strong> board = [["a","b"],["c","d"]], words = ["abcb"]
+<strong>Output:</strong> []
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == board.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == board[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 12
+    </code>
+   </li>
+   <li>
+    <code>
+     board[i][j]
+    </code>
+    is a lowercase English letter.
+   </li>
+   <li>
+    <code>
+     1 &lt;= words.length &lt;= 3 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= words[i].length &lt;= 10
+    </code>
+   </li>
+   <li>
+    <code>
+     words[i]
+    </code>
+    consists of lowercase English letters.
+   </li>
+   <li>
+    All the strings of
+    <code>
+     words
+    </code>
+    are unique.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 212 -->
+<pre>/*
+ * @lc app=leetcode id=212 lang=cpp
+ *
+ * [212] Word Search II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool dfs(vector&lt;vector&lt;char&gt;&gt;&amp; board,int i,int j,string s){
+        if(!s.size()) return true;
+        if(i&lt;0 || j&lt;0 || i&gt;=board.size() || j&gt;= board[0].size() || board[i][j]!=s[0] || board[i][j]==&#x27;*&#x27;) return false;
+        char c = board[i][j];
+        board[i][j]=&#x27;*&#x27;;
+        s=s.substr(1);
+        bool ans = dfs(board,i+1,j,s) || dfs(board,i-1,j,s) ||dfs(board,i,j-1,s) ||dfs(board,i,j+1,s);
+        board[i][j]=c;
+        return ans;
+    }
+    vector&lt;string&gt; findWords(vector&lt;vector&lt;char&gt;&gt;&amp; board, vector&lt;string&gt;&amp; words) {
+        set&lt;string&gt;a;
+        map&lt;char,vector&lt;pair&lt;int,int&gt;&gt;&gt;m;
+        for(int i=0;i&lt;board.size();i++){
+            for(int j=0;j&lt;board[i].size();j++){
+                m[board[i][j]].push_back({i,j});
+            }
+        }
+        for(int i=0;i&lt;words.size();i++){
+            for(auto x:m[words[i][0]]){
+                if(dfs(board,x.first,x.second,words[i])){
+                    a.insert(words[i]);
+                }
+            }
+        }
+        vector&lt;string&gt;ans;
+        for(auto x:a)ans.push_back(x);
+        return ans;
     }
 };
 // @lc code=end
@@ -31486,6 +31969,214 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 295. Find Median from Data Stream
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   The
+   <strong>
+    median
+   </strong>
+   is the middle value in an ordered integer list. If the size of the list is even, there is no middle value and the median is the mean of the two middle values.
+  </p>
+  <ul>
+   <li>
+    For example, for
+    <code>
+     arr = [2,3,4]
+    </code>
+    , the median is
+    <code>
+     3
+    </code>
+    .
+   </li>
+   <li>
+    For example, for
+    <code>
+     arr = [2,3]
+    </code>
+    , the median is
+    <code>
+     (2 + 3) / 2 = 2.5
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+   Implement the MedianFinder class:
+  </p>
+  <ul>
+   <li>
+    <code>
+     MedianFinder()
+    </code>
+    initializes the
+    <code>
+     MedianFinder
+    </code>
+    object.
+   </li>
+   <li>
+    <code>
+     void addNum(int num)
+    </code>
+    adds the integer
+    <code>
+     num
+    </code>
+    from the data stream to the data structure.
+   </li>
+   <li>
+    <code>
+     double findMedian()
+    </code>
+    returns the median of all elements so far. Answers within
+    <code>
+     10
+     <sup>
+      -5
+     </sup>
+    </code>
+    of the actual answer will be accepted.
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input</strong>
+["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
+[[], [1], [2], [], [3], []]
+<strong>Output</strong>
+[null, null, null, 1.5, null, 2.0]
+
+<strong>Explanation</strong>
+MedianFinder medianFinder = new MedianFinder();
+medianFinder.addNum(1);    // arr = [1]
+medianFinder.addNum(2);    // arr = [1, 2]
+medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
+medianFinder.addNum(3);    // arr[1, 2, 3]
+medianFinder.findMedian(); // return 2.0
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     -10
+     <sup>
+      5
+     </sup>
+     &lt;= num &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    There will be at least one element in the data structure before calling
+    <code>
+     findMedian
+    </code>
+    .
+   </li>
+   <li>
+    At most
+    <code>
+     5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+    calls will be made to
+    <code>
+     addNum
+    </code>
+    and
+    <code>
+     findMedian
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Follow up:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    If all integer numbers from the stream are in the range
+    <code>
+     [0, 100]
+    </code>
+    , how would you optimize your solution?
+   </li>
+   <li>
+    If
+    <code>
+     99%
+    </code>
+    of all integer numbers from the stream are in the range
+    <code>
+     [0, 100]
+    </code>
+    , how would you optimize your solution?
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 295 -->
+<pre>/*
+ * @lc app=leetcode id=295 lang=cpp
+ *
+ * [295] Find Median from Data Stream
+ */
+
+// @lc code=start
+class MedianFinder {
+public:
+    vector&lt;int&gt;a;
+    MedianFinder() {
+
+    }
+
+    void addNum(int num) {
+        a.insert(lower_bound(a.begin(), a.end(), num),num);
+    }
+
+    double findMedian() {
+        int n=a.size()/2;
+        if(a.size()%2==0){
+            return (double)(a[n]+a[n-1])/2;
+        }
+        return a[a.size()/2];
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj-&gt;addNum(num);
+ * double param_2 = obj-&gt;findMedian();
+ */
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  297. Serialize and Deserialize Binary Tree
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -32532,7 +33223,7 @@ public:
         a.insert(a.begin(),1);
         int n= a.size();
         vector&lt;vector&lt;int&gt;&gt;dp(n,vector&lt;int&gt;(n));
-        for(int len=2;len&lt;=n;len++){
+        for(int len=3;len&lt;=n;len++){
             for(int i=0;i+len&lt;=n;i++){
                 int j=i+len-1;
                 for(int k=i+1;k&lt;j;k++){
@@ -32832,6 +33523,120 @@ public:
             }
         }
         return maxx;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 319. Bulb Switcher
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   There are
+   <code>
+    n
+   </code>
+   bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.
+  </p>
+  <p>
+   On the third round, you toggle every third bulb (turning on if it's off or turning off if it's on). For the
+   <code>
+    i
+    <sup>
+     th
+    </sup>
+   </code>
+   round, you toggle every
+   <code>
+    i
+   </code>
+   bulb. For the
+   <code>
+    n
+    <sup>
+     th
+    </sup>
+   </code>
+   round, you only toggle the last bulb.
+  </p>
+  <p>
+   Return
+   <em>
+    the number of bulbs that are on after
+    <code>
+     n
+    </code>
+    rounds
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/bulb.jpg" style="width: 421px; height: 321px;"/>
+  <pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 1
+<strong>Explanation:</strong> At first, the three bulbs are [off, off, off].
+After the first round, the three bulbs are [on, on, on].
+After the second round, the three bulbs are [on, off, on].
+After the third round, the three bulbs are [on, off, off]. 
+So you should return 1 because there is only one bulb is on.</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 0
+<strong>Output:</strong> 0
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= n &lt;= 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 319 -->
+<pre>/*
+ * @lc app=leetcode id=319 lang=cpp
+ *
+ * [319] Bulb Switcher
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int bulbSwitch(int n) {
+        //prime numbers cant be cosidereed
+        //only number s rehed in oddd times are on others are off and those are only the sqrt numbers 
+        return sqrt(n);
     }
 };
 // @lc code=end
@@ -33223,6 +34028,148 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 329. Longest Increasing Path in a Matrix
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an
+   <code>
+    m x n
+   </code>
+   integers
+   <code>
+    matrix
+   </code>
+   , return
+   <em>
+    the length of the longest increasing path in
+   </em>
+   <code>
+    matrix
+   </code>
+   .
+  </p>
+  <p>
+   From each cell, you can either move in four directions: left, right, up, or down. You
+   <strong>
+    may not
+   </strong>
+   move
+   <strong>
+    diagonally
+   </strong>
+   or move
+   <strong>
+    outside the boundary
+   </strong>
+   (i.e., wrap-around is not allowed).
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/grid1(1).jpg" style="width: 242px; height: 242px;"/>
+  <pre><strong>Input:</strong> matrix = [[9,9,4],[6,6,8],[2,1,1]]
+<strong>Output:</strong> 4
+<strong>Explanation:</strong> The longest increasing path is <code>[1, 2, 6, 9]</code>.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/tmp-grid.jpg" style="width: 253px; height: 253px;"/>
+  <pre><strong>Input:</strong> matrix = [[3,4,5],[3,2,6],[2,2,1]]
+<strong>Output:</strong> 4
+<strong>Explanation: </strong>The longest increasing path is <code>[3, 4, 5, 6]</code>. Moving diagonally is not allowed.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> matrix = [[1]]
+<strong>Output:</strong> 1
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     m == matrix.length
+    </code>
+   </li>
+   <li>
+    <code>
+     n == matrix[i].length
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= m, n &lt;= 200
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= matrix[i][j] &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 329 -->
+<pre>/*
+ * @lc app=leetcode id=329 lang=cpp
+ *
+ * [329] Longest Increasing Path in a Matrix
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int dfs(vector&lt;vector&lt;int&gt;&gt;&amp; matrix,int posx,int posy,vector&lt;vector&lt;int&gt;&gt;&amp; h){
+        if(h[posx][posy]!=-1) return h[posx][posy];
+        vector&lt;int&gt;newx{0,0,1,-1};
+        vector&lt;int&gt;newy{1,-1,0,0};
+        int ans=0;
+        for(int i=0;i&lt;4;i++){
+            int x=newx[i]+posx;
+            int y=newy[i]+posy;
+            if(x&gt;=0 &amp;&amp; y&gt;=0 &amp;&amp; y&lt;matrix[0].size() &amp;&amp; x&lt;matrix.size()  &amp;&amp; matrix[x][y] &gt; matrix[posx][posy]){
+                ans=max(ans,1+dfs(matrix,x,y,h));
+            }
+        }
+        return h[posx][posy]=ans;
+    }
+    int longestIncreasingPath(vector&lt;vector&lt;int&gt;&gt;&amp; matrix) {
+        int ans = 0;
+        vector&lt;vector&lt;int&gt;&gt;h(matrix.size(),vector&lt;int&gt;(matrix[0].size(),-1));
+        for(int i = 0; i &lt; matrix.size();i++){
+            for(int j = 0; j &lt; matrix[0].size();j++){
+                ans = max(ans,1+dfs(matrix,i,j,h));
+            }
+        }
+        return ans;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  331. Verify Preorder Serialization of a Binary Tree
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -33366,6 +34313,145 @@ class Solution {
 public:
     bool isValidSerialization(string preorder) {
         
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 334. Increasing Triplet Subsequence
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer array
+   <code>
+    nums
+   </code>
+   , return
+   <code>
+    true
+   </code>
+   <em>
+    if there exists a triple of indices
+   </em>
+   <code>
+    (i, j, k)
+   </code>
+   <em>
+    such that
+   </em>
+   <code>
+    i &lt; j &lt; k
+   </code>
+   <em>
+    and
+   </em>
+   <code>
+    nums[i] &lt; nums[j] &lt; nums[k]
+   </code>
+   . If no such indices exists, return
+   <code>
+    false
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [1,2,3,4,5]
+<strong>Output:</strong> true
+<strong>Explanation:</strong> Any triplet where i &lt; j &lt; k is valid.
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [5,4,3,2,1]
+<strong>Output:</strong> false
+<strong>Explanation:</strong> No triplet exists.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> nums = [2,1,5,0,4,6]
+<strong>Output:</strong> true
+<strong>Explanation:</strong> The triplet (3, 4, 5) is valid because nums[3] == 0 &lt; nums[4] == 4 &lt; nums[5] == 6.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= nums.length &lt;= 5 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     -2
+     <sup>
+      31
+     </sup>
+     &lt;= nums[i] &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+  <p>
+  </p>
+  <strong>
+   Follow up:
+  </strong>
+  Could you implement a solution that runs in
+  <code>
+   O(n)
+  </code>
+  time complexity and
+  <code>
+   O(1)
+  </code>
+  space complexity?
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 334 -->
+<pre>/*
+ * @lc app=leetcode id=334 lang=cpp
+ *
+ * [334] Increasing Triplet Subsequence
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool increasingTriplet(vector&lt;int&gt;&amp; nums) {
+        int n=nums.size();
+        if(n&lt;3)return false;
+        int low=INT_MAX, mid=INT_MAX;
+        for(int i=0; i&lt;n; i++){
+            if(nums[i]&gt;mid) return true;
+            else if(nums[i]&lt;low) low=nums[i];
+            else if(nums[i]&lt;mid &amp;&amp; nums[i] &gt; low) mid=nums[i];
+        }
+        return false;
     }
 };
 // @lc code=end
@@ -34983,13 +36069,41 @@ public:
 class Solution {
 public:
     int getSum(int a, int b) {
+
+        /*
+
+        a = 0101
+        b = 0111
+
+        First Iteration:
+
+        sum = a ^ b: 0101 ^ 0111 = 0010 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (0101 &amp; 0111) &lt;&lt; 1 = 0101 &lt;&lt; 1 = 1010 (carry)
+        a = sum: a is now 0010
+
+        Second Iteration:
+
+        sum = a ^ b: 0010 ^ 1010 = 1000 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (0010 &amp; 1010) &lt;&lt; 1 = 0010 &lt;&lt; 1 = 0100 (carry)
+        a = sum: a is now 1000
+
+        Third Iteration:
+
+        sum = a ^ b: 1000 ^ 0100 = 1100 (sum without considering carry)
+        b = (a &amp; b) &lt;&lt; 1: (1000 &amp; 0100) &lt;&lt; 1 = 0000 (carry)
+        a = sum: a is now 1100
+
+        */
+
         int sum=a;
-        while(b!=0){
-            sum=a^b;
-            b=(a&amp;b)&lt;&lt;1;
+        while(b!=0){// add carry till it is zero
+            sum=a^b; // sum without carrry
+            b=(a&amp;b)&lt;&lt;1; // carry
             a=sum;
         }
         return sum;
+
+
     }
 };
 // @lc code=end
@@ -35117,6 +36231,168 @@ public:
         int n=b.back();
         b.pop_back();
         return power(superPow(a,b),10) * power(a,n) %base;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 374. Guess Number Higher or Lower
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   We are playing the Guess Game. The game is as follows:
+  </p>
+  <p>
+   I pick a number from
+   <code>
+    1
+   </code>
+   to
+   <code>
+    n
+   </code>
+   . You have to guess which number I picked.
+  </p>
+  <p>
+   Every time you guess wrong, I will tell you whether the number I picked is higher or lower than your guess.
+  </p>
+  <p>
+   You call a pre-defined API
+   <code>
+    int guess(int num)
+   </code>
+   , which returns 3 possible results:
+  </p>
+  <ul>
+   <li>
+    <code>
+     -1
+    </code>
+    : The number I picked is lower than your guess (i.e.
+    <code>
+     pick &lt; num
+    </code>
+    ).
+   </li>
+   <li>
+    <code>
+     1
+    </code>
+    : The number I picked is higher than your guess (i.e.
+    <code>
+     pick &gt; num
+    </code>
+    ).
+   </li>
+   <li>
+    <code>
+     0
+    </code>
+    : The number I picked is equal to your guess (i.e.
+    <code>
+     pick == num
+    </code>
+    ).
+   </li>
+  </ul>
+  <p>
+   Return
+   <em>
+    the number that I picked
+   </em>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 10, pick = 6
+<strong>Output:</strong> 6
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 1, pick = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2, pick = 1
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2, pick = 2
+<strong>Output:</strong> 2
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+   <li>
+    <code>
+     1 &lt;= pick &lt;= n
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 374 -->
+<pre>/*
+ * @lc app=leetcode id=374 lang=cpp
+ *
+ * [374] Guess Number Higher or Lower
+ */
+
+// @lc code=start
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * int guess(int num);
+ */
+
+class Solution {
+public:
+    int guessNumber(int n) {
+        long long start=0,end=n;
+        while(start&lt;=end){
+            long long mid=(start+end)/2;
+            int val=guess(mid);
+            if(val==0) return mid;
+            else if ( val==-1) end=mid-1;
+            else start=mid+1;
+        }
+        return -1;
     }
 };
 // @lc code=end
@@ -35565,6 +36841,220 @@ public:
         while(start&lt;end) {
             if()
         }
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 383. Ransom Note
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given two stings
+   <code>
+    ransomNote
+   </code>
+   and
+   <code>
+    magazine
+   </code>
+   , return
+   <code>
+    true
+   </code>
+   if
+   <code>
+    ransomNote
+   </code>
+   can be constructed from
+   <code>
+    magazine
+   </code>
+   and
+   <code>
+    false
+   </code>
+   otherwise.
+  </p>
+  <p>
+   Each letter in
+   <code>
+    magazine
+   </code>
+   can only be used once in
+   <code>
+    ransomNote
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> ransomNote = "a", magazine = "b"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> ransomNote = "aa", magazine = "ab"
+<strong>Output:</strong> false
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> ransomNote = "aa", magazine = "aab"
+<strong>Output:</strong> true
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= ransomNote.length, magazine.length &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     ransomNote
+    </code>
+    and
+    <code>
+     magazine
+    </code>
+    consist of lowercase English letters.
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 383 -->
+<pre>/*
+ * @lc app=leetcode id=383 lang=cpp
+ *
+ * [383] Ransom Note
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        map&lt;char,int&gt;m1;
+        map&lt;char,int&gt;m2;
+        for(char x:ransomNote) m1[x]++;
+        for(char x:magazine) m2[x]++;
+        for(auto x:m1){
+            if(m2[x.first]&lt;m1[x.first]) return 0;
+        }
+        return 1;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 386. Lexicographical Numbers
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer
+   <code>
+    n
+   </code>
+   , return all the numbers in the range
+   <code>
+    [1, n]
+   </code>
+   sorted in lexicographical order.
+  </p>
+  <p>
+   You must write an algorithm that runs in
+   <code>
+    O(n)
+   </code>
+   time and uses
+   <code>
+    O(1)
+   </code>
+   extra space.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 13
+<strong>Output:</strong> [1,10,11,12,13,2,3,4,5,6,7,8,9]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 2
+<strong>Output:</strong> [1,2]
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 5 * 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 386 -->
+<pre>/*
+ * @lc app=leetcode id=386 lang=cpp
+ *
+ * [386] Lexicographical Numbers
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector&lt;int&gt; lexicalOrder(int n) {
+        vector&lt;string&gt;a;
+        vector&lt;int&gt;ans;
+        for(int i=1;i&lt;=n;i++){
+            a.push_back(to_string(i));
+        }
+        sort(a.begin(),a.end());
+        for(int i=1;i&lt;=n;i++){
+            ans.push_back(stoi(a[i-1]));
+        }
+        return ans;
     }
 };
 // @lc code=end
@@ -36565,6 +38055,94 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 400. Nth Digit
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given an integer
+   <code>
+    n
+   </code>
+   , return the
+   <code>
+    n
+    <sup>
+     th
+    </sup>
+   </code>
+   digit of the infinite integer sequence
+   <code>
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...]
+   </code>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 3
+<strong>Output:</strong> 3
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> n = 11
+<strong>Output:</strong> 0
+<strong>Explanation:</strong> The 11<sup>th</sup> digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     1 &lt;= n &lt;= 2
+     <sup>
+      31
+     </sup>
+     - 1
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 400 -->
+<pre>/*
+ * @lc app=leetcode id=400 lang=cpp
+ *
+ * [400] Nth Digit
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int findNthDigit(int n) {
+        int a=9,d=1;
+        while(n&gt;(long)a*d){
+            n-=a*d;
+            a*=10;
+            d++;
+        }
+        // highest crossed power + new number for every d
+        int num = pow(10, d - 1) + (n - 1) / d;
+        return to_string(num)[ (n-1) %d] -&#x27;0&#x27;;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  401. Binary Watch
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -36801,6 +38379,7 @@ public:
             ans.pop_back();
             k--;
         }
+        
         if(ans.size()&gt;1 &amp;&amp; ans[0]==&#x27;0&#x27;){
             reverse(ans.begin(), ans.end());
             while(!ans.empty() &amp;&amp; ans.back()==&#x27;0&#x27;) ans.pop_back();
@@ -37967,6 +39546,136 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 434. Number of Segments in a String
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   You are given a string
+   <code>
+    s
+   </code>
+   , return
+   <em>
+    the number of segments in the string
+   </em>
+   .
+  </p>
+  <p>
+   A
+   <strong>
+    segment
+   </strong>
+   is defined to be a contiguous sequence of
+   <strong>
+    non-space characters
+   </strong>
+   .
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "Hello, my name is John"
+<strong>Output:</strong> 5
+<strong>Explanation:</strong> The five segments are ["Hello,", "my", "name", "is", "John"]
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "Hello"
+<strong>Output:</strong> 1
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = "love live! mu'sic forever"
+<strong>Output:</strong> 4
+</pre>
+  <p>
+   <strong>
+    Example 4:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> s = ""
+<strong>Output:</strong> 0
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= s.length &lt;= 300
+    </code>
+   </li>
+   <li>
+    <code>
+     s
+    </code>
+    consists of lower-case and upper-case English letters, digits or one of the following characters
+    <code>
+     "!@#$%^&amp;*()_+-=',.:"
+    </code>
+    .
+   </li>
+   <li>
+    The only space character in
+    <code>
+     s
+    </code>
+    is
+    <code>
+     ' '
+    </code>
+    .
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 434 -->
+<pre>/*
+ * @lc app=leetcode id=434 lang=cpp
+ *
+ * [434] Number of Segments in a String
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int countSegments(string s) {
+        if(s==&quot;&quot;) return 0;
+        int i=0;
+        s=s+&#x27; &#x27;;
+        string temp=&quot;&quot;;
+        for(char x:s){
+            if(x==&#x27; &#x27;){
+                if(temp!=&quot;&quot;) i++;
+                temp=&quot;&quot;;
+            }
+            else{
+                temp+=x;
+            }
+        }
+        return i;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  435. Non-overlapping Intervals
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -38693,6 +40402,172 @@ public:
 
 </pre><html><head></head><body>
 <div id="title">
+ 450. Delete Node in a BST
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
+  </p>
+  <p>
+   Basically, the deletion can be divided into two stages:
+  </p>
+  <ol>
+   <li>
+    Search for a node to remove.
+   </li>
+   <li>
+    If the node is found, delete the node.
+   </li>
+  </ol>
+  <p>
+   <b>
+    Follow up:
+   </b>
+   Can you solve it with time complexity
+   <code>
+    O(height of tree)
+   </code>
+   ?
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <img alt="" src="./output_files/del_node_1.jpg" style="width: 800px; height: 214px;"/>
+  <pre><strong>Input:</strong> root = [5,3,6,2,4,null,7], key = 3
+<strong>Output:</strong> [5,4,6,2,null,null,7]
+<strong>Explanation:</strong> Given key to delete is 3. So we find the node with value 3 and delete it.
+One valid answer is [5,4,6,2,null,null,7], shown in the above BST.
+Please notice that another valid answer is [5,2,6,null,4,null,7] and it's also accepted.
+<img alt="" src="./output_files/del_node_supp.jpg" style="width: 350px; height: 255px;"/>
+</pre>
+  <p>
+   <strong>
+    Example 2:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root = [5,3,6,2,4,null,7], key = 0
+<strong>Output:</strong> [5,3,6,2,4,null,7]
+<strong>Explanation:</strong> The tree does not contain a node with value = 0.
+</pre>
+  <p>
+   <strong>
+    Example 3:
+   </strong>
+  </p>
+  <pre><strong>Input:</strong> root = [], key = 0
+<strong>Output:</strong> []
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    The number of nodes in the tree is in the range
+    <code>
+     [0, 10
+     <sup>
+      4
+     </sup>
+     ]
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     -10
+     <sup>
+      5
+     </sup>
+     &lt;= Node.val &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    Each node has a
+    <strong>
+     unique
+    </strong>
+    value.
+   </li>
+   <li>
+    <code>
+     root
+    </code>
+    is a valid binary search tree.
+   </li>
+   <li>
+    <code>
+     -10
+     <sup>
+      5
+     </sup>
+     &lt;= key &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+  </ul>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 450 -->
+<pre>/*
+ * @lc app=leetcode id=450 lang=cpp
+ *
+ * [450] Delete Node in a BST
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root){
+            if(root-&gt;val&gt;key) root-&gt;left=deleteNode(root-&gt;left,key);
+            else if(root-&gt;val&lt;key) root-&gt;right=deleteNode(root-&gt;right,key);
+            else{
+                if(root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL){
+                    return NULL;
+                }
+                if (!root-&gt;left || !root-&gt;right){
+                    if(root-&gt;left) return root-&gt;left;
+                    return root-&gt;right;
+                }
+                TreeNode* temp=root-&gt;left;
+                while(temp-&gt;right!=NULL) temp=temp-&gt;right;
+                root-&gt;val=temp-&gt;val;
+                root-&gt;left=deleteNode(root-&gt;left,temp-&gt;val);
+            }
+        }
+        return root;
+    }
+};
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
  457. Circular Array Loop
 </div>
 <div class="content__u3I1 question-content__JfgR">
@@ -38916,6 +40791,293 @@ public:
         
     }
 };
+// @lc code=end
+
+</pre><html><head></head><body>
+<div id="title">
+ 460. LFU Cache
+</div>
+<div class="content__u3I1 question-content__JfgR">
+ <div>
+  <p>
+   Design and implement a data structure for a
+   <a href="https://en.wikipedia.org/wiki/Least_frequently_used" target="_blank">
+    Least Frequently Used (LFU)
+   </a>
+   cache.
+  </p>
+  <p>
+   Implement the
+   <code>
+    LFUCache
+   </code>
+   class:
+  </p>
+  <ul>
+   <li>
+    <code>
+     LFUCache(int capacity)
+    </code>
+    Initializes the object with the
+    <code>
+     capacity
+    </code>
+    of the data structure.
+   </li>
+   <li>
+    <code>
+     int get(int key)
+    </code>
+    Gets the value of the
+    <code>
+     key
+    </code>
+    if the
+    <code>
+     key
+    </code>
+    exists in the cache. Otherwise, returns
+    <code>
+     -1
+    </code>
+    .
+   </li>
+   <li>
+    <code>
+     void put(int key, int value)
+    </code>
+    Update the value of the
+    <code>
+     key
+    </code>
+    if present, or inserts the
+    <code>
+     key
+    </code>
+    if not already present. When the cache reaches its
+    <code>
+     capacity
+    </code>
+    , it should invalidate and remove the
+    <strong>
+     least frequently used
+    </strong>
+    key before inserting a new item. For this problem, when there is a
+    <strong>
+     tie
+    </strong>
+    (i.e., two or more keys with the same frequency), the
+    <strong>
+     least recently used
+    </strong>
+    <code>
+     key
+    </code>
+    would be invalidated.
+   </li>
+  </ul>
+  <p>
+   To determine the least frequently used key, a
+   <strong>
+    use counter
+   </strong>
+   is maintained for each key in the cache. The key with the smallest
+   <strong>
+    use counter
+   </strong>
+   is the least frequently used key.
+  </p>
+  <p>
+   When a key is first inserted into the cache, its
+   <strong>
+    use counter
+   </strong>
+   is set to
+   <code>
+    1
+   </code>
+   (due to the
+   <code>
+    put
+   </code>
+   operation). The
+   <strong>
+    use counter
+   </strong>
+   for a key in the cache is incremented either a
+   <code>
+    get
+   </code>
+   or
+   <code>
+    put
+   </code>
+   operation is called on it.
+  </p>
+  <p>
+   The functions
+   <code data-stringify-type="code">
+    get
+   </code>
+   and
+   <code data-stringify-type="code">
+    put
+   </code>
+   must each run in
+   <code>
+    O(1)
+   </code>
+   average time complexity.
+  </p>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Example 1:
+   </strong>
+  </p>
+  <pre><strong>Input</strong>
+["LFUCache", "put", "put", "get", "put", "get", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [3], [4, 4], [1], [3], [4]]
+<strong>Output</strong>
+[null, null, null, 1, null, -1, 3, null, -1, 3, 4]
+
+<strong>Explanation</strong>
+// cnt(x) = the use counter for key x
+// cache=[] will show the last used order for tiebreakers (leftmost element is  most recent)
+LFUCache lfu = new LFUCache(2);
+lfu.put(1, 1);   // cache=[1,_], cnt(1)=1
+lfu.put(2, 2);   // cache=[2,1], cnt(2)=1, cnt(1)=1
+lfu.get(1);      // return 1
+                 // cache=[1,2], cnt(2)=1, cnt(1)=2
+lfu.put(3, 3);   // 2 is the LFU key because cnt(2)=1 is the smallest, invalidate 2.
+                 // cache=[3,1], cnt(3)=1, cnt(1)=2
+lfu.get(2);      // return -1 (not found)
+lfu.get(3);      // return 3
+                 // cache=[3,1], cnt(3)=2, cnt(1)=2
+lfu.put(4, 4);   // Both 1 and 3 have the same cnt, but 1 is LRU, invalidate 1.
+                 // cache=[4,3], cnt(4)=1, cnt(3)=2
+lfu.get(1);      // return -1 (not found)
+lfu.get(3);      // return 3
+                 // cache=[3,4], cnt(4)=1, cnt(3)=3
+lfu.get(4);      // return 4
+                 // cache=[3,4], cnt(4)=2, cnt(3)=3
+</pre>
+  <p>
+  </p>
+  <p>
+   <strong>
+    Constraints:
+   </strong>
+  </p>
+  <ul>
+   <li>
+    <code>
+     0 &lt;= capacity &lt;= 10
+     <sup>
+      4
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= key &lt;= 10
+     <sup>
+      5
+     </sup>
+    </code>
+   </li>
+   <li>
+    <code>
+     0 &lt;= value &lt;= 10
+     <sup>
+      9
+     </sup>
+    </code>
+   </li>
+   <li>
+    At most
+    <code>
+     2 * 10
+     <sup>
+      5
+     </sup>
+    </code>
+    calls will be made to
+    <code>
+     get
+    </code>
+    and
+    <code>
+     put
+    </code>
+    .
+   </li>
+  </ul>
+  <p>
+  </p>
+  <span style="display: none;">
+  </span>
+ </div>
+</div>
+</body></html>
+<!-- Solution for Question 460 -->
+<pre>/*
+ * @lc app=leetcode id=460 lang=cpp
+ *
+ * [460] LFU Cache
+ */
+
+// @lc code=start
+class LFUCache {
+public:
+    map&lt;int,int&gt;count;
+    map&lt;int,int&gt;m;
+
+    int frame,time=0;
+
+    priority_queue&lt;
+    pair&lt;int,pair&lt;int,int&gt;&gt;,
+    vector&lt;pair&lt;int,pair&lt;int,int&gt;&gt;&gt;,
+    greater&lt;pair&lt;int,pair&lt;int,int&gt;&gt;&gt;&gt;pq;
+
+    LFUCache(int capacity) {
+        frame=capacity;
+    }
+
+    int get(int key) {
+        if(count[key]==0) return -1;
+        put(key,m[key]);
+        return m[key];
+    }
+
+    void put(int key, int value) {
+        if(frame==0) return;
+        if(m.find(key)==m.end() &amp;&amp; m.size()==frame){
+            // there are values from 1 to count[key] for a vairalbe in ascendig order so we pop unitl we get that count
+            while(true){
+                auto x=pq.top();
+                if(count[x.second.second]==x.first){
+                    m.erase(x.second.second);
+                    count.erase(x.second.second);
+                    pq.pop();
+                    break;
+                }
+                pq.pop();
+            }
+        }
+        count[key]++;
+        pq.push({count[key],{time++,key}});
+        m[key]=value;
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj-&gt;get(key);
+ * obj-&gt;put(key,value);
+ */
 // @lc code=end
 
 </pre><html><head></head><body>
@@ -54471,8 +56633,7 @@ Islands in gray are closed because they are completely surrounded by water (grou
 class Solution {
 public:
     int count=0;
-    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y,int&amp; t)
-    {
+    void dfs(vector&lt;vector&lt;int&gt;&gt;&amp; grid,int x,int y,int&amp; t){
         if(x&lt;0 || x&gt;=grid.size() || y&lt;0 || y&gt;=grid[0].size()){
             if(t==0){
                 t++;
@@ -54487,6 +56648,7 @@ public:
         dfs(grid,x,y-1,t);
         dfs(grid,x,y+1,t);
     }
+
 
     int closedIsland(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
         int ans =0 ;
